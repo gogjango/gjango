@@ -11,6 +11,7 @@ require (
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/ribice/gorsk-gin v0.0.0-20190118073939-555e775d6528
+	github.com/stretchr/testify v1.4.0
 	gopkg.in/go-playground/validator.v8 v8.18.2
 	gopkg.in/yaml.v2 v2.2.4
 )
