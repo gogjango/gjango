@@ -8,6 +8,13 @@ An example project that uses golang gin as webserver, and go-pg library for conn
 ## Get started
 
 ```bash
+# postgresql config
+cp .env.sample .env
+source .env
+```
+
+```bash
+# get dependencies and run
 go get -v ./...
 go run .
 ```
