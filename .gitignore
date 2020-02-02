@@ -26,3 +26,4 @@
 # End of https://www.gitignore.io/api/go
 
 gin-go-pg
+cc-test-reporter
