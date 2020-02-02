@@ -27,3 +27,5 @@
 
 gin-go-pg
 cc-test-reporter
+.env*
+!.env.sample
