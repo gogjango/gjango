@@ -1,4 +1,4 @@
-![CircleCI](https://img.shields.io/circleci/build/github/calvinchengx/gin-go-pg/master) ![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/calvinchengx/gin-go-pg)
+![CircleCI](https://img.shields.io/circleci/build/github/calvinchengx/gin-go-pg/master) [![Maintainability](https://api.codeclimate.com/v1/badges/62185b640652168fe9f9/maintainability)](https://codeclimate.com/github/calvinchengx/gin-go-pg/maintainability)
 
 
 Example project with golang gin and go-pg
