@@ -24,3 +24,12 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+
+      - run:
+          name: Test Coverage
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter before-build
+            go test -coverprofile c.out ./…
+            ./cc-test-reporter after-build -t gocov -p github.com/calvinchengx/gin-go-pg -r ${TEST_REPORTER_ID}
