@@ -12,6 +12,8 @@ func main() {
 
 	mw.Add(r, cors.Default())
 
+	service.AuthRouter(r)
+
 	v1Router := r.Group("/v1")
 	service.UserRouter(v1Router)
 
