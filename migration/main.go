@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/calvinchengx/gin-go-pg/config"
@@ -31,16 +32,16 @@ func main() {
 	p := config.GetPostgresConfig()
 
 	// connection to db as superuser
-	db_super := config.GetSuperUserConnection()
-	defer db_super.Close()
+	dbSuper := config.GetSuperUserConnection()
+	defer dbSuper.Close()
 
 	// connection to db as POSTGRES_USER
 	db := config.GetConnection()
 	defer db.Close()
 
-	createUserIfNotExist(db_super, p)
+	createUserIfNotExist(dbSuper, p)
 
-	createDatabaseIfNotExist(db_super, p)
+	createDatabaseIfNotExist(dbSuper, p)
 
 	oldVersion, newVersion, err := migrations.Run(db, args...)
 	if err != nil {
@@ -95,5 +96,13 @@ func createDatabaseIfNotExist(db *pg.DB, p *config.PostgresConfig) {
 			fmt.Printf(`Created database %s`, p.Database)
 		}
 	}
+}
 
+func createSchema(db *pg.DB, models ...interface{}) {
+	for _, model := range models {
+		err := db.CreateTable(model, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
