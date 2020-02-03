@@ -3,11 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/calvinchengx/gin-go-pg/config"
+	"github.com/calvinchengx/gin-go-pg/model"
 	migrations "github.com/go-pg/migrations/v7"
 	"github.com/go-pg/pg/v9"
+	"github.com/go-pg/pg/v9/orm"
 )
 
 const usageText = `This program runs command on the db. Supported commands are:
@@ -17,7 +20,8 @@ const usageText = `This program runs command on the db. Supported commands are:
   - down - reverts last migration.
   - reset - reverts all migrations.
   - version - prints current db version.
-  - set_version [version] - sets db version without running migrations.
+	- set_version [version] - sets db version without running migrations.
+	- create_schema [version] - creates initial set of tables from models (structs).
 Usage:
   go run *.go <command> [args]
 `
@@ -31,16 +35,21 @@ func main() {
 	p := config.GetPostgresConfig()
 
 	// connection to db as superuser
-	db_super := config.GetSuperUserConnection()
-	defer db_super.Close()
+	dbSuper := config.GetSuperUserConnection()
+	defer dbSuper.Close()
 
 	// connection to db as POSTGRES_USER
 	db := config.GetConnection()
 	defer db.Close()
 
-	createUserIfNotExist(db_super, p)
+	createUserIfNotExist(dbSuper, p)
 
-	createDatabaseIfNotExist(db_super, p)
+	createDatabaseIfNotExist(dbSuper, p)
+
+	if flag.Arg(0) == "create_schema" {
+		createSchema(db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{})
+		os.Exit(2)
+	}
 
 	oldVersion, newVersion, err := migrations.Run(db, args...)
 	if err != nil {
@@ -95,5 +104,16 @@ func createDatabaseIfNotExist(db *pg.DB, p *config.PostgresConfig) {
 			fmt.Printf(`Created database %s`, p.Database)
 		}
 	}
+}
 
+func createSchema(db *pg.DB, models ...interface{}) {
+	for _, model := range models {
+		opt := &orm.CreateTableOptions{
+			IfNotExists: true,
+		}
+		err := db.CreateTable(model, opt)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
