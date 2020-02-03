@@ -10,6 +10,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/model"
 	migrations "github.com/go-pg/migrations/v7"
 	"github.com/go-pg/pg/v9"
+	"github.com/go-pg/pg/v9/orm"
 )
 
 const usageText = `This program runs command on the db. Supported commands are:
@@ -30,7 +31,6 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 	args := flag.Args()
-	fmt.Println(args)
 
 	p := config.GetPostgresConfig()
 
@@ -46,7 +46,7 @@ func main() {
 
 	createDatabaseIfNotExist(dbSuper, p)
 
-	if args[0] == "create_schema" {
+	if flag.Arg(0) == "create_schema" {
 		createSchema(db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{})
 		os.Exit(2)
 	}
@@ -108,7 +108,10 @@ func createDatabaseIfNotExist(db *pg.DB, p *config.PostgresConfig) {
 
 func createSchema(db *pg.DB, models ...interface{}) {
 	for _, model := range models {
-		err := db.CreateTable(model, nil)
+		opt := &orm.CreateTableOptions{
+			IfNotExists: true,
+		}
+		err := db.CreateTable(model, opt)
 		if err != nil {
 			log.Fatal(err)
 		}
