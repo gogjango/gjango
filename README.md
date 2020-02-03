@@ -25,3 +25,18 @@ go run .
 go test -coverprofile c.out ./...
 go tool cover -html=cp.out
 ```
+
+## Schema migration
+
+```bash
+# either
+go run migration/*.go [command]
+
+# or
+go build -o bin/migration migration/main.go
+./bin/migration [command]
+
+# see all commands via `go run migration/*.go -h`
+# we can create migrations by creating files named 1_name.go etc
+# reference https://github.com/go-pg/migrations/tree/master/example
+```

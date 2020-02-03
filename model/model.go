@@ -3,7 +3,7 @@ package model
 import (
 	"time"
 
-	"github.com/go-pg/pg/orm"
+	"github.com/go-pg/pg/v9/orm"
 )
 
 // Base contains common fields for all tables
