@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/calvinchengx/gin-go-pg/config"
+	"github.com/calvinchengx/gin-go-pg/model"
 	migrations "github.com/go-pg/migrations/v7"
 	"github.com/go-pg/pg/v9"
 )
@@ -18,7 +19,8 @@ const usageText = `This program runs command on the db. Supported commands are:
   - down - reverts last migration.
   - reset - reverts all migrations.
   - version - prints current db version.
-  - set_version [version] - sets db version without running migrations.
+	- set_version [version] - sets db version without running migrations.
+	- create_schema [version] - creates initial set of tables from models (structs).
 Usage:
   go run *.go <command> [args]
 `
@@ -28,6 +30,7 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 	args := flag.Args()
+	fmt.Println(args)
 
 	p := config.GetPostgresConfig()
 
@@ -42,6 +45,11 @@ func main() {
 	createUserIfNotExist(dbSuper, p)
 
 	createDatabaseIfNotExist(dbSuper, p)
+
+	if args[0] == "create_schema" {
+		createSchema(db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{})
+		os.Exit(2)
+	}
 
 	oldVersion, newVersion, err := migrations.Run(db, args...)
 	if err != nil {
