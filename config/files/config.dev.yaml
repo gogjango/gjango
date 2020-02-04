@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+jwt:
+  realm: "jwtrealm" # Change this value
+  secret: "jwtsecret" # Change this value
+  duration: 15
+  signingalgorithm: "HS256"

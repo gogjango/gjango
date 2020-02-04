@@ -12,11 +12,21 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type AuthService struct {
-	userRepo model.UserRepo
-	jwt      mw.JWT
+// NewAuthService creates new auth service
+func NewAuthService(userRepo model.UserRepo, jwt *mw.JWT) *AuthService {
+	return &AuthService{
+		userRepo: userRepo,
+		jwt:      jwt,
+	}
 }
 
+// AuthService represents the auth application service
+type AuthService struct {
+	userRepo model.UserRepo
+	jwt      *mw.JWT
+}
+
+// Authenticate tries to authenticate the user provided by username and password
 func (s *AuthService) Authenticate(c context.Context, username, password string) (*model.AuthToken, error) {
 	u, err := s.userRepo.FindByUsername(c, username)
 	if err != nil {
@@ -34,12 +44,29 @@ func (s *AuthService) Authenticate(c context.Context, username, password string)
 	}
 	u.UpdateLastLogin()
 	u.Token = xid.New().String()
-	// TODO: finish this
-	// if err := s.userRepo.UpdateLogin
+	if err := s.userRepo.UpdateLogin(c, u); err != nil {
+		return nil, err
+	}
 	return &model.AuthToken{
 		Token:        token,
 		Expires:      expire,
 		RefreshToken: u.Token,
+	}, nil
+}
+
+// Refresh refreshes jwt token and puts new claims inside
+func (s *AuthService) Refresh(c context.Context, token string) (*model.RefreshToken, error) {
+	user, err := s.userRepo.FindByToken(c, token)
+	if err != nil {
+		return nil, err
+	}
+	token, expire, err := s.jwt.GenerateToken(user)
+	if err != nil {
+		return nil, apperr.Generic
+	}
+	return &model.RefreshToken{
+		Token:   token,
+		Expires: expire,
 	}, nil
 }
 
