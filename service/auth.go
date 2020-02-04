@@ -13,6 +13,15 @@ func AuthRouter(r *gin.Engine) {
 }
 
 func login(c *gin.Context) {
+	// cred, err := request.Login(c)
+	// if err != nil {
+	// 	return
+	// }
+	// r, err := a.svc.Authenticate(c, cred.Username, cred.Password)
+	// if err != nil {
+	// apperr.Response(c, err)
+	// return
+	// }
 	c.JSON(http.StatusOK, "logging in")
 }
 
