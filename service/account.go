@@ -22,6 +22,7 @@ func AccountRouter(svc *controller.AccountService, r *gin.RouterGroup) {
 	}
 	ar := r.Group("/users")
 	ar.POST("", a.create)
+	ar.PATCH("/:id/password", a.changePassword)
 }
 
 func (a *AccountService) create(c *gin.Context) {
@@ -44,4 +45,16 @@ func (a *AccountService) create(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, user)
+}
+
+func (a *AccountService) changePassword(c *gin.Context) {
+	p, err := request.PasswordChange(c)
+	if err != nil {
+		return
+	}
+	if err := a.svc.ChangePassword(c, p.OldPassword, p.NewPassword, p.ID); err != nil {
+		apperr.Response(c, err)
+		return
+	}
+	c.Status(http.StatusOK)
 }

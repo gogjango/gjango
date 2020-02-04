@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UserRouter declares the orutes for users router group
 func UserRouter(r *gin.RouterGroup) {
 	ur := r.Group("/users")
 	ur.GET("", list)
