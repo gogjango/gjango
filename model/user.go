@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 // User represents user domain model
 type User struct {
@@ -22,6 +25,18 @@ type User struct {
 	RoleID     int `json:"-"`
 	CompanyID  int `json:"company_id"`
 	LocationID int `json:"location_id"`
+}
+
+// UpdateLastLogin updates last login field
+func (u *User) UpdateLastLogin() {
+	t := time.Now()
+	u.LastLogin = &t
+}
+
+type UserRepo interface {
+	FindByUsername(context.Context, string) (*User, error)
+	FindByToken(context.Context, string) (*User, error)
+	UpdateLogin(context.Context, *User) error
 }
 
 // AuthUser represents data stored in JWT token for user
