@@ -24,9 +24,11 @@ func main() {
 
 	userRepo := repository.NewUserRepo(db, log)
 	accountRepo := repository.NewAccountRepo(db, log)
+	rbac := repository.NewRBACService(userRepo)
 
 	authService := controller.NewAuthService(userRepo, jwt)
-	accountService := controller.NewAccountService(accountRepo)
+
+	accountService := controller.NewAccountService(userRepo, accountRepo, rbac)
 
 	service.AuthRouter(authService, r)
 

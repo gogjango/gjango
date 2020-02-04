@@ -2,20 +2,22 @@ package controller
 
 import (
 	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/repository"
 	"github.com/gin-gonic/gin"
 )
 
 // AccountService represents the account application service
 type AccountService struct {
-	accountRepo *repository.AccountRepo
-	userRepo    *repository.UserRepo
+	accountRepo model.AccountRepo
+	userRepo    model.UserRepo
+	rbac        model.RBACService
 }
 
 // NewAccountService creates a new account application service
-func NewAccountService(accountRepo *repository.AccountRepo) *AccountService {
+func NewAccountService(userRepo model.UserRepo, accountRepo model.AccountRepo, rbac model.RBACService) *AccountService {
 	return &AccountService{
 		accountRepo: accountRepo,
+		userRepo:    userRepo,
+		rbac:        rbac,
 	}
 }
 
