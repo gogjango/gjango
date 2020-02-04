@@ -42,7 +42,8 @@ type UserRepo interface {
 
 // AccountRepo represents account database interface (the repository)
 type AccountRepo interface {
-	Create(context.Context, int) (*User, error)
+	Create(context.Context, *User) error
+	ChangePassword(context.Context, *User) error
 }
 
 // AuthUser represents data stored in JWT token for user

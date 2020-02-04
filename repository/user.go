@@ -21,6 +21,7 @@ type UserRepo struct {
 	log *zap.Logger
 }
 
+// FindByUsername queries for a single user by username
 func (u *UserRepo) FindByUsername(c context.Context, username string) (*model.User, error) {
 	user := new(model.User)
 	sql := `SELECT "user".*, "role"."id" AS "role__id", "role"."access_level" AS "role__access_level", "role"."name" AS "role__name" 
