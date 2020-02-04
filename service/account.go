@@ -1,0 +1,47 @@
+package service
+
+import (
+	"net/http"
+
+	"github.com/calvinchengx/gin-go-pg/controller"
+	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/calvinchengx/gin-go-pg/request"
+	"github.com/gin-gonic/gin"
+)
+
+// AccountService represents the account http service
+type AccountService struct {
+	svc *controller.AccountService
+}
+
+func AccountRouter(svc *controller.AccountService, r *gin.RouterGroup) {
+	a := AccountService{
+		svc: svc,
+	}
+	ar := r.Group("/users")
+	ar.POST("", a.create)
+}
+
+func (a *AccountService) create(c *gin.Context) {
+	r, err := request.AccountCreate(c)
+	if err != nil {
+		return
+	}
+	user := &model.User{
+		Username:   r.Username,
+		Password:   r.Password,
+		Email:      r.Email,
+		FirstName:  r.FirstName,
+		LastName:   r.LastName,
+		CompanyID:  r.CompanyID,
+		LocationID: r.LocationID,
+		RoleID:     r.RoleID,
+	}
+	// TOOD: implement Create method
+	// if err := a.svc.Create(c, user); err != nil {
+	// 	apperr.Response(c, err)
+	// 	return
+	// }
+
+	c.JSON(http.StatusOK, user)
+}

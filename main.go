@@ -26,6 +26,7 @@ func main() {
 	service.AuthRouter(authService, r)
 
 	v1Router := r.Group("/v1")
+	service.AccountRouter(controller.NewAccountService(), v1Router)
 	service.UserRouter(v1Router)
 
 	r.Run()
