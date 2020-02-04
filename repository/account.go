@@ -39,8 +39,8 @@ func (a *AccountRepo) Create(c context.Context, u *model.User) error {
 }
 
 // ChangePassword changes user's password
-func (a *AccountRepo) ChangePassword(c context.Context, usr *model.User) error {
-	_, err := a.db.Model(usr).Column("password", "updated_at").WherePK().Update()
+func (a *AccountRepo) ChangePassword(c context.Context, u *model.User) error {
+	_, err := a.db.Model(u).Column("password", "updated_at").WherePK().Update()
 	if err != nil {
 		a.log.Warn("AccountRepo Error: ", zap.Error(err))
 	}
