@@ -138,6 +138,8 @@ github.com/robinjoseph08/go-pg-migrations v1.0.1 h1:HzJfbKX1XCrV3/ZxhDmOWL99I31C
 github.com/robinjoseph08/go-pg-migrations/v2 v2.0.1 h1:ITuAGC5uh+yo9ltRMDQAutQVrK3R2oHYCEakSY4sTus=
 github.com/robinjoseph08/go-pg-migrations/v2 v2.0.1/go.mod h1:d5XbEAkVBXngCEqLgSJJqhRB9hyc0iZ8VVPz1RDv3eA=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
+github.com/rs/xid v1.2.1 h1:mhH9Nq+C1fY2l1XIpgxIiUOfNpRBYH1kKcr+qfKgjRc=
+github.com/rs/xid v1.2.1/go.mod h1:+uKXf+4Djp6Md1KODXJxgGQPKngRmWyn10oCKFzNHOQ=
 github.com/russross/blackfriday/v2 v2.0.1 h1:lPqVAte+HuHNfhJ/0LC98ESWRz8afy9tM/0RK8m9o+Q=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/satori/go.uuid v1.2.0 h1:0uYX9dsZ2yD7q2RtLRtPSdGDWzjeM3TbMJP9utgA0ww=

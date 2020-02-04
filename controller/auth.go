@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/rs/xid"
+
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	mw "github.com/calvinchengx/gin-go-pg/middleware"
 	"github.com/calvinchengx/gin-go-pg/model"
