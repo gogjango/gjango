@@ -4,19 +4,19 @@ import (
 	"net/http"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/controller"
 	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/calvinchengx/gin-go-pg/repository/account"
 	"github.com/calvinchengx/gin-go-pg/request"
 	"github.com/gin-gonic/gin"
 )
 
 // AccountService represents the account http service
 type AccountService struct {
-	svc *controller.AccountService
+	svc *account.AccountService
 }
 
 // AccountRouter sets up all the controller functions to our router
-func AccountRouter(svc *controller.AccountService, r *gin.RouterGroup) {
+func AccountRouter(svc *account.AccountService, r *gin.RouterGroup) {
 	a := AccountService{
 		svc: svc,
 	}

@@ -1,7 +1,9 @@
-package controller
+package account
 
 import (
+	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,7 +25,10 @@ func NewAccountService(userRepo model.UserRepo, accountRepo model.AccountRepo, r
 
 // Create creates a new user account
 func (s *AccountService) Create(c *gin.Context, u *model.User) error {
-	// TODO: implement RBAC
+	if !s.rbac.AccountCreate(c, u.RoleID, u.CompanyID, u.LocationID) {
+		return apperr.Forbidden
+	}
+	u.Password = auth.HashPassword(u.Password)
 	return s.accountRepo.Create(c, u)
 }
 

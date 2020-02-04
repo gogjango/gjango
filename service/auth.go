@@ -4,13 +4,13 @@ import (
 	"net/http"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/controller"
+	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	"github.com/calvinchengx/gin-go-pg/request"
 	"github.com/gin-gonic/gin"
 )
 
 // AuthRouter creates new auth http service
-func AuthRouter(svc *controller.AuthService, r *gin.Engine) {
+func AuthRouter(svc *auth.AuthService, r *gin.Engine) {
 	a := Auth{svc}
 	r.POST("/login", a.login)
 	r.GET("/refresh/:token", a.refresh)
@@ -18,7 +18,7 @@ func AuthRouter(svc *controller.AuthService, r *gin.Engine) {
 
 // Auth represents auth http service
 type Auth struct {
-	svc *controller.AuthService
+	svc *auth.AuthService
 }
 
 func (a *Auth) login(c *gin.Context) {

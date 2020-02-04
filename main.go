@@ -2,9 +2,10 @@ package main
 
 import (
 	"github.com/calvinchengx/gin-go-pg/config"
-	"github.com/calvinchengx/gin-go-pg/controller"
 	mw "github.com/calvinchengx/gin-go-pg/middleware"
 	"github.com/calvinchengx/gin-go-pg/repository"
+	"github.com/calvinchengx/gin-go-pg/repository/auth"
+	"github.com/calvinchengx/gin-go-pg/repository/account"
 	"github.com/calvinchengx/gin-go-pg/service"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -26,9 +27,9 @@ func main() {
 	accountRepo := repository.NewAccountRepo(db, log)
 	rbac := repository.NewRBACService(userRepo)
 
-	authService := controller.NewAuthService(userRepo, jwt)
+	authService := auth.NewAuthService(userRepo, jwt)
 
-	accountService := controller.NewAccountService(userRepo, accountRepo, rbac)
+	accountService := account.NewAccountService(userRepo, accountRepo, rbac)
 
 	service.AuthRouter(authService, r)
 
