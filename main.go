@@ -20,12 +20,15 @@ func main() {
 	log, _ := zap.NewDevelopment()
 	defer log.Sync()
 	userRepo := repository.NewUserRepo(db, log)
+	accountRepo := repository.NewAccountRepo(db, log)
 	jwt := mw.NewJWT(c.JWT)
 	authService := controller.NewAuthService(userRepo, jwt)
+	accountService := controller.NewAccountService(accountRepo)
 
 	service.AuthRouter(authService, r)
 
 	v1Router := r.Group("/v1")
+	service.AccountRouter(accountService, v1Router)
 	service.UserRouter(v1Router)
 
 	r.Run()

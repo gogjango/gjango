@@ -33,10 +33,18 @@ func (u *User) UpdateLastLogin() {
 	u.LastLogin = &t
 }
 
+// UserRepo represents user database interface (the repository)
 type UserRepo interface {
+	View(context.Context, int) (*User, error)
 	FindByUsername(context.Context, string) (*User, error)
 	FindByToken(context.Context, string) (*User, error)
 	UpdateLogin(context.Context, *User) error
+}
+
+// AccountRepo represents account database interface (the repository)
+type AccountRepo interface {
+	Create(context.Context, *User) error
+	ChangePassword(context.Context, *User) error
 }
 
 // AuthUser represents data stored in JWT token for user
