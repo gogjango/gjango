@@ -3,6 +3,7 @@ package service
 import (
 	"net/http"
 
+	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/controller"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/request"
@@ -14,6 +15,7 @@ type AccountService struct {
 	svc *controller.AccountService
 }
 
+// AccountRouter sets up all the controller functions to our router
 func AccountRouter(svc *controller.AccountService, r *gin.RouterGroup) {
 	a := AccountService{
 		svc: svc,
@@ -37,11 +39,9 @@ func (a *AccountService) create(c *gin.Context) {
 		LocationID: r.LocationID,
 		RoleID:     r.RoleID,
 	}
-	// TOOD: implement Create method
-	// if err := a.svc.Create(c, user); err != nil {
-	// 	apperr.Response(c, err)
-	// 	return
-	// }
-
+	if err := a.svc.Create(c, user); err != nil {
+		apperr.Response(c, err)
+		return
+	}
 	c.JSON(http.StatusOK, user)
 }
