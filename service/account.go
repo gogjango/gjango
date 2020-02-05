@@ -12,11 +12,11 @@ import (
 
 // AccountService represents the account http service
 type AccountService struct {
-	svc *account.AccountService
+	svc *account.Service
 }
 
 // AccountRouter sets up all the controller functions to our router
-func AccountRouter(svc *account.AccountService, r *gin.RouterGroup) {
+func AccountRouter(svc *account.Service, r *gin.RouterGroup) {
 	a := AccountService{
 		svc: svc,
 	}
