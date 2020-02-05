@@ -64,8 +64,23 @@ func (u *User) view(c *gin.Context) {
 }
 
 func (u *User) update(c *gin.Context) {
-	// update database
-	c.JSON(http.StatusOK, "update user")
+	updateUser, err := request.UserUpdate(c)
+	if err != nil {
+		return
+	}
+	userUpdate, err := u.svc.Update(c, &user.Update{
+		ID:        updateUser.ID,
+		FirstName: updateUser.FirstName,
+		LastName:  updateUser.LastName,
+		Mobile:    updateUser.Mobile,
+		Phone:     updateUser.Phone,
+		Address:   updateUser.Address,
+	})
+	if err != nil {
+		apperr.Response(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, userUpdate)
 }
 
 func (u *User) delete(c *gin.Context) {

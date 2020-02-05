@@ -87,3 +87,13 @@ func (u *UserRepo) List(c context.Context, qp *model.ListQuery, p *model.Paginat
 	}
 	return users, nil
 }
+
+// Update updates user's contact info
+func (u *UserRepo) Update(c context.Context, user *model.User) (*model.User, error) {
+	_, err := u.db.Model(user).Column("first_name",
+		"last_name", "mobile", "phone", "address", "updated_at").WherePK().Update()
+	if err != nil {
+		u.log.Warn("UserDB Error", zap.Error(err))
+	}
+	return user, err
+}

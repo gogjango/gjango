@@ -40,6 +40,7 @@ type UserRepo interface {
 	FindByToken(context.Context, string) (*User, error)
 	UpdateLogin(context.Context, *User) error
 	List(context.Context, *ListQuery, *Pagination) ([]User, error)
+	Update(context.Context, *User) (*User, error)
 }
 
 // AccountRepo represents account database interface (the repository)

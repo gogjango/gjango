@@ -4,6 +4,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository/platform/query"
+	"github.com/calvinchengx/gin-go-pg/repository/platform/structs"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,4 +40,26 @@ func (s *Service) View(c *gin.Context, id int) (*model.User, error) {
 		return nil, apperr.Forbidden
 	}
 	return s.userRepo.View(c, id)
+}
+
+type Update struct {
+	ID        int
+	FirstName *string
+	LastName  *string
+	Mobile    *string
+	Phone     *string
+	Address   *string
+}
+
+// Update updates user's contact information
+func (s *Service) Update(c *gin.Context, update *Update) (*model.User, error) {
+	if !s.rbac.EnforceUser(c, update.ID) {
+		return nil, apperr.Forbidden
+	}
+	u, err := s.userRepo.View(c, update.ID)
+	if err != nil {
+		return nil, err
+	}
+	structs.Merge(u, update)
+	return s.userRepo.Update(c, u)
 }
