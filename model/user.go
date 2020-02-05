@@ -41,6 +41,7 @@ type UserRepo interface {
 	UpdateLogin(context.Context, *User) error
 	List(context.Context, *ListQuery, *Pagination) ([]User, error)
 	Update(context.Context, *User) (*User, error)
+	Delete(context.Context, *User) error
 }
 
 // AccountRepo represents account database interface (the repository)

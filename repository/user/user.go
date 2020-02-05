@@ -63,3 +63,16 @@ func (s *Service) Update(c *gin.Context, update *Update) (*model.User, error) {
 	structs.Merge(u, update)
 	return s.userRepo.Update(c, u)
 }
+
+// Delete deletes a user
+func (s *Service) Delete(c *gin.Context, id int) error {
+	u, err := s.userRepo.View(c, id)
+	if err != nil {
+		return err
+	}
+	if !s.rbac.IsLowerRole(c, u.Role.AccessLevel) {
+		return apperr.Forbidden
+	}
+	u.Delete()
+	return s.userRepo.Delete(c, u)
+}

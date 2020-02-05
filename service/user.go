@@ -84,6 +84,13 @@ func (u *User) update(c *gin.Context) {
 }
 
 func (u *User) delete(c *gin.Context) {
-	// delete user from database
-	c.JSON(http.StatusOK, "delete user")
+	id, err := request.ID(c)
+	if err != nil {
+		return
+	}
+	if err := u.svc.Delete(c, id); err != nil {
+		apperr.Response(c, err)
+		return
+	}
+	c.Status(http.StatusOK)
 }

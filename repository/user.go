@@ -97,3 +97,12 @@ func (u *UserRepo) Update(c context.Context, user *model.User) (*model.User, err
 	}
 	return user, err
 }
+
+// Delete sets deleted_at for a user
+func (u *UserRepo) Delete(c context.Context, user *model.User) error {
+	_, err := u.db.Model(user).Column("deleted_at").WherePK().Update()
+	if err != nil {
+		u.log.Warn("UserRepo Error", zap.Error(err))
+	}
+	return err
+}
