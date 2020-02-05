@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository/platform/query"
 	"github.com/gin-gonic/gin"
@@ -30,4 +31,12 @@ func (s *Service) List(c *gin.Context, p *model.Pagination) ([]model.User, error
 		return nil, err
 	}
 	return s.userRepo.List(c, q, p)
+}
+
+// View returns single user
+func (s *Service) View(c *gin.Context, id int) (*model.User, error) {
+	if !s.rbac.EnforceUser(c, id) {
+		return nil, apperr.Forbidden
+	}
+	return s.userRepo.View(c, id)
 }

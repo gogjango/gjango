@@ -2,7 +2,6 @@ package service
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
@@ -56,8 +55,12 @@ func (u *User) view(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	// retrieve from database
-	c.JSON(http.StatusOK, "view user "+strconv.Itoa(id))
+	result, err := u.svc.View(c, id)
+	if err != nil {
+		apperr.Response(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, result)
 }
 
 func (u *User) update(c *gin.Context) {
