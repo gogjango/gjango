@@ -13,6 +13,18 @@ type Base struct {
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 }
 
+// Pagination holds pagination's data
+type Pagination struct {
+	Limit  int
+	Offset int
+}
+
+// ListQuery holds company/location data used for list db queries
+type ListQuery struct {
+	Query string
+	ID    int
+}
+
 // BeforeInsert hooks into insert operations, setting createdAt and updatedAt to current time
 func (b *Base) BeforeInsert(ctx context.Context) (context.Context, error) {
 	now := time.Now()
