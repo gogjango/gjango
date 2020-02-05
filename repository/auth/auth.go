@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
@@ -13,21 +14,21 @@ import (
 )
 
 // NewAuthService creates new auth service
-func NewAuthService(userRepo model.UserRepo, jwt *mw.JWT) *AuthService {
-	return &AuthService{
+func NewAuthService(userRepo model.UserRepo, jwt *mw.JWT) *Service {
+	return &Service{
 		userRepo: userRepo,
 		jwt:      jwt,
 	}
 }
 
-// AuthService represents the auth application service
-type AuthService struct {
+// Service represents the auth application service
+type Service struct {
 	userRepo model.UserRepo
 	jwt      *mw.JWT
 }
 
 // Authenticate tries to authenticate the user provided by username and password
-func (s *AuthService) Authenticate(c context.Context, username, password string) (*model.AuthToken, error) {
+func (s *Service) Authenticate(c context.Context, username, password string) (*model.AuthToken, error) {
 	u, err := s.userRepo.FindByUsername(c, username)
 	if err != nil {
 		return nil, err
@@ -55,7 +56,7 @@ func (s *AuthService) Authenticate(c context.Context, username, password string)
 }
 
 // Refresh refreshes jwt token and puts new claims inside
-func (s *AuthService) Refresh(c context.Context, token string) (*model.RefreshToken, error) {
+func (s *Service) Refresh(c context.Context, token string) (*model.RefreshToken, error) {
 	user, err := s.userRepo.FindByToken(c, token)
 	if err != nil {
 		return nil, err
@@ -68,6 +69,24 @@ func (s *AuthService) Refresh(c context.Context, token string) (*model.RefreshTo
 		Token:   token,
 		Expires: expire,
 	}, nil
+}
+
+// User returns user data stored in jwt token
+func (s *Service) User(c *gin.Context) *model.AuthUser {
+	id := c.GetInt("id")
+	companyID := c.GetInt("company_id")
+	locationID := c.GetInt("location_id")
+	user := c.GetString("username")
+	email := c.GetString("email")
+	role := c.MustGet("role").(int8)
+	return &model.AuthUser{
+		ID:         id,
+		Username:   user,
+		CompanyID:  companyID,
+		LocationID: locationID,
+		Email:      email,
+		Role:       model.AccessRole(role),
+	}
 }
 
 // HashPassword hashes the password using bcrypt

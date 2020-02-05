@@ -10,6 +10,8 @@ import (
 	"github.com/calvinchengx/gin-go-pg/model"
 )
 
+const notDeleted = "deleted_at is null"
+
 // NewUserRepo returns a new UserRepo instance
 func NewUserRepo(db *pg.DB, log *zap.Logger) *UserRepo {
 	return &UserRepo{db, log}
@@ -66,6 +68,39 @@ func (u *UserRepo) FindByToken(c context.Context, token string) (*model.User, er
 // UpdateLogin updates last login and refresh token for user
 func (u *UserRepo) UpdateLogin(c context.Context, user *model.User) error {
 	_, err := u.db.Model(user).Column("last_login", "token").WherePK().Update()
+	if err != nil {
+		u.log.Warn("UserRepo Error", zap.Error(err))
+	}
+	return err
+}
+
+// List returns list of all users retreivable for the current user, depending on role
+func (u *UserRepo) List(c context.Context, qp *model.ListQuery, p *model.Pagination) ([]model.User, error) {
+	var users []model.User
+	q := u.db.Model(&users).Column("user.*", "Role").Limit(p.Limit).Offset(p.Offset).Where(notDeleted).Order("user.id desc")
+	if qp != nil {
+		q.Where(qp.Query, qp.ID)
+	}
+	if err := q.Select(); err != nil {
+		u.log.Warn("UserDB Error", zap.Error(err))
+		return nil, err
+	}
+	return users, nil
+}
+
+// Update updates user's contact info
+func (u *UserRepo) Update(c context.Context, user *model.User) (*model.User, error) {
+	_, err := u.db.Model(user).Column("first_name",
+		"last_name", "mobile", "phone", "address", "updated_at").WherePK().Update()
+	if err != nil {
+		u.log.Warn("UserDB Error", zap.Error(err))
+	}
+	return user, err
+}
+
+// Delete sets deleted_at for a user
+func (u *UserRepo) Delete(c context.Context, user *model.User) error {
+	_, err := u.db.Model(user).Column("deleted_at").WherePK().Update()
 	if err != nil {
 		u.log.Warn("UserRepo Error", zap.Error(err))
 	}

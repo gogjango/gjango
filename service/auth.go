@@ -10,7 +10,7 @@ import (
 )
 
 // AuthRouter creates new auth http service
-func AuthRouter(svc *auth.AuthService, r *gin.Engine) {
+func AuthRouter(svc *auth.Service, r *gin.Engine) {
 	a := Auth{svc}
 	r.POST("/login", a.login)
 	r.GET("/refresh/:token", a.refresh)
@@ -18,7 +18,7 @@ func AuthRouter(svc *auth.AuthService, r *gin.Engine) {
 
 // Auth represents auth http service
 type Auth struct {
-	svc *auth.AuthService
+	svc *auth.Service
 }
 
 func (a *Auth) login(c *gin.Context) {
