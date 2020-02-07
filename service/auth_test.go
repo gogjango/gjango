@@ -18,7 +18,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreate(t *testing.T) {
+func TestLogin(t *testing.T) {
 	cases := []struct {
 		name        string
 		req         string
