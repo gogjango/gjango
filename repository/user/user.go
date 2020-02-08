@@ -42,6 +42,7 @@ func (s *Service) View(c *gin.Context, id int) (*model.User, error) {
 	return s.userRepo.View(c, id)
 }
 
+// Update contains user's information used for updating
 type Update struct {
 	ID        int
 	FirstName *string
