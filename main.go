@@ -30,14 +30,14 @@ func main() {
 	defer log.Sync()
 
 	// setup routes
-	SetupV1Routes(db, log, jwt, r)
+	setupV1Routes(db, log, jwt, r)
 
 	// run with port from config
 	port := ":" + strconv.Itoa(c.Server.Port)
 	r.Run(port)
 }
 
-func SetupV1Routes(db *pg.DB, log *zap.Logger, jwt *mw.JWT, r *gin.Engine) {
+func setupV1Routes(db *pg.DB, log *zap.Logger, jwt *mw.JWT, r *gin.Engine) {
 	// database logic
 	userRepo := repository.NewUserRepo(db, log)
 	accountRepo := repository.NewAccountRepo(db, log)

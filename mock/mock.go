@@ -1,10 +1,37 @@
 package mock
 
-import "time"
+import (
+	"net/http/httptest"
+	"time"
+
+	"github.com/gin-gonic/gin"
+)
 
 // TestTime is used for testing time fields
 func TestTime(year int) time.Time {
 	return time.Date(year, time.May, 19, 1, 2, 3, 4, time.UTC)
+}
+
+// TestTimePtr is used for testing pointer time fields
+func TestTimePtr(year int) *time.Time {
+	t := time.Date(year, time.May, 19, 1, 2, 3, 4, time.UTC)
+	return &t
+}
+
+// Str2Ptr converts string to pointer
+func Str2Ptr(s string) *string {
+	return &s
+}
+
+// GinCtxWithKeys returns new gin context with keys
+func GinCtxWithKeys(keys []string, values ...interface{}) *gin.Context {
+	w := httptest.NewRecorder()
+	gin.SetMode(gin.TestMode)
+	c, _ := gin.CreateTestContext(w)
+	for i, k := range keys {
+		c.Set(k, values[i])
+	}
+	return c
 }
 
 // HeaderValid is used for jwt testing
