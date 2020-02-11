@@ -8,13 +8,12 @@ import (
 	"github.com/rs/xid"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
-	mw "github.com/calvinchengx/gin-go-pg/middleware"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // NewAuthService creates new auth service
-func NewAuthService(userRepo model.UserRepo, jwt *mw.JWT) *Service {
+func NewAuthService(userRepo model.UserRepo, jwt JWT) *Service {
 	return &Service{
 		userRepo: userRepo,
 		jwt:      jwt,
@@ -24,7 +23,12 @@ func NewAuthService(userRepo model.UserRepo, jwt *mw.JWT) *Service {
 // Service represents the auth application service
 type Service struct {
 	userRepo model.UserRepo
-	jwt      *mw.JWT
+	jwt      JWT
+}
+
+// JWT represents jwt interface
+type JWT interface {
+	GenerateToken(*model.User) (string, string, error)
 }
 
 // Authenticate tries to authenticate the user provided by username and password

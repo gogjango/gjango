@@ -22,7 +22,7 @@ go run .
 ## Tests and coverage
 
 ```bash
-go test -coverprofile c.out ./...
+go test -coverprofile cp.out ./...
 go tool cover -html=cp.out
 ```
 
