@@ -3,8 +3,8 @@ package middleware_test
 import (
 	"testing"
 
+	mw "github.com/calvinchengx/gin-go-pg/middleware"
 	"github.com/gin-gonic/gin"
-	"github.com/ribice/gorsk-gin/cmd/api/mw"
 )
 
 func TestAdd(t *testing.T) {
