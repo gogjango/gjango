@@ -7,11 +7,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
+	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/mock"
 	"github.com/calvinchengx/gin-go-pg/mock/mockdb"
 	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/repository/account"
+	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	"github.com/calvinchengx/gin-go-pg/service"
 	"github.com/gin-gonic/gin"
 
@@ -20,58 +22,49 @@ import (
 
 func TestLogin(t *testing.T) {
 	cases := []struct {
-		name        string
-		req         string
-		wantStatus  int
-		wantResp    *model.User
-		accountRepo *mockdb.Account
-		rbac        *mock.RBAC
+		name       string
+		req        string
+		wantStatus int
+		wantResp   *model.AuthToken
+		userRepo   *mockdb.User
+		jwt        *mock.JWT
 	}{
 		{
 			name:       "Invalid request",
-			req:        `{"first_name":"John","last_name":"Doe","username":"juzernejm","password":"hunter123","password_confirm":"hunter1234","email":"johndoe@gmail.com","company_id":1,"location_id":2,"role_id":3}`,
-			wantStatus: http.StatusBadRequest,
+			req:        `{"username":"juzernejm"}`,
+			wantStatus: http.StatusInternalServerError,
 		},
 		{
-			name: "Fail on userSvc",
-			req:  `{"first_name":"John","last_name":"Doe","username":"juzernejm","password":"hunter123","password_confirm":"hunter123","email":"johndoe@gmail.com","company_id":1,"location_id":2,"role_id":2}`,
-			rbac: &mock.RBAC{
-				AccountCreateFn: func(c *gin.Context, roleID, companyID, locationID int) bool {
-					return false
+			name:       "Fail on FindByUsername",
+			req:        `{"username":"juzernejm","password":"hunter123"}`,
+			wantStatus: http.StatusInternalServerError,
+			userRepo: &mockdb.User{
+				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+					return nil, apperr.DB
 				},
 			},
-			wantStatus: http.StatusForbidden,
 		},
 		{
-			name: "Success",
-			req:  `{"first_name":"John","last_name":"Doe","username":"juzernejm","password":"hunter123","password_confirm":"hunter123","email":"johndoe@gmail.com","company_id":1,"location_id":2,"role_id":2}`,
-			rbac: &mock.RBAC{
-				AccountCreateFn: func(c *gin.Context, roleID, companyID, locationID int) bool {
-					return true
+			name:       "Success",
+			req:        `{"username":"juzernejm","password":"hunter123"}`,
+			wantStatus: http.StatusOK,
+			userRepo: &mockdb.User{
+				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+					return &model.User{
+						Password: auth.HashPassword("hunter123"),
+						Active:   true,
+					}, nil
 				},
-			},
-			accountRepo: &mockdb.Account{
-				CreateFn: func(c context.Context, usr *model.User) error {
-					usr.ID = 1
-					usr.CreatedAt = mock.TestTime(2018)
-					usr.UpdatedAt = mock.TestTime(2018)
+				UpdateLoginFn: func(context.Context, *model.User) error {
 					return nil
 				},
 			},
-			wantResp: &model.User{
-				Base: model.Base{
-					ID:        1,
-					CreatedAt: mock.TestTime(2018),
-					UpdatedAt: mock.TestTime(2018),
+			jwt: &mock.JWT{
+				GenerateTokenFn: func(*model.User) (string, string, error) {
+					return "jwttokenstring", mock.TestTime(2018).Format(time.RFC3339), nil
 				},
-				FirstName:  "John",
-				LastName:   "Doe",
-				Username:   "juzernejm",
-				Email:      "johndoe@gmail.com",
-				CompanyID:  1,
-				LocationID: 2,
 			},
-			wantStatus: http.StatusOK,
+			wantResp: &model.AuthToken{Token: "jwttokenstring", Expires: mock.TestTime(2018).Format(time.RFC3339)},
 		},
 	}
 	gin.SetMode(gin.TestMode)
@@ -79,19 +72,85 @@ func TestLogin(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			rg := r.Group("/v1")
-			accountService := account.NewAccountService(nil, tt.accountRepo, tt.rbac)
-			service.AccountRouter(accountService, rg)
+			authService := auth.NewAuthService(tt.userRepo, tt.jwt)
+			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
-			path := ts.URL + "/v1/users"
+			path := ts.URL + "/login"
 			res, err := http.Post(path, "application/json", bytes.NewBufferString(tt.req))
 			if err != nil {
 				t.Fatal(err)
 			}
 			defer res.Body.Close()
 			if tt.wantResp != nil {
-				response := new(model.User)
+				response := new(model.AuthToken)
+				if err := json.NewDecoder(res.Body).Decode(response); err != nil {
+					t.Fatal(err)
+				}
+				tt.wantResp.RefreshToken = response.RefreshToken
+				assert.Equal(t, tt.wantResp, response)
+			}
+			assert.Equal(t, tt.wantStatus, res.StatusCode)
+		})
+	}
+}
+
+func TestRefresh(t *testing.T) {
+	cases := []struct {
+		name       string
+		req        string
+		wantStatus int
+		wantResp   *model.RefreshToken
+		userRepo   *mockdb.User
+		jwt        *mock.JWT
+	}{
+		{
+			name:       "Fail on FindByToken",
+			req:        "refreshtoken",
+			wantStatus: http.StatusInternalServerError,
+			userRepo: &mockdb.User{
+				FindByTokenFn: func(context.Context, string) (*model.User, error) {
+					return nil, apperr.DB
+				},
+			},
+		},
+		{
+			name:       "Success",
+			req:        "refreshtoken",
+			wantStatus: http.StatusOK,
+			userRepo: &mockdb.User{
+				FindByTokenFn: func(context.Context, string) (*model.User, error) {
+					return &model.User{
+						Username: "johndoe",
+						Active:   true,
+					}, nil
+				},
+			},
+			jwt: &mock.JWT{
+				GenerateTokenFn: func(*model.User) (string, string, error) {
+					return "jwttokenstring", mock.TestTime(2018).Format(time.RFC3339), nil
+				},
+			},
+			wantResp: &model.RefreshToken{Token: "jwttokenstring", Expires: mock.TestTime(2018).Format(time.RFC3339)},
+		},
+	}
+	gin.SetMode(gin.TestMode)
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			r := gin.New()
+			authService := auth.NewAuthService(tt.userRepo, tt.jwt)
+			service.AuthRouter(authService, r)
+			ts := httptest.NewServer(r)
+			defer ts.Close()
+			path := ts.URL + "/refresh/" + tt.req
+			res, err := http.Get(path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer res.Body.Close()
+			if tt.wantResp != nil {
+				response := new(model.RefreshToken)
 				if err := json.NewDecoder(res.Body).Decode(response); err != nil {
 					t.Fatal(err)
 				}
