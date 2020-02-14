@@ -7,16 +7,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Signup contains the user signup request
-type Signup struct {
-	Username        string `json:"username" binding:"required,min=3,alphanum"`
+// EmailSignup contains the user signup request
+type EmailSignup struct {
+	Email           string `json:"username" binding:"required,min=3,alphanum"`
 	Password        string `json:"password" binding:"required,min=8"`
 	PasswordConfirm string `json:"password_confirm" binding:"required"`
 }
 
 // AccountSignup validates user signup request
-func AccountSignup(c *gin.Context) (*Signup, error) {
-	var r Signup
+func AccountSignup(c *gin.Context) (*EmailSignup, error) {
+	var r EmailSignup
 	if err := c.ShouldBindJSON(&r); err != nil {
 		apperr.Response(c, err)
 		return nil, err

@@ -37,6 +37,7 @@ func (u *User) UpdateLastLogin() {
 type UserRepo interface {
 	View(context.Context, int) (*User, error)
 	FindByUsername(context.Context, string) (*User, error)
+	FindByEmail(context.Context, string) (*User, error)
 	FindByToken(context.Context, string) (*User, error)
 	UpdateLogin(context.Context, *User) error
 	List(context.Context, *ListQuery, *Pagination) ([]User, error)
