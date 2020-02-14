@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,17 +14,19 @@ import (
 )
 
 // NewAuthService creates new auth service
-func NewAuthService(userRepo model.UserRepo, jwt JWT) *Service {
+func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT) *Service {
 	return &Service{
-		userRepo: userRepo,
-		jwt:      jwt,
+		userRepo:    userRepo,
+		accountRepo: accountRepo,
+		jwt:         jwt,
 	}
 }
 
 // Service represents the auth application service
 type Service struct {
-	userRepo model.UserRepo
-	jwt      JWT
+	userRepo    model.UserRepo
+	accountRepo model.AccountRepo
+	jwt         JWT
 }
 
 // JWT represents jwt interface
@@ -91,6 +94,17 @@ func (s *Service) User(c *gin.Context) *model.AuthUser {
 		Email:      email,
 		Role:       model.AccessRole(role),
 	}
+}
+
+// Signup returns any error from creating a new user in our database
+func (s *Service) Signup(c *gin.Context) error {
+	username := c.GetString("username")
+	user, err := s.userRepo.FindByUsername(c, username)
+	if err == nil {
+		// no user will be created since it already exists
+		return errors.New("user exists")
+	}
+	return s.accountRepo.Create(c, user)
 }
 
 // HashPassword hashes the password using bcrypt

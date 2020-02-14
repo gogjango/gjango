@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Register contains registration request
-type Register struct {
+// RegisterAdmin contains admin registration request
+type RegisterAdmin struct {
 	FirstName       string `json:"first_name" binding:"required"`
 	LastName        string `json:"last_name" binding:"required"`
 	Username        string `json:"username" binding:"required,min=3,alphanum"`
@@ -23,8 +23,8 @@ type Register struct {
 }
 
 // AccountCreate validates account creation request
-func AccountCreate(c *gin.Context) (*Register, error) {
-	var r Register
+func AccountCreate(c *gin.Context) (*RegisterAdmin, error) {
+	var r RegisterAdmin
 	if err := c.ShouldBindJSON(&r); err != nil {
 		apperr.Response(c, err)
 		return nil, err

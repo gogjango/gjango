@@ -44,7 +44,7 @@ func setupV1Routes(db *pg.DB, log *zap.Logger, jwt *mw.JWT, r *gin.Engine) {
 	rbac := repository.NewRBACService(userRepo)
 
 	// service logic
-	authService := auth.NewAuthService(userRepo, jwt)
+	authService := auth.NewAuthService(userRepo, accountRepo, jwt)
 	accountService := account.NewAccountService(userRepo, accountRepo, rbac)
 	userService := user.NewUserService(userRepo, authService, rbac)
 

@@ -22,12 +22,13 @@ import (
 
 func TestLogin(t *testing.T) {
 	cases := []struct {
-		name       string
-		req        string
-		wantStatus int
-		wantResp   *model.AuthToken
-		userRepo   *mockdb.User
-		jwt        *mock.JWT
+		name        string
+		req         string
+		wantStatus  int
+		wantResp    *model.AuthToken
+		userRepo    *mockdb.User
+		accountRepo *mockdb.Account
+		jwt         *mock.JWT
 	}{
 		{
 			name:       "Invalid request",
@@ -72,7 +73,7 @@ func TestLogin(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			authService := auth.NewAuthService(tt.userRepo, tt.jwt)
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt)
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
@@ -97,12 +98,13 @@ func TestLogin(t *testing.T) {
 
 func TestRefresh(t *testing.T) {
 	cases := []struct {
-		name       string
-		req        string
-		wantStatus int
-		wantResp   *model.RefreshToken
-		userRepo   *mockdb.User
-		jwt        *mock.JWT
+		name        string
+		req         string
+		wantStatus  int
+		wantResp    *model.RefreshToken
+		userRepo    *mockdb.User
+		accountRepo *mockdb.Account
+		jwt         *mock.JWT
 	}{
 		{
 			name:       "Fail on FindByToken",
@@ -139,7 +141,7 @@ func TestRefresh(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			authService := auth.NewAuthService(tt.userRepo, tt.jwt)
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt)
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
