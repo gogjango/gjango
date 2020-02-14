@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
+	"github.com/calvinchengx/gin-go-pg/mail"
 	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	"github.com/calvinchengx/gin-go-pg/request"
 	"github.com/gin-gonic/gin"
@@ -45,7 +46,7 @@ func (a *Auth) refresh(c *gin.Context) {
 }
 
 func (a *Auth) signup(c *gin.Context) {
-	_, err := request.AccountSignup(c)
+	emailSignup, err := request.AccountSignup(c)
 	if err != nil {
 		return
 	}
@@ -54,5 +55,6 @@ func (a *Auth) signup(c *gin.Context) {
 		apperr.Response(c, err)
 		return
 	}
+	mail.DefaultSend("Verify Email", emailSignup.Email, "Please verify your email! :-)")
 	c.Status(http.StatusCreated)
 }

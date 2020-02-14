@@ -3,6 +3,7 @@ package mail
 import (
 	"os"
 
+	"github.com/calvinchengx/gin-go-pg/config"
 	"github.com/sendgrid/sendgrid-go"
 	m "github.com/sendgrid/sendgrid-go/helpers/mail"
 )
@@ -19,4 +20,10 @@ func Send(subject string, fromName string, fromEmail string, toName string, toEm
 		return err
 	}
 	return nil
+}
+
+// DefaultSend assumes some defaults for sending out email with sendgrid
+func DefaultSend(subject, toEmail, content string) {
+	c := config.GetMailConfig()
+	Send(subject, c.Name, c.Email, toEmail, toEmail, content)
 }
