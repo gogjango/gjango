@@ -75,3 +75,24 @@ func (a *AccountRepo) ChangePassword(c context.Context, u *model.User) error {
 	}
 	return err
 }
+
+// FindVerificationToken retrieves an existing verification token
+func (a *AccountRepo) FindVerificationToken(c context.Context, token string) (*model.Verification, error) {
+	var v = new(model.Verification)
+	sql := `SELECT * FROM verifications WHERE (token = ? and deleted_at IS NULL)`
+	_, err := a.db.QueryOne(v, sql, token)
+	if err != nil {
+		a.log.Warn("AccountRepo Error", zap.String("Error:", err.Error()))
+		return nil, apperr.NotFound
+	}
+	return v, nil
+}
+
+// DeleteVerificationToken sets deleted_at for an existing verification token
+func (a *AccountRepo) DeleteVerificationToken(c context.Context, v *model.Verification) error {
+	_, err := a.db.Model(v).Column("deleted_at").WherePK().Update()
+	if err != nil {
+		a.log.Warn("AccountRepo Error", zap.Error(err))
+	}
+	return err
+}
