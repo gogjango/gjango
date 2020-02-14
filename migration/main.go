@@ -47,7 +47,7 @@ func main() {
 	createDatabaseIfNotExist(dbSuper, p)
 
 	if flag.Arg(0) == "create_schema" {
-		createSchema(db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{})
+		createSchema(db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{}, &model.Verification{})
 		os.Exit(2)
 	}
 
