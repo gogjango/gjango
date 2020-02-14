@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
+	"github.com/calvinchengx/gin-go-pg/mail"
 	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	"github.com/calvinchengx/gin-go-pg/request"
 	"github.com/gin-gonic/gin"
@@ -12,6 +13,7 @@ import (
 // AuthRouter creates new auth http service
 func AuthRouter(svc *auth.Service, r *gin.Engine) {
 	a := Auth{svc}
+	r.POST("/signup", a.signup)
 	r.POST("/login", a.login)
 	r.GET("/refresh/:token", a.refresh)
 }
@@ -41,4 +43,18 @@ func (a *Auth) refresh(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, r)
+}
+
+func (a *Auth) signup(c *gin.Context) {
+	emailSignup, err := request.AccountSignup(c)
+	if err != nil {
+		return
+	}
+	err = a.svc.Signup(c)
+	if err != nil {
+		apperr.Response(c, err)
+		return
+	}
+	mail.DefaultSend("Verify Email", emailSignup.Email, "Please verify your email! :-)")
+	c.Status(http.StatusCreated)
 }

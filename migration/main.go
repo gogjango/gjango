@@ -20,8 +20,8 @@ const usageText = `This program runs command on the db. Supported commands are:
   - down - reverts last migration.
   - reset - reverts all migrations.
   - version - prints current db version.
-	- set_version [version] - sets db version without running migrations.
-	- create_schema [version] - creates initial set of tables from models (structs).
+  - set_version [version] - sets db version without running migrations.
+  - create_schema [version] - creates initial set of tables from models (structs).
 Usage:
   go run *.go <command> [args]
 `
@@ -47,7 +47,7 @@ func main() {
 	createDatabaseIfNotExist(dbSuper, p)
 
 	if flag.Arg(0) == "create_schema" {
-		createSchema(db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{})
+		createSchema(db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{}, &model.Verification{})
 		os.Exit(2)
 	}
 
