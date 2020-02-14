@@ -20,8 +20,8 @@ const usageText = `This program runs command on the db. Supported commands are:
   - down - reverts last migration.
   - reset - reverts all migrations.
   - version - prints current db version.
-	- set_version [version] - sets db version without running migrations.
-	- create_schema [version] - creates initial set of tables from models (structs).
+  - set_version [version] - sets db version without running migrations.
+  - create_schema [version] - creates initial set of tables from models (structs).
 Usage:
   go run *.go <command> [args]
 `
