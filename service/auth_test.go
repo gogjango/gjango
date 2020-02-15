@@ -29,6 +29,7 @@ func TestLogin(t *testing.T) {
 		userRepo    *mockdb.User
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
+		m           *mock.Mail
 	}{
 		{
 			name:       "Invalid request",
@@ -73,7 +74,7 @@ func TestLogin(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt)
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
@@ -105,6 +106,7 @@ func TestRefresh(t *testing.T) {
 		userRepo    *mockdb.User
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
+		m           *mock.Mail
 	}{
 		{
 			name:       "Fail on FindByToken",
@@ -141,7 +143,7 @@ func TestRefresh(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt)
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
@@ -159,6 +161,32 @@ func TestRefresh(t *testing.T) {
 				assert.Equal(t, tt.wantResp, response)
 			}
 			assert.Equal(t, tt.wantStatus, res.StatusCode)
+		})
+	}
+}
+
+func TestSignup(t *testing.T) {
+	cases := []struct {
+		name        string
+		userRepo    *mockdb.User
+		accountRepo *mockdb.Account
+		jwt         *mock.JWT
+		m           *mock.Mail
+	}{
+		{
+			name: "Success",
+		},
+	}
+
+	gin.SetMode(gin.TestMode)
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			r := gin.New()
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
+			service.AuthRouter(authService, r)
+			ts := httptest.NewServer(r)
+			defer ts.Close()
 		})
 	}
 }
