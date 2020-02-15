@@ -18,6 +18,7 @@ require (
 	github.com/ribice/gorsk-gin v0.0.0-20190118073939-555e775d6528
 	github.com/robinjoseph08/go-pg-migrations/v2 v2.0.1
 	github.com/rs/xid v1.2.1
+	github.com/satori/go.uuid v1.2.0
 	github.com/sendgrid/rest v2.4.1+incompatible // indirect
 	github.com/sendgrid/sendgrid-go v3.5.0+incompatible
 	github.com/stretchr/testify v1.4.0

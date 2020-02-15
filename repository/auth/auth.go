@@ -78,6 +78,19 @@ func (s *Service) Refresh(c context.Context, token string) (*model.RefreshToken,
 	}, nil
 }
 
+// Verify verifies the (verification) token and deletes it
+func (s *Service) Verify(c context.Context, token string) error {
+	v, err := s.accountRepo.FindVerificationToken(c, token)
+	if err != nil {
+		return err
+	}
+	err = s.accountRepo.DeleteVerificationToken(c, v)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // User returns user data stored in jwt token
 func (s *Service) User(c *gin.Context) *model.AuthUser {
 	id := c.GetInt("id")

@@ -16,6 +16,7 @@ func AuthRouter(svc *auth.Service, r *gin.Engine) {
 	r.POST("/signup", a.signup)
 	r.POST("/login", a.login)
 	r.GET("/refresh/:token", a.refresh)
+	r.GET("/verification/:token", a.verify)
 }
 
 // Auth represents auth http service
@@ -57,4 +58,14 @@ func (a *Auth) signup(c *gin.Context) {
 	}
 	mail.DefaultSend("Verify Email", emailSignup.Email, "Please verify your email! :-)")
 	c.Status(http.StatusCreated)
+}
+
+func (a *Auth) verify(c *gin.Context) {
+	token := c.Param("token")
+	err := a.svc.Verify(c, token)
+	if err != nil {
+		apperr.Response(c, err)
+		return
+	}
+	c.Status(http.StatusOK)
 }

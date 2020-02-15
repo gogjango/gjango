@@ -49,6 +49,8 @@ type UserRepo interface {
 type AccountRepo interface {
 	Create(context.Context, *User) error
 	ChangePassword(context.Context, *User) error
+	FindVerificationToken(context.Context, string) (*Verification, error)
+	DeleteVerificationToken(context.Context, *Verification) error
 }
 
 // AuthUser represents data stored in JWT token for user
