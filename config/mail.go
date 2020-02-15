@@ -12,7 +12,7 @@ type MailConfig struct {
 	Email string `env:"DEFAULT_EMAIL"`
 }
 
-// GetMailConfig returns a PostgresConfig pointer with the correct Postgres Config values
+// GetMailConfig returns a MailConfig pointer with the correct Mail Config values
 func GetMailConfig() *MailConfig {
 	c := MailConfig{}
 	if err := env.Parse(&c); err != nil {

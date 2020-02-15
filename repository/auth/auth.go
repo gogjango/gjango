@@ -110,14 +110,14 @@ func (s *Service) User(c *gin.Context) *model.AuthUser {
 }
 
 // Signup returns any error from creating a new user in our database
-func (s *Service) Signup(c *gin.Context) error {
+func (s *Service) Signup(c *gin.Context) (*model.Verification, error) {
 	username := c.GetString("username")
 	user, err := s.userRepo.FindByUsername(c, username)
 	if err == nil {
 		// no user will be created since it already exists
-		return errors.New("user exists")
+		return nil, errors.New("user exists")
 	}
-	return s.accountRepo.Create(c, user)
+	return s.accountRepo.CreateAndVerify(c, user)
 }
 
 // HashPassword hashes the password using bcrypt

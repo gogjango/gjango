@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/calvinchengx/gin-go-pg/config"
+	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/sendgrid/sendgrid-go"
 	m "github.com/sendgrid/sendgrid-go/helpers/mail"
 )
@@ -22,8 +23,24 @@ func Send(subject string, fromName string, fromEmail string, toName string, toEm
 	return nil
 }
 
-// DefaultSend assumes some defaults for sending out email with sendgrid
-func DefaultSend(subject, toEmail, content string) {
+// SendWithDefaults assumes some defaults for sending out email with sendgrid
+func SendWithDefaults(subject, toEmail, content string) error {
 	c := config.GetMailConfig()
-	Send(subject, c.Name, c.Email, toEmail, toEmail, content)
+	err := Send(subject, c.Name, c.Email, toEmail, toEmail, content)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// SendVerificationEmail assumes defaults and generates a verification email
+func SendVerificationEmail(toEmail string, v *model.Verification) error {
+	c := config.GetSiteConfig()
+	url := c.ExternalURL + "/verification/" + v.Token
+	content := "Click on this to verify your account " + url
+	err := SendWithDefaults("Verification Email", toEmail, content)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -51,12 +51,16 @@ func (a *Auth) signup(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	err = a.svc.Signup(c)
+	v, err := a.svc.Signup(c)
 	if err != nil {
 		apperr.Response(c, err)
 		return
 	}
-	mail.DefaultSend("Verify Email", emailSignup.Email, "Please verify your email! :-)")
+	err = mail.SendVerificationEmail(emailSignup.Email, v)
+	if err != nil {
+		apperr.Response(c, err)
+		return
+	}
 	c.Status(http.StatusCreated)
 }
 
