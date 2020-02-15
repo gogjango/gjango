@@ -14,11 +14,12 @@ import (
 )
 
 // NewAuthService creates new auth service
-func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT) *Service {
+func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT, m Mail) *Service {
 	return &Service{
 		userRepo:    userRepo,
 		accountRepo: accountRepo,
 		jwt:         jwt,
+		m:           m,
 	}
 }
 
@@ -27,11 +28,17 @@ type Service struct {
 	userRepo    model.UserRepo
 	accountRepo model.AccountRepo
 	jwt         JWT
+	m           Mail
 }
 
 // JWT represents jwt interface
 type JWT interface {
 	GenerateToken(*model.User) (string, string, error)
+}
+
+// Mail represents mail interface
+type Mail interface {
+	SendVerificationEmail(string, *model.Verification) error
 }
 
 // Authenticate tries to authenticate the user provided by username and password
@@ -110,14 +117,23 @@ func (s *Service) User(c *gin.Context) *model.AuthUser {
 }
 
 // Signup returns any error from creating a new user in our database
-func (s *Service) Signup(c *gin.Context) (*model.Verification, error) {
+func (s *Service) Signup(c *gin.Context, email string) error {
 	username := c.GetString("username")
 	user, err := s.userRepo.FindByUsername(c, username)
 	if err == nil {
 		// no user will be created since it already exists
-		return nil, errors.New("user exists")
+		return errors.New("user exists")
 	}
-	return s.accountRepo.CreateAndVerify(c, user)
+	v, err := s.accountRepo.CreateAndVerify(c, user)
+	if err != nil {
+		return err
+	}
+	err = s.m.SendVerificationEmail(user.Email, v)
+	if err != nil {
+		apperr.Response(c, err)
+		return err
+	}
+	return nil
 }
 
 // HashPassword hashes the password using bcrypt
