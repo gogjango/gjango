@@ -42,16 +42,16 @@ func (a *AccountRepo) Create(c context.Context, u *model.User) error {
 
 // CreateAndVerify creates a new user in our database, and generates a verification token.
 // User active being false until after verification.
-func (a *AccountRepo) CreateAndVerify(c context.Context, u *model.User) error {
+func (a *AccountRepo) CreateAndVerify(c context.Context, u *model.User) (*model.Verification, error) {
 	user := new(model.User)
 	fmt.Println(user.Active)
 	res, err := a.db.Query(user, "SELECT id FROM users WHERE username = ? or email = ? AND deleted_at IS NULL", u.Username, u.Email)
 	if err != nil {
 		a.log.Error("AccountRepo Error: ", zap.Error(err))
-		return apperr.DB
+		return nil, apperr.DB
 	}
 	if res.RowsReturned() != 0 {
-		return apperr.New(http.StatusBadRequest, "Username or email already exists.")
+		return nil, apperr.New(http.StatusBadRequest, "Username or email already exists.")
 	}
 
 	if err := a.db.Insert(u); err != nil {
@@ -64,7 +64,7 @@ func (a *AccountRepo) CreateAndVerify(c context.Context, u *model.User) error {
 	if err := a.db.Insert(v); err != nil {
 		a.log.Warn("AccountRepo error: ", zap.Error(err))
 	}
-	return nil
+	return v, nil
 }
 
 // ChangePassword changes user's password
