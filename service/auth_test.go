@@ -296,6 +296,35 @@ func TestVerification(t *testing.T) {
 				},
 			},
 		},
+		{
+			name:       "Failed",
+			req:        "some-random-verification-token",
+			wantStatus: http.StatusNotFound,
+			accountRepo: &mockdb.Account{
+				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+					return nil, apperr.NotFound
+				},
+				// DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
+				// 	return nil
+				// },
+			},
+		},
+		{
+			name:       "Failed",
+			req:        "some-random-verification-token",
+			wantStatus: http.StatusInternalServerError,
+			accountRepo: &mockdb.Account{
+				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+				DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
+					return apperr.DB
+				},
+			},
+		},
 	}
 
 	gin.SetMode(gin.TestMode)
