@@ -106,6 +106,13 @@ func (s *Service) Verify(c context.Context, token string) error {
 	return nil
 }
 
+// VerifyMobile verifies the mobile verification code, i.e. (6-digit) code
+func (s *Service) VerifyMobile(c context.Context, code string) error {
+	// send code to twilio
+	// if it code is approved, make user active
+	return nil
+}
+
 // User returns user data stored in jwt token
 func (s *Service) User(c *gin.Context) *model.AuthUser {
 	id := c.GetInt("id")
