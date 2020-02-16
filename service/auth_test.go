@@ -269,3 +269,52 @@ func TestSignup(t *testing.T) {
 		})
 	}
 }
+
+func TestVerification(t *testing.T) {
+	cases := []struct {
+		name        string
+		req         string
+		wantStatus  int
+		userRepo    *mockdb.User
+		accountRepo *mockdb.Account
+		jwt         *mock.JWT
+		m           *mock.Mail
+	}{
+		{
+			name:       "Success",
+			req:        "some-random-verification-token",
+			wantStatus: http.StatusOK,
+			accountRepo: &mockdb.Account{
+				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+				DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
+					return nil
+				},
+			},
+		},
+	}
+
+	gin.SetMode(gin.TestMode)
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			r := gin.New()
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
+			service.AuthRouter(authService, r)
+			ts := httptest.NewServer(r)
+			defer ts.Close()
+
+			path := ts.URL + "/verification/" + tt.req
+			res, err := http.Get(path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer res.Body.Close()
+			assert.Equal(t, tt.wantStatus, res.StatusCode)
+		})
+	}
+}
