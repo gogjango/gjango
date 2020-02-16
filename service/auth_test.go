@@ -169,14 +169,34 @@ func TestSignup(t *testing.T) {
 	cases := []struct {
 		name        string
 		req         string
+		wantStatus  int
 		userRepo    *mockdb.User
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
 		m           *mock.Mail
 	}{
 		{
-			name: "Success",
-			req:  `{"email":"juzernejm","password":"hunter123","passwordConfirm":"hunter123"}`,
+			name:       "Success",
+			req:        `{"email":"juzernejm","password":"hunter123","password_confirm":"hunter123"}`,
+			wantStatus: http.StatusCreated,
+			userRepo: &mockdb.User{ // no such user, so create
+				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+					return nil, apperr.DB
+				},
+			},
+			accountRepo: &mockdb.Account{
+				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+			},
+			m: &mock.Mail{
+				SendVerificationEmailFn: func(string, *model.Verification) error {
+					return nil
+				},
+			},
 		},
 	}
 
@@ -196,6 +216,7 @@ func TestSignup(t *testing.T) {
 				t.Fatal(err)
 			}
 			defer res.Body.Close()
+			assert.Equal(t, tt.wantStatus, res.StatusCode)
 		})
 	}
 }

@@ -50,7 +50,7 @@ func (a *Auth) signup(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	err = a.svc.Signup(c, e.Email)
+	err = a.svc.Signup(c, e)
 	if err != nil {
 		apperr.Response(c, err)
 		return
