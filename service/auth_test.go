@@ -168,6 +168,7 @@ func TestRefresh(t *testing.T) {
 func TestSignup(t *testing.T) {
 	cases := []struct {
 		name        string
+		req         string
 		userRepo    *mockdb.User
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
@@ -175,6 +176,7 @@ func TestSignup(t *testing.T) {
 	}{
 		{
 			name: "Success",
+			req:  `{"email":"juzernejm","password":"hunter123","passwordConfirm":"hunter123"}`,
 		},
 	}
 
@@ -187,6 +189,13 @@ func TestSignup(t *testing.T) {
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
+			// signup
+			path := ts.URL + "/signup"
+			res, err := http.Post(path, "application/json", bytes.NewBufferString(tt.req))
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer res.Body.Close()
 		})
 	}
 }
