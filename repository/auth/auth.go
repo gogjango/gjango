@@ -47,6 +47,7 @@ type Mail interface {
 // Mobile represents mobile interface
 type Mobile interface {
 	GenerateSMSToken(string, string) error
+	CheckCode(string, string, string) error
 }
 
 // Authenticate tries to authenticate the user provided by username and password
