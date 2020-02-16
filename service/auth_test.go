@@ -198,6 +198,55 @@ func TestSignup(t *testing.T) {
 				},
 			},
 		},
+		{
+			name:       "Failure because no password",
+			req:        `{"email":"calvin","password":"","password_confirm":""}`,
+			wantStatus: http.StatusInternalServerError,
+			userRepo: &mockdb.User{ // no such user, so create
+				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+					return nil, apperr.DB
+				},
+			},
+			accountRepo: &mockdb.Account{
+				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+			},
+			m: &mock.Mail{
+				SendVerificationEmailFn: func(string, *model.Verification) error {
+					return nil
+				},
+			},
+		},
+		{
+			name:       "Failure because user already exists",
+			req:        `{"email":"calvin","password":"whatever123","password_confirm":"whatever123"}`,
+			wantStatus: http.StatusInternalServerError,
+			userRepo: &mockdb.User{ // user already exists
+				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+					return &model.User{
+						Username: "calvin",
+						Active:   true,
+					}, nil
+				},
+			},
+			accountRepo: &mockdb.Account{
+				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+			},
+			m: &mock.Mail{
+				SendVerificationEmailFn: func(string, *model.Verification) error {
+					return nil
+				},
+			},
+		},
 	}
 
 	gin.SetMode(gin.TestMode)
