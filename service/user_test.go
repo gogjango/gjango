@@ -363,7 +363,7 @@ func TestUpdateUser(t *testing.T) {
 						LastName:  "Doe",
 						Username:  "JohnDoe",
 						Address:   "Work",
-						Phone:     "332223",
+						Mobile:    "332223",
 					}, nil
 				},
 				UpdateFn: func(c context.Context, usr *model.User) (*model.User, error) {
@@ -382,7 +382,6 @@ func TestUpdateUser(t *testing.T) {
 				FirstName: "jj",
 				LastName:  "okocha",
 				Username:  "JohnDoe",
-				Phone:     "321321",
 				Address:   "home",
 				Mobile:    "991991",
 			},

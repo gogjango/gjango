@@ -22,8 +22,8 @@ go run .
 ## Tests and coverage
 
 ```bash
-go test -coverprofile cp.out ./...
-go tool cover -html=cp.out
+go test -coverprofile c.out ./...
+go tool cover -html=c.out
 ```
 
 ## Schema migration

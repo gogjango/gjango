@@ -10,6 +10,7 @@ import (
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/calvinchengx/gin-go-pg/request"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -117,18 +118,17 @@ func (s *Service) User(c *gin.Context) *model.AuthUser {
 }
 
 // Signup returns any error from creating a new user in our database
-func (s *Service) Signup(c *gin.Context, email string) error {
-	username := c.GetString("username")
-	user, err := s.userRepo.FindByUsername(c, username)
+func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
+	_, err := s.userRepo.FindByEmail(c, e.Email)
 	if err == nil {
 		// no user will be created since it already exists
 		return errors.New("user exists")
 	}
-	v, err := s.accountRepo.CreateAndVerify(c, user)
+	v, err := s.accountRepo.CreateAndVerify(c, &model.User{Email: e.Email, Password: e.Password})
 	if err != nil {
 		return err
 	}
-	err = s.m.SendVerificationEmail(user.Email, v)
+	err = s.m.SendVerificationEmail(e.Email, v)
 	if err != nil {
 		apperr.Response(c, err)
 		return err

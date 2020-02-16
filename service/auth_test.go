@@ -168,13 +168,84 @@ func TestRefresh(t *testing.T) {
 func TestSignup(t *testing.T) {
 	cases := []struct {
 		name        string
+		req         string
+		wantStatus  int
 		userRepo    *mockdb.User
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
 		m           *mock.Mail
 	}{
 		{
-			name: "Success",
+			name:       "Success",
+			req:        `{"email":"juzernejm","password":"hunter123","password_confirm":"hunter123"}`,
+			wantStatus: http.StatusCreated,
+			userRepo: &mockdb.User{ // no such user, so create
+				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+					return nil, apperr.DB
+				},
+			},
+			accountRepo: &mockdb.Account{
+				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+			},
+			m: &mock.Mail{
+				SendVerificationEmailFn: func(string, *model.Verification) error {
+					return nil
+				},
+			},
+		},
+		{
+			name:       "Failure because no password",
+			req:        `{"email":"calvin","password":"","password_confirm":""}`,
+			wantStatus: http.StatusInternalServerError,
+			userRepo: &mockdb.User{ // no such user, so create
+				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+					return nil, apperr.DB
+				},
+			},
+			accountRepo: &mockdb.Account{
+				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+			},
+			m: &mock.Mail{
+				SendVerificationEmailFn: func(string, *model.Verification) error {
+					return nil
+				},
+			},
+		},
+		{
+			name:       "Failure because user already exists",
+			req:        `{"email":"calvin","password":"whatever123","password_confirm":"whatever123"}`,
+			wantStatus: http.StatusInternalServerError,
+			userRepo: &mockdb.User{ // user already exists
+				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+					return &model.User{
+						Username: "calvin",
+						Active:   true,
+					}, nil
+				},
+			},
+			accountRepo: &mockdb.Account{
+				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+			},
+			m: &mock.Mail{
+				SendVerificationEmailFn: func(string, *model.Verification) error {
+					return nil
+				},
+			},
 		},
 	}
 
@@ -187,6 +258,92 @@ func TestSignup(t *testing.T) {
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
+			// signup
+			path := ts.URL + "/signup"
+			res, err := http.Post(path, "application/json", bytes.NewBufferString(tt.req))
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer res.Body.Close()
+			assert.Equal(t, tt.wantStatus, res.StatusCode)
+		})
+	}
+}
+
+func TestVerification(t *testing.T) {
+	cases := []struct {
+		name        string
+		req         string
+		wantStatus  int
+		userRepo    *mockdb.User
+		accountRepo *mockdb.Account
+		jwt         *mock.JWT
+		m           *mock.Mail
+	}{
+		{
+			name:       "Success",
+			req:        "some-random-verification-token",
+			wantStatus: http.StatusOK,
+			accountRepo: &mockdb.Account{
+				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+				DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
+					return nil
+				},
+			},
+		},
+		{
+			name:       "Failed",
+			req:        "some-random-verification-token",
+			wantStatus: http.StatusNotFound,
+			accountRepo: &mockdb.Account{
+				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+					return nil, apperr.NotFound
+				},
+				// DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
+				// 	return nil
+				// },
+			},
+		},
+		{
+			name:       "Failed",
+			req:        "some-random-verification-token",
+			wantStatus: http.StatusInternalServerError,
+			accountRepo: &mockdb.Account{
+				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+					return &model.Verification{
+						Token:  "some-random-token-for-verification",
+						UserID: 1,
+					}, nil
+				},
+				DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
+					return apperr.DB
+				},
+			},
+		},
+	}
+
+	gin.SetMode(gin.TestMode)
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			r := gin.New()
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
+			service.AuthRouter(authService, r)
+			ts := httptest.NewServer(r)
+			defer ts.Close()
+
+			path := ts.URL + "/verification/" + tt.req
+			res, err := http.Get(path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer res.Body.Close()
+			assert.Equal(t, tt.wantStatus, res.StatusCode)
 		})
 	}
 }

@@ -9,7 +9,7 @@ import (
 
 // EmailSignup contains the user signup request
 type EmailSignup struct {
-	Email           string `json:"username" binding:"required,min=3,alphanum"`
+	Email           string `json:"email" binding:"required,min=3,alphanum"`
 	Password        string `json:"password" binding:"required,min=8"`
 	PasswordConfirm string `json:"password_confirm" binding:"required"`
 }

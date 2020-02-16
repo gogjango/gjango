@@ -93,6 +93,7 @@ func (a *AccountRepo) DeleteVerificationToken(c context.Context, v *model.Verifi
 	_, err := a.db.Model(v).Column("deleted_at").WherePK().Update()
 	if err != nil {
 		a.log.Warn("AccountRepo Error", zap.Error(err))
+		return apperr.DB
 	}
 	return err
 }
