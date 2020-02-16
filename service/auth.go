@@ -12,6 +12,7 @@ import (
 // AuthRouter creates new auth http service
 func AuthRouter(svc *auth.Service, r *gin.Engine) {
 	a := Auth{svc}
+	r.POST("/signup/m", a.signupm)
 	r.POST("/signup", a.signup)
 	r.POST("/login", a.login)
 	r.GET("/refresh/:token", a.refresh)
@@ -48,6 +49,7 @@ func (a *Auth) refresh(c *gin.Context) {
 func (a *Auth) signup(c *gin.Context) {
 	e, err := request.AccountSignup(c)
 	if err != nil {
+		apperr.Response(c, err)
 		return
 	}
 	err = a.svc.Signup(c, e)
@@ -66,4 +68,14 @@ func (a *Auth) verify(c *gin.Context) {
 		return
 	}
 	c.Status(http.StatusOK)
+}
+
+func (a *Auth) signupm(c *gin.Context) {
+	m, err := request.AccountSignupMobile(c)
+	if err != nil {
+		apperr.Response(c, err)
+		return
+	}
+	err = a.svc.SignupMobile(c, m)
+	c.Status(http.StatusCreated)
 }

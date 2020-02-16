@@ -6,6 +6,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/config"
 	"github.com/calvinchengx/gin-go-pg/mail"
 	mw "github.com/calvinchengx/gin-go-pg/middleware"
+	"github.com/calvinchengx/gin-go-pg/mobile"
 	"github.com/calvinchengx/gin-go-pg/repository"
 	"github.com/calvinchengx/gin-go-pg/repository/account"
 	"github.com/calvinchengx/gin-go-pg/repository/auth"
@@ -27,35 +28,47 @@ func main() {
 	c, _ := config.Load("dev")
 	jwt := mw.NewJWT(c.JWT)
 	m := mail.NewMail(config.GetMailConfig(), config.GetSiteConfig())
+	mobile := mobile.NewMobile(config.GetTwilioConfig())
 	db := config.GetConnection()
 	log, _ := zap.NewDevelopment()
 	defer log.Sync()
 
 	// setup routes
-	setupV1Routes(db, log, jwt, m, r)
+	rs := &RouteServices{db, log, jwt, m, mobile, r}
+	rs.setupV1Routes()
 
 	// run with port from config
 	port := ":" + strconv.Itoa(c.Server.Port)
 	r.Run(port)
 }
 
-func setupV1Routes(db *pg.DB, log *zap.Logger, jwt *mw.JWT, m *mail.Mail, r *gin.Engine) {
+// RouteServices lets us bind specific services when setting up routes
+type RouteServices struct {
+	db     *pg.DB
+	log    *zap.Logger
+	jwt    *mw.JWT
+	m      *mail.Mail
+	mobile *mobile.Mobile
+	r      *gin.Engine
+}
+
+func (s *RouteServices) setupV1Routes() {
 	// database logic
-	userRepo := repository.NewUserRepo(db, log)
-	accountRepo := repository.NewAccountRepo(db, log)
+	userRepo := repository.NewUserRepo(s.db, s.log)
+	accountRepo := repository.NewAccountRepo(s.db, s.log)
 	rbac := repository.NewRBACService(userRepo)
 
 	// service logic
-	authService := auth.NewAuthService(userRepo, accountRepo, jwt, m)
+	authService := auth.NewAuthService(userRepo, accountRepo, s.jwt, s.m, s.mobile)
 	accountService := account.NewAccountService(userRepo, accountRepo, rbac)
 	userService := user.NewUserService(userRepo, authService, rbac)
 
 	// no prefix, no jwt
-	service.AuthRouter(authService, r)
+	service.AuthRouter(authService, s.r)
 
 	// prefixed with /v1 and protected by jwt
-	v1Router := r.Group("/v1")
-	v1Router.Use(jwt.MWFunc())
+	v1Router := s.r.Group("/v1")
+	v1Router.Use(s.jwt.MWFunc())
 	service.AccountRouter(accountService, v1Router)
 	service.UserRouter(userService, v1Router)
 }

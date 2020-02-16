@@ -15,12 +15,13 @@ import (
 )
 
 // NewAuthService creates new auth service
-func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT, m Mail) *Service {
+func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT, mail Mail, mobile Mobile) *Service {
 	return &Service{
 		userRepo:    userRepo,
 		accountRepo: accountRepo,
 		jwt:         jwt,
-		m:           m,
+		mail:        mail,
+		mobile:      mobile,
 	}
 }
 
@@ -29,7 +30,8 @@ type Service struct {
 	userRepo    model.UserRepo
 	accountRepo model.AccountRepo
 	jwt         JWT
-	m           Mail
+	mail        Mail
+	mobile      Mobile
 }
 
 // JWT represents jwt interface
@@ -40,6 +42,11 @@ type JWT interface {
 // Mail represents mail interface
 type Mail interface {
 	SendVerificationEmail(string, *model.Verification) error
+}
+
+// Mobile represents mobile interface
+type Mobile interface {
+	GenerateSMSToken(string, string) error
 }
 
 // Authenticate tries to authenticate the user provided by username and password
@@ -128,11 +135,19 @@ func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 	if err != nil {
 		return err
 	}
-	err = s.m.SendVerificationEmail(e.Email, v)
+	err = s.mail.SendVerificationEmail(e.Email, v)
 	if err != nil {
 		apperr.Response(c, err)
 		return err
 	}
+	return nil
+}
+
+// SignupMobile returns any error from creating a new user in our database with a mobile number
+func (s *Service) SignupMobile(c *gin.Context, m *request.MobileSignup) error {
+	// find by countryCode and mobile
+	// create and verify
+	// generate sms token
 	return nil
 }
 
