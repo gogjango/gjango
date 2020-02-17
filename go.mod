@@ -15,7 +15,6 @@ require (
 	github.com/gogf/gf v1.11.4 // indirect
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
-	github.com/ribice/gorsk-gin v0.0.0-20190118073939-555e775d6528
 	github.com/robinjoseph08/go-pg-migrations/v2 v2.0.1
 	github.com/rs/xid v1.2.1
 	github.com/satori/go.uuid v1.2.0

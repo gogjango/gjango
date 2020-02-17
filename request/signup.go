@@ -28,3 +28,19 @@ func AccountSignup(c *gin.Context) (*EmailSignup, error) {
 	}
 	return &r, nil
 }
+
+// MobileSignup contains the user signup request with a mobile number
+type MobileSignup struct {
+	CountryCode string `json:"country_code" binding:"required,min=2"`
+	Mobile      string `json:"mobile" binding:"required"`
+}
+
+// AccountSignupMobile validates user signup request via mobile
+func AccountSignupMobile(c *gin.Context) (*MobileSignup, error) {
+	var r MobileSignup
+	if err := c.ShouldBindJSON(&r); err != nil {
+		apperr.Response(c, err)
+		return nil, err
+	}
+	return &r, nil
+}

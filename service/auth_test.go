@@ -30,6 +30,7 @@ func TestLogin(t *testing.T) {
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
 		m           *mock.Mail
+		mobile      *mock.Mobile
 	}{
 		{
 			name:       "Invalid request",
@@ -74,7 +75,7 @@ func TestLogin(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m, tt.mobile)
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
@@ -107,6 +108,7 @@ func TestRefresh(t *testing.T) {
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
 		m           *mock.Mail
+		mobile      *mock.Mobile
 	}{
 		{
 			name:       "Fail on FindByToken",
@@ -143,7 +145,7 @@ func TestRefresh(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m, tt.mobile)
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
@@ -174,13 +176,14 @@ func TestSignup(t *testing.T) {
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
 		m           *mock.Mail
+		mobile      *mock.Mobile
 	}{
 		{
 			name:       "Success",
 			req:        `{"email":"juzernejm","password":"hunter123","password_confirm":"hunter123"}`,
 			wantStatus: http.StatusCreated,
 			userRepo: &mockdb.User{ // no such user, so create
-				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+				FindByEmailFn: func(context.Context, string) (*model.User, error) {
 					return nil, apperr.DB
 				},
 			},
@@ -224,9 +227,9 @@ func TestSignup(t *testing.T) {
 		{
 			name:       "Failure because user already exists",
 			req:        `{"email":"calvin","password":"whatever123","password_confirm":"whatever123"}`,
-			wantStatus: http.StatusInternalServerError,
+			wantStatus: http.StatusConflict,
 			userRepo: &mockdb.User{ // user already exists
-				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+				FindByEmailFn: func(context.Context, string) (*model.User, error) {
 					return &model.User{
 						Username: "calvin",
 						Active:   true,
@@ -254,7 +257,7 @@ func TestSignup(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m, tt.mobile)
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
@@ -279,6 +282,7 @@ func TestVerification(t *testing.T) {
 		accountRepo *mockdb.Account
 		jwt         *mock.JWT
 		m           *mock.Mail
+		mobile      *mock.Mobile
 	}{
 		{
 			name:       "Success",
@@ -332,7 +336,7 @@ func TestVerification(t *testing.T) {
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
-			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m)
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m, tt.mobile)
 			service.AuthRouter(authService, r)
 			ts := httptest.NewServer(r)
 			defer ts.Close()

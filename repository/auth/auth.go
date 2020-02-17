@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,12 +14,13 @@ import (
 )
 
 // NewAuthService creates new auth service
-func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT, m Mail) *Service {
+func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT, mail Mail, mobile Mobile) *Service {
 	return &Service{
 		userRepo:    userRepo,
 		accountRepo: accountRepo,
 		jwt:         jwt,
-		m:           m,
+		mail:        mail,
+		mobile:      mobile,
 	}
 }
 
@@ -29,7 +29,8 @@ type Service struct {
 	userRepo    model.UserRepo
 	accountRepo model.AccountRepo
 	jwt         JWT
-	m           Mail
+	mail        Mail
+	mobile      Mobile
 }
 
 // JWT represents jwt interface
@@ -40,6 +41,12 @@ type JWT interface {
 // Mail represents mail interface
 type Mail interface {
 	SendVerificationEmail(string, *model.Verification) error
+}
+
+// Mobile represents mobile interface
+type Mobile interface {
+	GenerateSMSToken(string, string) error
+	CheckCode(string, string, string) error
 }
 
 // Authenticate tries to authenticate the user provided by username and password
@@ -99,6 +106,13 @@ func (s *Service) Verify(c context.Context, token string) error {
 	return nil
 }
 
+// VerifyMobile verifies the mobile verification code, i.e. (6-digit) code
+func (s *Service) VerifyMobile(c context.Context, code string) error {
+	// send code to twilio
+	// if it code is approved, make user active
+	return nil
+}
+
 // User returns user data stored in jwt token
 func (s *Service) User(c *gin.Context) *model.AuthUser {
 	id := c.GetInt("id")
@@ -120,15 +134,35 @@ func (s *Service) User(c *gin.Context) *model.AuthUser {
 // Signup returns any error from creating a new user in our database
 func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 	_, err := s.userRepo.FindByEmail(c, e.Email)
-	if err == nil {
-		// no user will be created since it already exists
-		return errors.New("user exists")
+	if err == nil { // user already exists
+		return apperr.NewStatus(http.StatusConflict)
 	}
 	v, err := s.accountRepo.CreateAndVerify(c, &model.User{Email: e.Email, Password: e.Password})
 	if err != nil {
 		return err
 	}
-	err = s.m.SendVerificationEmail(e.Email, v)
+	err = s.mail.SendVerificationEmail(e.Email, v)
+	if err != nil {
+		apperr.Response(c, err)
+		return err
+	}
+	return nil
+}
+
+// SignupMobile returns any error from creating a new user in our database with a mobile number
+func (s *Service) SignupMobile(c *gin.Context, m *request.MobileSignup) error {
+	// find by countryCode and mobile
+	u, err := s.userRepo.FindByMobile(c, m.CountryCode, m.Mobile)
+	if err == nil { // user already exists
+		return apperr.NewStatus(http.StatusConflict)
+	}
+	// create and verify
+	err = s.accountRepo.CreateWithMobile(c, u)
+	if err != nil {
+		return err
+	}
+	// generate sms token
+	err = s.mobile.GenerateSMSToken(m.CountryCode, m.Mobile)
 	if err != nil {
 		apperr.Response(c, err)
 		return err

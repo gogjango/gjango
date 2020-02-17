@@ -36,6 +36,7 @@ type UserRepo interface {
 	View(context.Context, int) (*User, error)
 	FindByUsername(context.Context, string) (*User, error)
 	FindByEmail(context.Context, string) (*User, error)
+	FindByMobile(context.Context, string, string) (*User, error)
 	FindByToken(context.Context, string) (*User, error)
 	UpdateLogin(context.Context, *User) error
 	List(context.Context, *ListQuery, *Pagination) ([]User, error)
@@ -47,6 +48,7 @@ type UserRepo interface {
 type AccountRepo interface {
 	Create(context.Context, *User) error
 	CreateAndVerify(context.Context, *User) (*Verification, error)
+	CreateWithMobile(context.Context, *User) error
 	ChangePassword(context.Context, *User) error
 	FindVerificationToken(context.Context, string) (*Verification, error)
 	DeleteVerificationToken(context.Context, *Verification) error
