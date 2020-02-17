@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -135,9 +134,8 @@ func (s *Service) User(c *gin.Context) *model.AuthUser {
 // Signup returns any error from creating a new user in our database
 func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 	_, err := s.userRepo.FindByEmail(c, e.Email)
-	if err == nil {
-		// no user will be created since it already exists
-		return errors.New("user exists")
+	if err == nil { // user already exists
+		return apperr.NewStatus(http.StatusConflict)
 	}
 	v, err := s.accountRepo.CreateAndVerify(c, &model.User{Email: e.Email, Password: e.Password})
 	if err != nil {
@@ -154,6 +152,10 @@ func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 // SignupMobile returns any error from creating a new user in our database with a mobile number
 func (s *Service) SignupMobile(c *gin.Context, m *request.MobileSignup) error {
 	// find by countryCode and mobile
+	_, err := s.userRepo.FindByMobile(c, m.CountryCode, m.Mobile)
+	if err == nil { // user already exists
+		return apperr.NewStatus(http.StatusConflict)
+	}
 	// create and verify
 	// generate sms token
 	return nil

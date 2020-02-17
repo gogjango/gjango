@@ -78,6 +78,10 @@ func (a *Auth) signupm(c *gin.Context) {
 		return
 	}
 	err = a.svc.SignupMobile(c, m)
+	if err != nil {
+		apperr.Response(c, err)
+		return
+	}
 	c.Status(http.StatusCreated)
 }
 

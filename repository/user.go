@@ -65,6 +65,20 @@ func (u *UserRepo) FindByEmail(c context.Context, email string) (*model.User, er
 	return user, nil
 }
 
+// FindByMobile queries for a single user by mobile (and country code)
+func (u *UserRepo) FindByMobile(c context.Context, countryCode, mobile string) (*model.User, error) {
+	user := new(model.User)
+	sql := `SELECT "user".*, "role"."id" AS "role__id", "role"."access_level" AS "role__access_level", "role"."name" AS "role__name" 
+	FROM "users" AS "user" LEFT JOIN "roles" AS "role" ON "role"."id" = "user"."role_id" 
+	WHERE ("user"."country_code" = ? and "user"."mobile" = ? and deleted_at is null)`
+	_, err := u.db.QueryOne(user, sql, countryCode, mobile)
+	if err != nil {
+		u.log.Warn("UserRepo Error", zap.String("Error:", err.Error()))
+		return nil, apperr.NotFound
+	}
+	return user, nil
+}
+
 // FindByToken queries for single user by token
 func (u *UserRepo) FindByToken(c context.Context, token string) (*model.User, error) {
 	var user = new(model.User)

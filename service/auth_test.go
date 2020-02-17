@@ -183,7 +183,7 @@ func TestSignup(t *testing.T) {
 			req:        `{"email":"juzernejm","password":"hunter123","password_confirm":"hunter123"}`,
 			wantStatus: http.StatusCreated,
 			userRepo: &mockdb.User{ // no such user, so create
-				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+				FindByEmailFn: func(context.Context, string) (*model.User, error) {
 					return nil, apperr.DB
 				},
 			},
@@ -227,9 +227,9 @@ func TestSignup(t *testing.T) {
 		{
 			name:       "Failure because user already exists",
 			req:        `{"email":"calvin","password":"whatever123","password_confirm":"whatever123"}`,
-			wantStatus: http.StatusInternalServerError,
+			wantStatus: http.StatusConflict,
 			userRepo: &mockdb.User{ // user already exists
-				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+				FindByEmailFn: func(context.Context, string) (*model.User, error) {
 					return &model.User{
 						Username: "calvin",
 						Active:   true,
