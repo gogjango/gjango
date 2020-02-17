@@ -17,7 +17,7 @@ func AuthRouter(svc *auth.Service, r *gin.Engine) {
 	r.POST("/login", a.login)
 	r.GET("/refresh/:token", a.refresh)
 	r.GET("/verification/:token", a.verify) // email
-	r.GET("/verifycode/:code", a.verifym)   // mobile
+	r.POST("/verifycode", a.verifym)        // mobile
 }
 
 // Auth represents auth http service
@@ -86,8 +86,12 @@ func (a *Auth) signupm(c *gin.Context) {
 }
 
 func (a *Auth) verifym(c *gin.Context) {
-	code := c.Param("code")
-	err := a.svc.VerifyMobile(c, code)
+	m, err := request.AccountVerifyMobile(c)
+	if err != nil {
+		apperr.Response(c, err)
+		return
+	}
+	err = a.svc.VerifyMobile(c, m.CountryCode, m.Mobile, m.Code)
 	if err != nil {
 		apperr.Response(c, err)
 		return
