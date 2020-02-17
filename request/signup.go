@@ -44,3 +44,19 @@ func AccountSignupMobile(c *gin.Context) (*MobileSignup, error) {
 	}
 	return &r, nil
 }
+
+// MobileVerify contains the user's mobile verification country code, mobile number and verification code
+type MobileVerify struct {
+	CountryCode string `json:"country_code" binding:"required,min=2"`
+	Mobile      string `json:"mobile" binding:"required"`
+	Code        string `json:"code" binding:"required"`
+}
+
+// AccountVerifyMobile validates user mobile verification
+func AccountVerifyMobile(c *gin.Context) (*MobileVerify, error) {
+	var r MobileVerify
+	if err := c.ShouldBindJSON(&r); err != nil {
+		return nil, err
+	}
+	return &r, nil
+}

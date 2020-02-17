@@ -107,9 +107,22 @@ func (s *Service) Verify(c context.Context, token string) error {
 }
 
 // VerifyMobile verifies the mobile verification code, i.e. (6-digit) code
-func (s *Service) VerifyMobile(c context.Context, code string) error {
+func (s *Service) VerifyMobile(c context.Context, countryCode, mobile, code string) error {
 	// send code to twilio
+	err := s.mobile.CheckCode(countryCode, mobile, code)
+	if err != nil {
+		return err
+	}
+	user, err := s.userRepo.FindByMobile(c, countryCode, mobile)
+	if err != nil {
+		return err
+	}
 	// if it code is approved, make user active
+	user.Active = true
+	_, err = s.userRepo.Update(c, user)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
