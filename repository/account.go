@@ -67,6 +67,26 @@ func (a *AccountRepo) CreateAndVerify(c context.Context, u *model.User) (*model.
 	return v, nil
 }
 
+// CreateWithMobile creates a new user in our database with country code and mobile number
+func (a *AccountRepo) CreateWithMobile(c context.Context, u *model.User) error {
+	user := new(model.User)
+	res, err := a.db.Query(user, "SELECT id FROM users WHERE username = ? or email = ? AND deleted_at IS NULL", u.Username, u.Email)
+	if err != nil {
+		a.log.Error("AccountRepo Error: ", zap.Error(err))
+		return apperr.DB
+	}
+	if res.RowsReturned() != 0 && user.Active == true {
+		return apperr.NewStatus(http.StatusConflict) // user already exists and is already verified
+	}
+	if res.RowsReturned() != 0 {
+		return apperr.BadRequest // user already exists but is not yet verified
+	}
+	if err := a.db.Insert(u); err != nil {
+		a.log.Warn("AccountRepo error: ", zap.Error(err))
+	}
+	return nil
+}
+
 // ChangePassword changes user's password
 func (a *AccountRepo) ChangePassword(c context.Context, u *model.User) error {
 	_, err := a.db.Model(u).Column("password", "updated_at").WherePK().Update()

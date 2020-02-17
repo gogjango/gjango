@@ -10,6 +10,7 @@ import (
 type Account struct {
 	CreateFn                  func(context.Context, *model.User) error
 	CreateAndVerifyFn         func(context.Context, *model.User) (*model.Verification, error)
+	CreateWithMobileFn        func(context.Context, *model.User) error
 	ChangePasswordFn          func(context.Context, *model.User) error
 	FindVerificationTokenFn   func(context.Context, string) (*model.Verification, error)
 	DeleteVerificationTokenFn func(context.Context, *model.Verification) error
@@ -23,6 +24,11 @@ func (a *Account) Create(c context.Context, usr *model.User) error {
 // CreateAndVerify mock
 func (a *Account) CreateAndVerify(c context.Context, usr *model.User) (*model.Verification, error) {
 	return a.CreateAndVerifyFn(c, usr)
+}
+
+// CreateWithMobile mock
+func (a *Account) CreateWithMobile(c context.Context, usr *model.User) error {
+	return a.CreateWithMobileFn(c, usr)
 }
 
 // ChangePassword mock

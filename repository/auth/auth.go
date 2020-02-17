@@ -152,12 +152,21 @@ func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 // SignupMobile returns any error from creating a new user in our database with a mobile number
 func (s *Service) SignupMobile(c *gin.Context, m *request.MobileSignup) error {
 	// find by countryCode and mobile
-	_, err := s.userRepo.FindByMobile(c, m.CountryCode, m.Mobile)
+	u, err := s.userRepo.FindByMobile(c, m.CountryCode, m.Mobile)
 	if err == nil { // user already exists
 		return apperr.NewStatus(http.StatusConflict)
 	}
 	// create and verify
+	err = s.accountRepo.CreateWithMobile(c, u)
+	if err != nil {
+		return err
+	}
 	// generate sms token
+	err = s.mobile.GenerateSMSToken(m.CountryCode, m.Mobile)
+	if err != nil {
+		apperr.Response(c, err)
+		return err
+	}
 	return nil
 }
 
