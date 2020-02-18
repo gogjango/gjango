@@ -35,9 +35,6 @@ func (m *Mobile) GenerateSMSToken(countryCode, mobile string) error {
 		return err
 	}
 
-	// take a look at our response
-	fmt.Println(resp.StatusCode)
-	fmt.Println(resp.Body)
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)

@@ -36,7 +36,7 @@ func (u *User) FindByEmail(c context.Context, email string) (*model.User, error)
 
 // FindByMobile mock
 func (u *User) FindByMobile(c context.Context, countryCode, mobile string) (*model.User, error) {
-	return u.FindByMobile(c, countryCode, mobile)
+	return u.FindByMobileFn(c, countryCode, mobile)
 }
 
 // FindByToken mock
