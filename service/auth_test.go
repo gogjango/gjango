@@ -425,3 +425,82 @@ func TestSignupMobile(t *testing.T) {
 		})
 	}
 }
+
+func TestVerifyMobile(t *testing.T) {
+	cases := []struct {
+		name        string
+		req         string
+		wantStatus  int
+		userRepo    *mockdb.User
+		accountRepo *mockdb.Account
+		jwt         *mock.JWT
+		m           *mock.Mail
+		mobile      *mock.Mobile
+	}{
+		{
+			name:       "Success",
+			req:        `{"country_code":"+65","mobile":"91919191","code":"324567"}`,
+			wantStatus: http.StatusOK,
+			mobile: &mock.Mobile{
+				CheckCodeFn: func(string, string, string) error {
+					return nil
+				},
+			},
+			userRepo: &mockdb.User{
+				FindByMobileFn: func(context.Context, string, string) (*model.User, error) {
+					return &model.User{
+						CountryCode: "+65",
+						Mobile:      "91919191",
+					}, nil
+				},
+				UpdateFn: func(context.Context, *model.User) (*model.User, error) {
+					return &model.User{
+						CountryCode: "+65",
+						Mobile:      "91919191",
+						Active:      true,
+					}, nil
+				},
+			},
+		},
+		{
+			name:       "Failure: no country code",
+			req:        `{"mobile":"91919191}`,
+			wantStatus: http.StatusInternalServerError,
+		},
+		{
+			name:       "Failure: no mobile",
+			req:        `{"country_code":"+1}`,
+			wantStatus: http.StatusInternalServerError,
+		},
+		{
+			name:       "Failure: code not verified",
+			req:        `{"country_code":"+65","mobile":"91919191","code":"324567"}`,
+			wantStatus: http.StatusNotFound,
+			mobile: &mock.Mobile{
+				CheckCodeFn: func(string, string, string) error {
+					return apperr.NewStatus(http.StatusNotFound)
+				},
+			},
+		},
+	}
+
+	gin.SetMode(gin.TestMode)
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			r := gin.New()
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m, tt.mobile)
+			service.AuthRouter(authService, r)
+			ts := httptest.NewServer(r)
+			defer ts.Close()
+			// signup
+			path := ts.URL + "/verifycode"
+			res, err := http.Post(path, "application/json", bytes.NewBufferString(tt.req))
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer res.Body.Close()
+			assert.Equal(t, tt.wantStatus, res.StatusCode)
+		})
+	}
+}
