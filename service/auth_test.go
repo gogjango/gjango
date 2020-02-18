@@ -385,6 +385,24 @@ func TestSignupMobile(t *testing.T) {
 			req:        `{"mobile":"91919191}`,
 			wantStatus: http.StatusInternalServerError,
 		},
+		{
+			name:       "Failure: no mobile",
+			req:        `{"country_code":"+1}`,
+			wantStatus: http.StatusInternalServerError,
+		},
+		{
+			name:       "Failure: user with mobile number already exists",
+			req:        `{"country_code":"+65","mobile":"91919191"}`,
+			wantStatus: http.StatusConflict,
+			userRepo: &mockdb.User{
+				FindByMobileFn: func(context.Context, string, string) (*model.User, error) {
+					return &model.User{ // user already exists
+						CountryCode: "+65",
+						Mobile:      "91919191",
+					}, nil
+				},
+			},
+		},
 	}
 
 	gin.SetMode(gin.TestMode)
