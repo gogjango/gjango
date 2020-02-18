@@ -308,9 +308,6 @@ func TestVerification(t *testing.T) {
 				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
 					return nil, apperr.NotFound
 				},
-				// DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
-				// 	return nil
-				// },
 			},
 		},
 		{
@@ -348,6 +345,38 @@ func TestVerification(t *testing.T) {
 			}
 			defer res.Body.Close()
 			assert.Equal(t, tt.wantStatus, res.StatusCode)
+		})
+	}
+}
+
+func TestSignupMobile(t *testing.T) {
+	cases := []struct {
+		name        string
+		req         string
+		wantStatus  int
+		userRepo    *mockdb.User
+		accountRepo *mockdb.Account
+		jwt         *mock.JWT
+		m           *mock.Mail
+		mobile      *mock.Mobile
+	}{
+		{
+			name:       "Success",
+			req:        `{"country_code":"+65","mobile":"91919191"}`,
+			wantStatus: http.StatusCreated,
+			userRepo: &mockdb.User{
+				FindByMobileFn: func(context.Context, string, string) (*model.User, error) {
+					return nil, apperr.DB // no such user, so create
+				},
+			},
+		},
+	}
+
+	gin.SetMode(gin.TestMode)
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+
 		})
 	}
 }
