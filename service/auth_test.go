@@ -369,6 +369,16 @@ func TestSignupMobile(t *testing.T) {
 					return nil, apperr.DB // no such user, so create
 				},
 			},
+			accountRepo: &mockdb.Account{
+				CreateWithMobileFn: func(context.Context, *model.User) error {
+					return nil
+				},
+			},
+			mobile: &mock.Mobile{
+				GenerateSMSTokenFn: func(string, string) error {
+					return nil
+				},
+			},
 		},
 	}
 
@@ -376,7 +386,19 @@ func TestSignupMobile(t *testing.T) {
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-
+			r := gin.New()
+			authService := auth.NewAuthService(tt.userRepo, tt.accountRepo, tt.jwt, tt.m, tt.mobile)
+			service.AuthRouter(authService, r)
+			ts := httptest.NewServer(r)
+			defer ts.Close()
+			// signup
+			path := ts.URL + "/signup/m"
+			res, err := http.Post(path, "application/json", bytes.NewBufferString(tt.req))
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer res.Body.Close()
+			assert.Equal(t, tt.wantStatus, res.StatusCode)
 		})
 	}
 }
