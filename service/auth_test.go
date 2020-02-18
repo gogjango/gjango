@@ -380,6 +380,11 @@ func TestSignupMobile(t *testing.T) {
 				},
 			},
 		},
+		{
+			name:       "Failure: no country code",
+			req:        `{"mobile":"91919191}`,
+			wantStatus: http.StatusInternalServerError,
+		},
 	}
 
 	gin.SetMode(gin.TestMode)
