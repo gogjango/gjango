@@ -32,7 +32,7 @@ func (a *AccountRepo) Create(u *model.User) (*model.User, error) {
 		return nil, apperr.DB
 	}
 	if res.RowsReturned() != 0 {
-		return nil, apperr.New(http.StatusBadRequest, "Username or email already exists.")
+		return nil, apperr.New(http.StatusBadRequest, "User already exists.")
 	}
 	if err := a.db.Insert(u); err != nil {
 		a.log.Warn("AccountRepo error: ", zap.Error(err))

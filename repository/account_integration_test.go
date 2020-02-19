@@ -56,10 +56,17 @@ func (suite *AccountTestSuite) TearDownTest() {
 func (suite *AccountTestSuite) TestAccount() {
 	log, _ := zap.NewDevelopment()
 	accountRepo := repository.NewAccountRepo(suite.db, log)
-	u := &model.User{}
+	u := &model.User{
+		Email: "user@example.org",
+	}
 	user, err := accountRepo.Create(u)
 	assert.Equal(suite.T(), err, nil)
 	assert.NotNil(suite.T(), user)
+
+	// execute Create again
+	user, err = accountRepo.Create(u)
+	assert.Nil(suite.T(), user)
+	assert.Equal(suite.T(), err.Error(), "User already exists.")
 }
 
 func TestAccountTestSuite(t *testing.T) {
