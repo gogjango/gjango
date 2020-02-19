@@ -1,10 +1,15 @@
 package model_test
 
 import (
+	"path"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/calvinchengx/gin-go-pg/mock"
 	"github.com/calvinchengx/gin-go-pg/model"
+	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBeforeInsert(t *testing.T) {
@@ -43,4 +48,23 @@ func TestDelete(t *testing.T) {
 		t.Errorf("DeletedAt not changed")
 	}
 
+}
+
+func TestDatabase(t *testing.T) {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b))
+	projectRoot := filepath.Dir(d)
+	tmpDir := path.Join(projectRoot, "tmp")
+	testConfig := embeddedpostgres.DefaultConfig().
+		Username("db_test_user").
+		Password("db_test_password").
+		Database("db_test_database").
+		Version("12.1.0").
+		RuntimePath(tmpDir).
+		Port(9876)
+
+	postgres := embeddedpostgres.NewDatabase(testConfig)
+	err := postgres.Start()
+	assert.Equal(t, err, nil)
+	_ = postgres.Stop()
 }
