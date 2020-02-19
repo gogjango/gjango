@@ -1,12 +1,15 @@
 package repository_test
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 	"path"
 	"path/filepath"
 	"runtime"
 	"testing"
 
+	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
@@ -54,19 +57,46 @@ func (suite *AccountTestSuite) TearDownTest() {
 }
 
 func (suite *AccountTestSuite) TestAccount() {
-	log, _ := zap.NewDevelopment()
-	accountRepo := repository.NewAccountRepo(suite.db, log)
-	u := &model.User{
-		Email: "user@example.org",
+	cases := []struct {
+		name       string
+		user       *model.User
+		wantError  error
+		wantResult *model.User
+	}{
+		{
+			name: "Success: user created",
+			user: &model.User{
+				Email: "user@example.org",
+			},
+			wantError: nil,
+			wantResult: &model.User{
+				Email: "user@example.org",
+			},
+		},
+		{
+			name: "Failure: user already exists",
+			user: &model.User{
+				Email: "user@example.org",
+			},
+			wantError:  apperr.New(http.StatusBadRequest, "User already exists."),
+			wantResult: nil,
+		},
 	}
-	user, err := accountRepo.Create(u)
-	assert.Equal(suite.T(), err, nil)
-	assert.NotNil(suite.T(), user)
 
-	// execute Create again
-	user, err = accountRepo.Create(u)
-	assert.Nil(suite.T(), user)
-	assert.Equal(suite.T(), err.Error(), "User already exists.")
+	for _, tt := range cases {
+		suite.T().Run(tt.name, func(t *testing.T) {
+			log, _ := zap.NewDevelopment()
+			accountRepo := repository.NewAccountRepo(suite.db, log)
+			fmt.Println(accountRepo)
+			u, err := accountRepo.Create(tt.user)
+			assert.Equal(t, tt.wantError, err)
+			if u != nil {
+				assert.Equal(t, tt.wantResult.Email, u.Email)
+			} else {
+				assert.Nil(t, u)
+			}
+		})
+	}
 }
 
 func TestAccountTestSuite(t *testing.T) {
