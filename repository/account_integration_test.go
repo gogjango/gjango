@@ -1,7 +1,6 @@
 package repository_test
 
 import (
-	"fmt"
 	"log"
 	"path"
 	"path/filepath"
@@ -57,7 +56,9 @@ func (suite *AccountTestSuite) TearDownTest() {
 func (suite *AccountTestSuite) TestAccount() {
 	log, _ := zap.NewDevelopment()
 	accountRepo := repository.NewAccountRepo(suite.db, log)
-	fmt.Println(accountRepo)
+	u := &model.User{}
+	result := accountRepo.Create(u)
+	assert.Equal(suite.T(), result, nil)
 }
 
 func TestAccountTestSuite(t *testing.T) {

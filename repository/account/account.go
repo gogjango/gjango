@@ -31,7 +31,7 @@ func (s *Service) Create(c *gin.Context, u *model.User) error {
 		return apperr.Forbidden
 	}
 	u.Password = auth.HashPassword(u.Password)
-	return s.accountRepo.Create(c, u)
+	return s.accountRepo.Create(u)
 }
 
 // ChangePassword changes user's password

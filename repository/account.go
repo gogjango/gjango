@@ -24,7 +24,7 @@ type AccountRepo struct {
 }
 
 // Create creates a new user in our database
-func (a *AccountRepo) Create(c context.Context, u *model.User) error {
+func (a *AccountRepo) Create(u *model.User) error {
 	user := new(model.User)
 	res, err := a.db.Query(user, "SELECT id FROM users WHERE username = ? or email = ? AND deleted_at IS NULL", u.Username, u.Email)
 	if err != nil {

@@ -51,7 +51,7 @@ func TestCreate(t *testing.T) {
 				},
 			},
 			accountRepo: &mockdb.Account{
-				CreateFn: func(c context.Context, usr *model.User) error {
+				CreateFn: func(usr *model.User) error {
 					usr.ID = 1
 					usr.CreatedAt = mock.TestTime(2018)
 					usr.UpdatedAt = mock.TestTime(2018)
