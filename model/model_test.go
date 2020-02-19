@@ -1,6 +1,7 @@
 package model_test
 
 import (
+	"log"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -9,6 +10,8 @@ import (
 	"github.com/calvinchengx/gin-go-pg/mock"
 	"github.com/calvinchengx/gin-go-pg/model"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
+	"github.com/go-pg/pg/v9"
+	"github.com/go-pg/pg/v9/orm"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -66,5 +69,26 @@ func TestDatabase(t *testing.T) {
 	postgres := embeddedpostgres.NewDatabase(testConfig)
 	err := postgres.Start()
 	assert.Equal(t, err, nil)
+
+	db := pg.Connect(&pg.Options{
+		Addr:     "localhost:9876",
+		User:     "db_test_user",
+		Password: "db_test_password",
+		Database: "db_test_database",
+	})
+	createSchema(db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{}, &model.Verification{})
+
 	_ = postgres.Stop()
+}
+
+func createSchema(db *pg.DB, models ...interface{}) {
+	for _, model := range models {
+		opt := &orm.CreateTableOptions{
+			IfNotExists: true,
+		}
+		err := db.CreateTable(model, opt)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
