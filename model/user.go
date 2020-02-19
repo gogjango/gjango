@@ -46,7 +46,7 @@ type UserRepo interface {
 
 // AccountRepo represents account database interface (the repository)
 type AccountRepo interface {
-	Create(*User) error
+	Create(*User) (*User, error)
 	CreateAndVerify(context.Context, *User) (*Verification, error)
 	CreateWithMobile(context.Context, *User) error
 	ChangePassword(context.Context, *User) error

@@ -51,11 +51,11 @@ func TestCreate(t *testing.T) {
 				},
 			},
 			accountRepo: &mockdb.Account{
-				CreateFn: func(usr *model.User) error {
+				CreateFn: func(usr *model.User) (*model.User, error) {
 					usr.ID = 1
 					usr.CreatedAt = mock.TestTime(2018)
 					usr.UpdatedAt = mock.TestTime(2018)
-					return nil
+					return usr, nil
 				},
 			},
 			wantResp: &model.User{

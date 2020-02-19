@@ -57,8 +57,9 @@ func (suite *AccountTestSuite) TestAccount() {
 	log, _ := zap.NewDevelopment()
 	accountRepo := repository.NewAccountRepo(suite.db, log)
 	u := &model.User{}
-	result := accountRepo.Create(u)
-	assert.Equal(suite.T(), result, nil)
+	user, err := accountRepo.Create(u)
+	assert.Equal(suite.T(), err, nil)
+	assert.NotNil(suite.T(), user)
 }
 
 func TestAccountTestSuite(t *testing.T) {

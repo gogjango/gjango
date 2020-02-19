@@ -8,7 +8,7 @@ import (
 
 // Account database mock
 type Account struct {
-	CreateFn                  func(*model.User) error
+	CreateFn                  func(*model.User) (*model.User, error)
 	CreateAndVerifyFn         func(context.Context, *model.User) (*model.Verification, error)
 	CreateWithMobileFn        func(context.Context, *model.User) error
 	ChangePasswordFn          func(context.Context, *model.User) error
@@ -17,7 +17,7 @@ type Account struct {
 }
 
 // Create mock
-func (a *Account) Create(usr *model.User) error {
+func (a *Account) Create(usr *model.User) (*model.User, error) {
 	return a.CreateFn(usr)
 }
 
