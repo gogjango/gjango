@@ -62,7 +62,31 @@ func (suite *AccountTestSuite) TearDownTest() {
 	suite.postgres.Stop()
 }
 
-func (suite *AccountTestSuite) TestAccount() {
+func (suite *AccountTestSuite) TestAccountCreateAndVerify() {
+	cases := []struct {
+		name       string
+		user       *model.User
+		db         *pg.DB
+		wantError  error
+		wantResult *model.User
+	}{}
+
+	for _, tt := range cases {
+		suite.T().Run(tt.name, func(t *testing.T) {
+			log, _ := zap.NewDevelopment()
+			accountRepo := repository.NewAccountRepo(tt.db, log)
+			_, err := accountRepo.CreateAndVerify(tt.user)
+			assert.Equal(t, tt.wantError, err)
+			// if u != nil {
+			// 	assert.Equal(t, tt.wantResult.Email, u.Email)
+			// } else {
+			// 	assert.Nil(t, u)
+			// }
+		})
+	}
+}
+
+func (suite *AccountTestSuite) TestAccountCreate() {
 	cases := []struct {
 		name       string
 		user       *model.User

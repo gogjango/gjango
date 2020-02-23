@@ -150,7 +150,7 @@ func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 	if err == nil { // user already exists
 		return apperr.NewStatus(http.StatusConflict)
 	}
-	v, err := s.accountRepo.CreateAndVerify(c, &model.User{Email: e.Email, Password: e.Password})
+	v, err := s.accountRepo.CreateAndVerify(&model.User{Email: e.Email, Password: e.Password})
 	if err != nil {
 		return err
 	}

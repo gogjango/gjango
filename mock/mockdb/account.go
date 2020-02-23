@@ -9,7 +9,7 @@ import (
 // Account database mock
 type Account struct {
 	CreateFn                  func(*model.User) (*model.User, error)
-	CreateAndVerifyFn         func(context.Context, *model.User) (*model.Verification, error)
+	CreateAndVerifyFn         func(*model.User) (*model.Verification, error)
 	CreateWithMobileFn        func(context.Context, *model.User) error
 	ChangePasswordFn          func(context.Context, *model.User) error
 	FindVerificationTokenFn   func(context.Context, string) (*model.Verification, error)
@@ -22,8 +22,8 @@ func (a *Account) Create(usr *model.User) (*model.User, error) {
 }
 
 // CreateAndVerify mock
-func (a *Account) CreateAndVerify(c context.Context, usr *model.User) (*model.Verification, error) {
-	return a.CreateAndVerifyFn(c, usr)
+func (a *Account) CreateAndVerify(usr *model.User) (*model.Verification, error) {
+	return a.CreateAndVerifyFn(usr)
 }
 
 // CreateWithMobile mock
