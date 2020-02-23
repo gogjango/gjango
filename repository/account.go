@@ -36,6 +36,7 @@ func (a *AccountRepo) Create(u *model.User) (*model.User, error) {
 	}
 	if err := a.db.Insert(u); err != nil {
 		a.log.Warn("AccountRepo error: ", zap.Error(err))
+		return nil, apperr.DB
 	}
 	return u, nil
 }

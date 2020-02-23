@@ -22,6 +22,7 @@ import (
 type AccountTestSuite struct {
 	suite.Suite
 	db       *pg.DB
+	dbErr    *pg.DB
 	postgres *embeddedpostgres.EmbeddedPostgres
 }
 
@@ -48,6 +49,12 @@ func (suite *AccountTestSuite) SetupTest() {
 		Password: "db_test_password",
 		Database: "db_test_database",
 	})
+	suite.dbErr = pg.Connect(&pg.Options{
+		Addr:     "localhost:9875",
+		User:     "db_test_user",
+		Password: "db_test_password",
+		Database: "db_test_database",
+	})
 	createSchema(suite.db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{}, &model.Verification{})
 }
 
@@ -59,6 +66,7 @@ func (suite *AccountTestSuite) TestAccount() {
 	cases := []struct {
 		name       string
 		user       *model.User
+		db         *pg.DB
 		wantError  error
 		wantResult *model.User
 	}{
@@ -67,6 +75,7 @@ func (suite *AccountTestSuite) TestAccount() {
 			user: &model.User{
 				Email: "user@example.org",
 			},
+			db:        suite.db,
 			wantError: nil,
 			wantResult: &model.User{
 				Email: "user@example.org",
@@ -77,7 +86,27 @@ func (suite *AccountTestSuite) TestAccount() {
 			user: &model.User{
 				Email: "user@example.org",
 			},
+			db:         suite.db,
 			wantError:  apperr.New(http.StatusBadRequest, "User already exists."),
+			wantResult: nil,
+		},
+		{
+			name: "Failure: db connection failed",
+			db:   suite.dbErr,
+			user: &model.User{
+				Email: "user2@example.org",
+			},
+			wantError:  apperr.DB,
+			wantResult: nil,
+		},
+		{
+			name: "Failure",
+			db:   suite.db,
+			user: &model.User{
+				ID:    1,
+				Email: "user2@example.org",
+			},
+			wantError:  apperr.DB,
 			wantResult: nil,
 		},
 	}
@@ -85,7 +114,7 @@ func (suite *AccountTestSuite) TestAccount() {
 	for _, tt := range cases {
 		suite.T().Run(tt.name, func(t *testing.T) {
 			log, _ := zap.NewDevelopment()
-			accountRepo := repository.NewAccountRepo(suite.db, log)
+			accountRepo := repository.NewAccountRepo(tt.db, log)
 			u, err := accountRepo.Create(tt.user)
 			assert.Equal(t, tt.wantError, err)
 			if u != nil {

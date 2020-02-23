@@ -60,10 +60,10 @@ func TestCreate(t *testing.T) {
 			},
 			wantResp: &model.User{
 				Base: model.Base{
-					ID:        1,
 					CreatedAt: mock.TestTime(2018),
 					UpdatedAt: mock.TestTime(2018),
 				},
+				ID:         1,
 				FirstName:  "John",
 				LastName:   "Doe",
 				Username:   "juzernejm",
