@@ -109,7 +109,8 @@ func createDatabaseIfNotExist(db *pg.DB, p *config.PostgresConfig) {
 func createSchema(db *pg.DB, models ...interface{}) {
 	for _, model := range models {
 		opt := &orm.CreateTableOptions{
-			IfNotExists: true,
+			IfNotExists:   true,
+			FKConstraints: true,
 		}
 		err := db.CreateTable(model, opt)
 		if err != nil {
