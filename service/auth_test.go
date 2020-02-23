@@ -370,7 +370,7 @@ func TestSignupMobile(t *testing.T) {
 				},
 			},
 			accountRepo: &mockdb.Account{
-				CreateWithMobileFn: func(context.Context, *model.User) error {
+				CreateWithMobileFn: func(*model.User) error {
 					return nil
 				},
 			},

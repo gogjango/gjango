@@ -49,7 +49,7 @@ type UserRepo interface {
 type AccountRepo interface {
 	Create(*User) (*User, error)
 	CreateAndVerify(*User) (*Verification, error)
-	CreateWithMobile(context.Context, *User) error
+	CreateWithMobile(*User) error
 	ChangePassword(context.Context, *User) error
 	FindVerificationToken(context.Context, string) (*Verification, error)
 	DeleteVerificationToken(context.Context, *Verification) error
