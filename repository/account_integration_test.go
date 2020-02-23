@@ -74,10 +74,21 @@ func (suite *AccountTestSuite) TestAccountCreateAndVerify() {
 		{
 			name: "Success: user created",
 			user: &model.User{
-				Email: "user@example.org",
+				CountryCode: "+65",
+				Mobile:      "91919191",
 			},
 			db:        suite.db,
 			wantError: nil,
+		},
+		{
+			name: "Failure: user already exists",
+			user: &model.User{
+				CountryCode: "+65",
+				Mobile:      "91919191",
+			},
+			db:         suite.db,
+			wantError:  apperr.New(http.StatusBadRequest, "User already exists."),
+			wantResult: nil,
 		},
 	}
 
@@ -87,8 +98,10 @@ func (suite *AccountTestSuite) TestAccountCreateAndVerify() {
 			accountRepo := repository.NewAccountRepo(tt.db, log)
 			v, err := accountRepo.CreateAndVerify(tt.user)
 			assert.Equal(t, tt.wantError, err)
-			fmt.Println(v.UserID)
-			fmt.Println(v.Token)
+			if v != nil {
+				fmt.Println(v.UserID)
+				fmt.Println(v.Token)
+			}
 		})
 	}
 }

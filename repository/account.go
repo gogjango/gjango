@@ -52,7 +52,7 @@ func (a *AccountRepo) CreateAndVerify(u *model.User) (*model.Verification, error
 		return nil, apperr.DB
 	}
 	if res.RowsReturned() != 0 {
-		return nil, apperr.New(http.StatusBadRequest, "Username or email already exists.")
+		return nil, apperr.New(http.StatusBadRequest, "User already exists.")
 	}
 	if err := a.db.Insert(u); err != nil {
 		a.log.Warn("AccountRepo error: ", zap.Error(err))
