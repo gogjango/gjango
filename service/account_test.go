@@ -51,19 +51,19 @@ func TestCreate(t *testing.T) {
 				},
 			},
 			accountRepo: &mockdb.Account{
-				CreateFn: func(c context.Context, usr *model.User) error {
+				CreateFn: func(usr *model.User) (*model.User, error) {
 					usr.ID = 1
 					usr.CreatedAt = mock.TestTime(2018)
 					usr.UpdatedAt = mock.TestTime(2018)
-					return nil
+					return usr, nil
 				},
 			},
 			wantResp: &model.User{
 				Base: model.Base{
-					ID:        1,
 					CreatedAt: mock.TestTime(2018),
 					UpdatedAt: mock.TestTime(2018),
 				},
+				ID:         1,
 				FirstName:  "John",
 				LastName:   "Doe",
 				Username:   "juzernejm",
@@ -74,6 +74,8 @@ func TestCreate(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 	}
+
+	gin.SetMode(gin.TestMode)
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {

@@ -85,9 +85,8 @@ func TestGenerateToken(t *testing.T) {
 		{
 			name: "Success",
 			req: &model.User{
-				Base: model.Base{
-					ID: 1,
-				},
+				Base:     model.Base{},
+				ID:       1,
 				Username: "johndoe",
 				Email:    "johndoe@mail.com",
 				Role: &model.Role{

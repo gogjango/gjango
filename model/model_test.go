@@ -8,9 +8,7 @@ import (
 )
 
 func TestBeforeInsert(t *testing.T) {
-	base := &model.Base{
-		ID: 1,
-	}
+	base := &model.Base{}
 	base.BeforeInsert(nil)
 	if base.CreatedAt.IsZero() {
 		t.Errorf("CreatedAt was not changed")
@@ -22,7 +20,6 @@ func TestBeforeInsert(t *testing.T) {
 
 func TestBeforeUpdate(t *testing.T) {
 	base := &model.Base{
-		ID:        1,
 		CreatedAt: mock.TestTime(2000),
 	}
 	base.BeforeUpdate(nil)
@@ -34,7 +31,6 @@ func TestBeforeUpdate(t *testing.T) {
 
 func TestDelete(t *testing.T) {
 	baseModel := &model.Base{
-		ID:        1,
 		CreatedAt: mock.TestTime(2000),
 		UpdatedAt: mock.TestTime(2001),
 	}

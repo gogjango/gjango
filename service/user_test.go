@@ -88,11 +88,10 @@ func TestListUsers(t *testing.T) {
 
 							{
 								Base: model.Base{
-									ID: 10,
-
 									CreatedAt: mock.TestTime(2001),
 									UpdatedAt: mock.TestTime(2002),
 								},
+								ID:        10,
 								FirstName: "John",
 
 								LastName: "Doe",
@@ -113,11 +112,10 @@ func TestListUsers(t *testing.T) {
 							},
 							{
 								Base: model.Base{
-									ID: 11,
-
 									CreatedAt: mock.TestTime(2004),
 									UpdatedAt: mock.TestTime(2005),
 								},
+								ID:        11,
 								FirstName: "Joanna",
 
 								LastName: "Dye",
@@ -148,11 +146,10 @@ func TestListUsers(t *testing.T) {
 				Users: []model.User{
 					{
 						Base: model.Base{
-							ID: 10,
-
 							CreatedAt: mock.TestTime(2001),
 							UpdatedAt: mock.TestTime(2002),
 						},
+						ID:        10,
 						FirstName: "John",
 
 						LastName: "Doe",
@@ -173,11 +170,10 @@ func TestListUsers(t *testing.T) {
 					},
 					{
 						Base: model.Base{
-							ID: 11,
-
 							CreatedAt: mock.TestTime(2004),
 							UpdatedAt: mock.TestTime(2005),
 						},
+						ID:        11,
 						FirstName: "Joanna",
 
 						LastName: "Dye",
@@ -264,10 +260,10 @@ func TestViewUser(t *testing.T) {
 				ViewFn: func(c context.Context, id int) (*model.User, error) {
 					return &model.User{
 						Base: model.Base{
-							ID:        1,
 							CreatedAt: mock.TestTime(2000),
 							UpdatedAt: mock.TestTime(2000),
 						},
+						ID:        1,
 						FirstName: "John",
 						LastName:  "Doe",
 						Username:  "JohnDoe",
@@ -277,10 +273,10 @@ func TestViewUser(t *testing.T) {
 			wantStatus: http.StatusOK,
 			wantResp: &model.User{
 				Base: model.Base{
-					ID:        1,
 					CreatedAt: mock.TestTime(2000),
 					UpdatedAt: mock.TestTime(2000),
 				},
+				ID:        1,
 				FirstName: "John",
 				LastName:  "Doe",
 				Username:  "JohnDoe",
@@ -355,10 +351,10 @@ func TestUpdateUser(t *testing.T) {
 				ViewFn: func(c context.Context, id int) (*model.User, error) {
 					return &model.User{
 						Base: model.Base{
-							ID:        1,
 							CreatedAt: mock.TestTime(2000),
 							UpdatedAt: mock.TestTime(2000),
 						},
+						ID:        1,
 						FirstName: "John",
 						LastName:  "Doe",
 						Username:  "JohnDoe",
@@ -375,10 +371,10 @@ func TestUpdateUser(t *testing.T) {
 			wantStatus: http.StatusOK,
 			wantResp: &model.User{
 				Base: model.Base{
-					ID:        1,
 					CreatedAt: mock.TestTime(2000),
 					UpdatedAt: mock.TestTime(2010),
 				},
+				ID:        1,
 				FirstName: "jj",
 				LastName:  "okocha",
 				Username:  "JohnDoe",

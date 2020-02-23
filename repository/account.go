@@ -24,20 +24,21 @@ type AccountRepo struct {
 }
 
 // Create creates a new user in our database
-func (a *AccountRepo) Create(c context.Context, u *model.User) error {
+func (a *AccountRepo) Create(u *model.User) (*model.User, error) {
 	user := new(model.User)
-	res, err := a.db.Query(user, "SELECT id FROM users WHERE username = ? or email = ? AND deleted_at IS NULL", u.Username, u.Email)
+	res, err := a.db.Query(user, "SELECT id FROM users WHERE username = ? OR email = ? OR (country_code = ? AND mobile = ?) AND deleted_at IS NULL", u.Username, u.Email, u.CountryCode, u.Mobile)
 	if err != nil {
 		a.log.Error("AccountRepo Error: ", zap.Error(err))
-		return apperr.DB
+		return nil, apperr.DB
 	}
 	if res.RowsReturned() != 0 {
-		return apperr.New(http.StatusBadRequest, "Username or email already exists.")
+		return nil, apperr.New(http.StatusBadRequest, "User already exists.")
 	}
 	if err := a.db.Insert(u); err != nil {
 		a.log.Warn("AccountRepo error: ", zap.Error(err))
+		return nil, apperr.DB
 	}
-	return nil
+	return u, nil
 }
 
 // CreateAndVerify creates a new user in our database, and generates a verification token.
