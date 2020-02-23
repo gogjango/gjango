@@ -170,7 +170,7 @@ func (s *Service) SignupMobile(c *gin.Context, m *request.MobileSignup) error {
 		return apperr.NewStatus(http.StatusConflict)
 	}
 	// create and verify
-	err = s.accountRepo.CreateWithMobile(c, u)
+	err = s.accountRepo.CreateWithMobile(u)
 	if err != nil {
 		return err
 	}

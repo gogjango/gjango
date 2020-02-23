@@ -63,6 +63,34 @@ func (suite *AccountTestSuite) TearDownTest() {
 	suite.postgres.Stop()
 }
 
+func (suite *AccountTestSuite) TestAccountCreateWithMobile() {
+	cases := []struct {
+		name       string
+		user       *model.User
+		db         *pg.DB
+		wantError  error
+		wantResult *model.Verification
+	}{
+		{
+			name: "Success: user created",
+			user: &model.User{
+				CountryCode: "+65",
+				Mobile:      "91919191",
+			},
+			db:        suite.db,
+			wantError: nil,
+		},
+	}
+	for _, tt := range cases {
+		suite.T().Run(tt.name, func(t *testing.T) {
+			log, _ := zap.NewDevelopment()
+			accountRepo := repository.NewAccountRepo(tt.db, log)
+			err := accountRepo.CreateWithMobile(tt.user)
+			assert.Equal(t, tt.wantError, err)
+		})
+	}
+}
+
 func (suite *AccountTestSuite) TestAccountCreateAndVerify() {
 	cases := []struct {
 		name       string

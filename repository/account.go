@@ -69,9 +69,10 @@ func (a *AccountRepo) CreateAndVerify(u *model.User) (*model.Verification, error
 }
 
 // CreateWithMobile creates a new user in our database with country code and mobile number
-func (a *AccountRepo) CreateWithMobile(c context.Context, u *model.User) error {
+func (a *AccountRepo) CreateWithMobile(u *model.User) error {
 	user := new(model.User)
-	res, err := a.db.Query(user, "SELECT id FROM users WHERE username = ? or email = ? AND deleted_at IS NULL", u.Username, u.Email)
+	sql := `SELECT id FROM users WHERE username = ? OR email = ? OR (country_code = ? AND mobile = ?) AND deleted_at IS NULL`
+	res, err := a.db.Query(user, sql, u.Username, u.Email, u.CountryCode, u.Mobile)
 	if err != nil {
 		a.log.Error("AccountRepo Error: ", zap.Error(err))
 		return apperr.DB
@@ -84,6 +85,7 @@ func (a *AccountRepo) CreateWithMobile(c context.Context, u *model.User) error {
 	}
 	if err := a.db.Insert(u); err != nil {
 		a.log.Warn("AccountRepo error: ", zap.Error(err))
+		return apperr.DB
 	}
 	return nil
 }
