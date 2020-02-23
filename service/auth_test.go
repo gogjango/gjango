@@ -188,7 +188,7 @@ func TestSignup(t *testing.T) {
 				},
 			},
 			accountRepo: &mockdb.Account{
-				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+				CreateAndVerifyFn: func(*model.User) (*model.Verification, error) {
 					return &model.Verification{
 						Token:  "some-random-token-for-verification",
 						UserID: 1,
@@ -211,7 +211,7 @@ func TestSignup(t *testing.T) {
 				},
 			},
 			accountRepo: &mockdb.Account{
-				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+				CreateAndVerifyFn: func(*model.User) (*model.Verification, error) {
 					return &model.Verification{
 						Token:  "some-random-token-for-verification",
 						UserID: 1,
@@ -237,7 +237,7 @@ func TestSignup(t *testing.T) {
 				},
 			},
 			accountRepo: &mockdb.Account{
-				CreateAndVerifyFn: func(context.Context, *model.User) (*model.Verification, error) {
+				CreateAndVerifyFn: func(*model.User) (*model.Verification, error) {
 					return &model.Verification{
 						Token:  "some-random-token-for-verification",
 						UserID: 1,
