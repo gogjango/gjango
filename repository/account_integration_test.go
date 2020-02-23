@@ -1,7 +1,6 @@
 package repository_test
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"path"
@@ -87,7 +86,6 @@ func (suite *AccountTestSuite) TestAccount() {
 		suite.T().Run(tt.name, func(t *testing.T) {
 			log, _ := zap.NewDevelopment()
 			accountRepo := repository.NewAccountRepo(suite.db, log)
-			fmt.Println(accountRepo)
 			u, err := accountRepo.Create(tt.user)
 			assert.Equal(t, tt.wantError, err)
 			if u != nil {
@@ -106,7 +104,8 @@ func TestAccountTestSuite(t *testing.T) {
 func createSchema(db *pg.DB, models ...interface{}) {
 	for _, model := range models {
 		opt := &orm.CreateTableOptions{
-			IfNotExists: true,
+			IfNotExists:   true,
+			FKConstraints: true,
 		}
 		err := db.CreateTable(model, opt)
 		if err != nil {
