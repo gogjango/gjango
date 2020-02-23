@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"path"
@@ -68,20 +69,26 @@ func (suite *AccountTestSuite) TestAccountCreateAndVerify() {
 		user       *model.User
 		db         *pg.DB
 		wantError  error
-		wantResult *model.User
-	}{}
+		wantResult *model.Verification
+	}{
+		{
+			name: "Success: user created",
+			user: &model.User{
+				Email: "user@example.org",
+			},
+			db:        suite.db,
+			wantError: nil,
+		},
+	}
 
 	for _, tt := range cases {
 		suite.T().Run(tt.name, func(t *testing.T) {
 			log, _ := zap.NewDevelopment()
 			accountRepo := repository.NewAccountRepo(tt.db, log)
-			_, err := accountRepo.CreateAndVerify(tt.user)
+			v, err := accountRepo.CreateAndVerify(tt.user)
 			assert.Equal(t, tt.wantError, err)
-			// if u != nil {
-			// 	assert.Equal(t, tt.wantResult.Email, u.Email)
-			// } else {
-			// 	assert.Nil(t, u)
-			// }
+			fmt.Println(v.UserID)
+			fmt.Println(v.Token)
 		})
 	}
 }
