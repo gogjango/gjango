@@ -38,7 +38,7 @@ func (u *UserRepo) View(id int) (*model.User, error) {
 }
 
 // FindByUsername queries for a single user by username
-func (u *UserRepo) FindByUsername(c context.Context, username string) (*model.User, error) {
+func (u *UserRepo) FindByUsername(username string) (*model.User, error) {
 	user := new(model.User)
 	sql := `SELECT "user".*, "role"."id" AS "role__id", "role"."access_level" AS "role__access_level", "role"."name" AS "role__name" 
 	FROM "users" AS "user" LEFT JOIN "roles" AS "role" ON "role"."id" = "user"."role_id" 
