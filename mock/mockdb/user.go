@@ -8,7 +8,7 @@ import (
 
 // User database mock
 type User struct {
-	ViewFn           func(context.Context, int) (*model.User, error)
+	ViewFn           func(int) (*model.User, error)
 	FindByUsernameFn func(context.Context, string) (*model.User, error)
 	FindByEmailFn    func(context.Context, string) (*model.User, error)
 	FindByMobileFn   func(context.Context, string, string) (*model.User, error)
@@ -20,8 +20,8 @@ type User struct {
 }
 
 // View mock
-func (u *User) View(c context.Context, id int) (*model.User, error) {
-	return u.ViewFn(c, id)
+func (u *User) View(id int) (*model.User, error) {
+	return u.ViewFn(id)
 }
 
 // FindByUsername mock

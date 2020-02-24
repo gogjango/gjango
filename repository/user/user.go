@@ -39,7 +39,7 @@ func (s *Service) View(c *gin.Context, id int) (*model.User, error) {
 	if !s.rbac.EnforceUser(c, id) {
 		return nil, apperr.Forbidden
 	}
-	return s.userRepo.View(c, id)
+	return s.userRepo.View(id)
 }
 
 // Update contains user's information used for updating
@@ -57,7 +57,7 @@ func (s *Service) Update(c *gin.Context, update *Update) (*model.User, error) {
 	if !s.rbac.EnforceUser(c, update.ID) {
 		return nil, apperr.Forbidden
 	}
-	u, err := s.userRepo.View(c, update.ID)
+	u, err := s.userRepo.View(update.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (s *Service) Update(c *gin.Context, update *Update) (*model.User, error) {
 
 // Delete deletes a user
 func (s *Service) Delete(c *gin.Context, id int) error {
-	u, err := s.userRepo.View(c, id)
+	u, err := s.userRepo.View(id)
 	if err != nil {
 		return err
 	}

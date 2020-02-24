@@ -34,7 +34,7 @@ func (u *User) UpdateLastLogin() {
 
 // UserRepo represents user database interface (the repository)
 type UserRepo interface {
-	View(context.Context, int) (*User, error)
+	View(int) (*User, error)
 	FindByUsername(context.Context, string) (*User, error)
 	FindByEmail(context.Context, string) (*User, error)
 	FindByMobile(context.Context, string, string) (*User, error)

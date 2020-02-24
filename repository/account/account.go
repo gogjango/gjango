@@ -40,7 +40,7 @@ func (s *Service) ChangePassword(c *gin.Context, oldPass, newPass string, id int
 	if !s.rbac.EnforceUser(c, id) {
 		return apperr.Forbidden
 	}
-	u, err := s.userRepo.View(c, id)
+	u, err := s.userRepo.View(id)
 	if err != nil {
 		return err
 	}
