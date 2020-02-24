@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
@@ -73,43 +74,20 @@ func (suite *UserTestSuite) TestUserView() {
 				Mobile:      "91919191",
 			},
 			db:        suite.db,
-			wantError: nil,
+			wantError: apperr.NotFound,
 		},
 	}
 	for _, tt := range cases {
 		suite.T().Run(tt.name, func(t *testing.T) {
 			log, _ := zap.NewDevelopment()
 			userRepo := repository.NewUserRepo(tt.db, log)
-			_, err := userRepo.View(tt.user.ID)
+			u, err := userRepo.View(tt.user.ID)
+			assert.Nil(t, u)
 			assert.Equal(t, tt.wantError, err)
 		})
 	}
 }
 
-func (suite *UserTestSuite) TestUserFindByUsername() {
-	cases := []struct {
-		name       string
-		user       *model.User
-		db         *pg.DB
-		wantError  error
-		wantResult *model.Verification
-	}{
-		{
-			name: "Success: find user",
-			user: &model.User{
-				CountryCode: "+65",
-				Mobile:      "91919191",
-			},
-			db:        suite.db,
-			wantError: nil,
-		},
-	}
-	for _, tt := range cases {
-		suite.T().Run(tt.name, func(t *testing.T) {
-			log, _ := zap.NewDevelopment()
-			userRepo := repository.NewUserRepo(tt.db, log)
-			_, err := userRepo.View(tt.user.ID)
-			assert.Equal(t, tt.wantError, err)
-		})
-	}
+func TestUserTestSuite(t *testing.T) {
+	suite.Run(t, new(UserTestSuite))
 }
