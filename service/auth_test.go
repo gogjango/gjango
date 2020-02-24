@@ -42,7 +42,7 @@ func TestLogin(t *testing.T) {
 			req:        `{"username":"juzernejm","password":"hunter123"}`,
 			wantStatus: http.StatusInternalServerError,
 			userRepo: &mockdb.User{
-				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+				FindByUsernameFn: func(string) (*model.User, error) {
 					return nil, apperr.DB
 				},
 			},
@@ -52,7 +52,7 @@ func TestLogin(t *testing.T) {
 			req:        `{"username":"juzernejm","password":"hunter123"}`,
 			wantStatus: http.StatusOK,
 			userRepo: &mockdb.User{
-				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+				FindByUsernameFn: func(string) (*model.User, error) {
 					return &model.User{
 						Password: auth.HashPassword("hunter123"),
 						Active:   true,
@@ -206,7 +206,7 @@ func TestSignup(t *testing.T) {
 			req:        `{"email":"calvin","password":"","password_confirm":""}`,
 			wantStatus: http.StatusInternalServerError,
 			userRepo: &mockdb.User{ // no such user, so create
-				FindByUsernameFn: func(context.Context, string) (*model.User, error) {
+				FindByUsernameFn: func(string) (*model.User, error) {
 					return nil, apperr.DB
 				},
 			},
