@@ -183,7 +183,7 @@ func TestSignup(t *testing.T) {
 			req:        `{"email":"juzernejm","password":"hunter123","password_confirm":"hunter123"}`,
 			wantStatus: http.StatusCreated,
 			userRepo: &mockdb.User{ // no such user, so create
-				FindByEmailFn: func(context.Context, string) (*model.User, error) {
+				FindByEmailFn: func(string) (*model.User, error) {
 					return nil, apperr.DB
 				},
 			},
@@ -229,7 +229,7 @@ func TestSignup(t *testing.T) {
 			req:        `{"email":"calvin","password":"whatever123","password_confirm":"whatever123"}`,
 			wantStatus: http.StatusConflict,
 			userRepo: &mockdb.User{ // user already exists
-				FindByEmailFn: func(context.Context, string) (*model.User, error) {
+				FindByEmailFn: func(string) (*model.User, error) {
 					return &model.User{
 						Username: "calvin",
 						Active:   true,
@@ -365,7 +365,7 @@ func TestSignupMobile(t *testing.T) {
 			req:        `{"country_code":"+65","mobile":"91919191"}`,
 			wantStatus: http.StatusCreated,
 			userRepo: &mockdb.User{
-				FindByMobileFn: func(context.Context, string, string) (*model.User, error) {
+				FindByMobileFn: func(string, string) (*model.User, error) {
 					return nil, apperr.DB // no such user, so create
 				},
 			},
@@ -395,7 +395,7 @@ func TestSignupMobile(t *testing.T) {
 			req:        `{"country_code":"+65","mobile":"91919191"}`,
 			wantStatus: http.StatusConflict,
 			userRepo: &mockdb.User{
-				FindByMobileFn: func(context.Context, string, string) (*model.User, error) {
+				FindByMobileFn: func(string, string) (*model.User, error) {
 					return &model.User{ // user already exists
 						CountryCode: "+65",
 						Mobile:      "91919191",
@@ -447,7 +447,7 @@ func TestVerifyMobile(t *testing.T) {
 				},
 			},
 			userRepo: &mockdb.User{
-				FindByMobileFn: func(context.Context, string, string) (*model.User, error) {
+				FindByMobileFn: func(string, string) (*model.User, error) {
 					return &model.User{
 						CountryCode: "+65",
 						Mobile:      "91919191",

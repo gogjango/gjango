@@ -52,7 +52,7 @@ func (u *UserRepo) FindByUsername(c context.Context, username string) (*model.Us
 }
 
 // FindByEmail queries for a single user by email
-func (u *UserRepo) FindByEmail(c context.Context, email string) (*model.User, error) {
+func (u *UserRepo) FindByEmail(email string) (*model.User, error) {
 	user := new(model.User)
 	sql := `SELECT "user".*, "role"."id" AS "role__id", "role"."access_level" AS "role__access_level", "role"."name" AS "role__name" 
 	FROM "users" AS "user" LEFT JOIN "roles" AS "role" ON "role"."id" = "user"."role_id" 
@@ -66,7 +66,7 @@ func (u *UserRepo) FindByEmail(c context.Context, email string) (*model.User, er
 }
 
 // FindByMobile queries for a single user by mobile (and country code)
-func (u *UserRepo) FindByMobile(c context.Context, countryCode, mobile string) (*model.User, error) {
+func (u *UserRepo) FindByMobile(countryCode, mobile string) (*model.User, error) {
 	user := new(model.User)
 	sql := `SELECT "user".*, "role"."id" AS "role__id", "role"."access_level" AS "role__access_level", "role"."name" AS "role__name" 
 	FROM "users" AS "user" LEFT JOIN "roles" AS "role" ON "role"."id" = "user"."role_id" 

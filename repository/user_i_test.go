@@ -72,6 +72,7 @@ func (suite *UserTestSuite) TestUserView() {
 			name:   "Fail: user not found",
 			create: false,
 			user: &model.User{
+				Email:       "user@example.org",
 				CountryCode: "+65",
 				Mobile:      "91919191",
 			},
@@ -79,9 +80,10 @@ func (suite *UserTestSuite) TestUserView() {
 			wantError: apperr.NotFound,
 		},
 		{
-			name:   "Success: view user",
+			name:   "Success: view user, find user",
 			create: true,
 			user: &model.User{
+				Email:       "user@example.org",
 				CountryCode: "+65",
 				Mobile:      "91919191",
 			},
@@ -105,8 +107,13 @@ func (suite *UserTestSuite) TestUserView() {
 				u, err := userRepo.View(tt.user.ID)
 				assert.Nil(t, u)
 				assert.Equal(t, tt.wantError, err)
+				u, err = userRepo.FindByMobile(tt.user.CountryCode, tt.user.Mobile)
+				assert.Nil(t, u)
+				assert.Equal(t, tt.wantError, err)
+				u, err = userRepo.FindByEmail(tt.user.Email)
+				assert.Nil(t, u)
+				assert.Equal(t, tt.wantError, err)
 			}
-
 		})
 	}
 }

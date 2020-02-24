@@ -10,8 +10,8 @@ import (
 type User struct {
 	ViewFn           func(int) (*model.User, error)
 	FindByUsernameFn func(context.Context, string) (*model.User, error)
-	FindByEmailFn    func(context.Context, string) (*model.User, error)
-	FindByMobileFn   func(context.Context, string, string) (*model.User, error)
+	FindByEmailFn    func(string) (*model.User, error)
+	FindByMobileFn   func(string, string) (*model.User, error)
 	FindByTokenFn    func(context.Context, string) (*model.User, error)
 	UpdateLoginFn    func(context.Context, *model.User) error
 	ListFn           func(context.Context, *model.ListQuery, *model.Pagination) ([]model.User, error)
@@ -30,13 +30,13 @@ func (u *User) FindByUsername(c context.Context, username string) (*model.User, 
 }
 
 // FindByEmail mock
-func (u *User) FindByEmail(c context.Context, email string) (*model.User, error) {
-	return u.FindByEmailFn(c, email)
+func (u *User) FindByEmail(email string) (*model.User, error) {
+	return u.FindByEmailFn(email)
 }
 
 // FindByMobile mock
-func (u *User) FindByMobile(c context.Context, countryCode, mobile string) (*model.User, error) {
-	return u.FindByMobileFn(c, countryCode, mobile)
+func (u *User) FindByMobile(countryCode, mobile string) (*model.User, error) {
+	return u.FindByMobileFn(countryCode, mobile)
 }
 
 // FindByToken mock

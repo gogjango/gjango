@@ -113,7 +113,7 @@ func (s *Service) VerifyMobile(c context.Context, countryCode, mobile, code stri
 	if err != nil {
 		return err
 	}
-	user, err := s.userRepo.FindByMobile(c, countryCode, mobile)
+	user, err := s.userRepo.FindByMobile(countryCode, mobile)
 	if err != nil {
 		return err
 	}
@@ -146,7 +146,7 @@ func (s *Service) User(c *gin.Context) *model.AuthUser {
 
 // Signup returns any error from creating a new user in our database
 func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
-	_, err := s.userRepo.FindByEmail(c, e.Email)
+	_, err := s.userRepo.FindByEmail(e.Email)
 	if err == nil { // user already exists
 		return apperr.NewStatus(http.StatusConflict)
 	}
@@ -165,7 +165,7 @@ func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 // SignupMobile returns any error from creating a new user in our database with a mobile number
 func (s *Service) SignupMobile(c *gin.Context, m *request.MobileSignup) error {
 	// find by countryCode and mobile
-	u, err := s.userRepo.FindByMobile(c, m.CountryCode, m.Mobile)
+	u, err := s.userRepo.FindByMobile(m.CountryCode, m.Mobile)
 	if err == nil { // user already exists
 		return apperr.NewStatus(http.StatusConflict)
 	}
