@@ -257,7 +257,7 @@ func TestViewUser(t *testing.T) {
 				},
 			},
 			udb: &mockdb.User{
-				ViewFn: func(c context.Context, id int) (*model.User, error) {
+				ViewFn: func(id int) (*model.User, error) {
 					return &model.User{
 						Base: model.Base{
 							CreatedAt: mock.TestTime(2000),
@@ -348,7 +348,7 @@ func TestUpdateUser(t *testing.T) {
 				},
 			},
 			udb: &mockdb.User{
-				ViewFn: func(c context.Context, id int) (*model.User, error) {
+				ViewFn: func(id int) (*model.User, error) {
 					return &model.User{
 						Base: model.Base{
 							CreatedAt: mock.TestTime(2000),
@@ -431,7 +431,7 @@ func TestDeleteUser(t *testing.T) {
 			name: "Fail on RBAC",
 			id:   `1`,
 			udb: &mockdb.User{
-				ViewFn: func(c context.Context, id int) (*model.User, error) {
+				ViewFn: func(id int) (*model.User, error) {
 					return &model.User{
 						Role: &model.Role{
 							AccessLevel: model.CompanyAdminRole,
@@ -450,7 +450,7 @@ func TestDeleteUser(t *testing.T) {
 			name: "Success",
 			id:   `1`,
 			udb: &mockdb.User{
-				ViewFn: func(c context.Context, id int) (*model.User, error) {
+				ViewFn: func(id int) (*model.User, error) {
 					return &model.User{
 						Role: &model.Role{
 							AccessLevel: model.CompanyAdminRole,

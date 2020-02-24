@@ -140,7 +140,7 @@ func TestChangePassword(t *testing.T) {
 			},
 			id: "1",
 			userRepo: &mockdb.User{
-				ViewFn: func(c context.Context, id int) (*model.User, error) {
+				ViewFn: func(id int) (*model.User, error) {
 					return &model.User{
 						Password: auth.HashPassword("oldpassw"),
 					}, nil
