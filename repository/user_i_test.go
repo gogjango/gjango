@@ -62,13 +62,15 @@ func (suite *UserTestSuite) TearDownTest() {
 func (suite *UserTestSuite) TestUserView() {
 	cases := []struct {
 		name       string
+		create     bool
 		user       *model.User
 		db         *pg.DB
 		wantError  error
 		wantResult *model.Verification
 	}{
 		{
-			name: "Success: view user",
+			name:   "Fail: user not found",
+			create: false,
 			user: &model.User{
 				CountryCode: "+65",
 				Mobile:      "91919191",
@@ -76,14 +78,35 @@ func (suite *UserTestSuite) TestUserView() {
 			db:        suite.db,
 			wantError: apperr.NotFound,
 		},
+		{
+			name:   "Success: view user",
+			create: true,
+			user: &model.User{
+				CountryCode: "+65",
+				Mobile:      "91919191",
+			},
+			db:        suite.db,
+			wantError: nil,
+		},
 	}
 	for _, tt := range cases {
 		suite.T().Run(tt.name, func(t *testing.T) {
 			log, _ := zap.NewDevelopment()
 			userRepo := repository.NewUserRepo(tt.db, log)
-			u, err := userRepo.View(tt.user.ID)
-			assert.Nil(t, u)
-			assert.Equal(t, tt.wantError, err)
+
+			if tt.create {
+				accountRepo := repository.NewAccountRepo(tt.db, log)
+				_, err := accountRepo.Create(tt.user)
+				assert.Nil(t, err)
+				u, err := userRepo.View(tt.user.ID)
+				assert.Nil(t, err)
+				assert.Equal(t, tt.user.Mobile, u.Mobile)
+			} else {
+				u, err := userRepo.View(tt.user.ID)
+				assert.Nil(t, u)
+				assert.Equal(t, tt.wantError, err)
+			}
+
 		})
 	}
 }
