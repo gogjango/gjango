@@ -1,7 +1,6 @@
 package repository_test
 
 import (
-	"fmt"
 	"net/http/httptest"
 	"path"
 	"path/filepath"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
+	"github.com/calvinchengx/gin-go-pg/repository/account"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v9"
@@ -63,28 +63,27 @@ func (suite *RBACTestSuite) TestRBAC() {
 	resp := httptest.NewRecorder()
 	gin.SetMode(gin.TestMode)
 	c, _ := gin.CreateTestContext(resp)
-	c.Set("role", model.SuperAdminRole)
+	c.Set("role", int8(model.SuperAdminRole))
 
 	// create a user in our test database, which is superadmin
 	log, _ := zap.NewDevelopment()
 	userRepo := repository.NewUserRepo(suite.db, log)
 	accountRepo := repository.NewAccountRepo(suite.db, log)
-	u := createUserAndMakeActive(accountRepo, userRepo)
-	fmt.Println("#######")
-	fmt.Println(u.Role)
-	fmt.Println("#######")
-
 	rbac := repository.NewRBACService(userRepo)
-	assert.NotNil(suite.T(), rbac)
-}
 
-func createUserAndMakeActive(accountRepo *repository.AccountRepo, userRepo *repository.UserRepo) *model.User {
-	u := &model.User{
+	// ensure that our roles table is populated with default roles
+	roleRepo := repository.NewRoleRepo(suite.db, log)
+	err := roleRepo.CreateRoles()
+	assert.Nil(suite.T(), err)
+
+	accountService := account.NewAccountService(userRepo, accountRepo, rbac)
+	err = accountService.Create(c, &model.User{
 		CountryCode: "+65",
 		Mobile:      "91919191",
-	}
-	u, _ = accountRepo.Create(u)
-	u.Active = true
-	u, _ = userRepo.Update(u)
-	return u
+		Active:      true,
+		RoleID:      5,
+	})
+
+	assert.Nil(suite.T(), err)
+	assert.NotNil(suite.T(), rbac)
 }
