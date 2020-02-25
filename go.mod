@@ -12,7 +12,7 @@ require (
 	github.com/go-pg/migrations v6.7.3+incompatible // indirect
 	github.com/go-pg/migrations/v7 v7.1.9 // indirect
 	github.com/go-pg/pg v8.0.6+incompatible
-	github.com/go-pg/pg/v9 v9.1.2
+	github.com/go-pg/pg/v9 v9.1.3
 	github.com/gogf/gf v1.11.4 // indirect
 	github.com/lib/pq v1.3.0 // indirect
 	github.com/onsi/ginkgo v1.12.0 // indirect
