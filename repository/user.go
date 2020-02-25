@@ -80,7 +80,7 @@ func (u *UserRepo) FindByMobile(countryCode, mobile string) (*model.User, error)
 }
 
 // FindByToken queries for single user by token
-func (u *UserRepo) FindByToken(c context.Context, token string) (*model.User, error) {
+func (u *UserRepo) FindByToken(token string) (*model.User, error) {
 	var user = new(model.User)
 	sql := `SELECT "user".*, "role"."id" AS "role__id", "role"."access_level" AS "role__access_level", "role"."name" AS "role__name" 
 	FROM "users" AS "user" LEFT JOIN "roles" AS "role" ON "role"."id" = "user"."role_id" 

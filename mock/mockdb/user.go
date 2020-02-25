@@ -12,7 +12,7 @@ type User struct {
 	FindByUsernameFn func(string) (*model.User, error)
 	FindByEmailFn    func(string) (*model.User, error)
 	FindByMobileFn   func(string, string) (*model.User, error)
-	FindByTokenFn    func(context.Context, string) (*model.User, error)
+	FindByTokenFn    func(string) (*model.User, error)
 	UpdateLoginFn    func(context.Context, *model.User) error
 	ListFn           func(context.Context, *model.ListQuery, *model.Pagination) ([]model.User, error)
 	DeleteFn         func(context.Context, *model.User) error
@@ -40,8 +40,8 @@ func (u *User) FindByMobile(countryCode, mobile string) (*model.User, error) {
 }
 
 // FindByToken mock
-func (u *User) FindByToken(c context.Context, token string) (*model.User, error) {
-	return u.FindByTokenFn(c, token)
+func (u *User) FindByToken(token string) (*model.User, error) {
+	return u.FindByTokenFn(token)
 }
 
 // UpdateLogin mock

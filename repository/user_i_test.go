@@ -118,6 +118,9 @@ func (suite *UserTestSuite) TestUserView() {
 				u, err = userRepo.FindByUsername(tt.user.Username)
 				assert.Nil(t, u)
 				assert.Equal(t, tt.wantError, err)
+				u, err = userRepo.FindByToken("somerandomtokenthatdoesntexist")
+				assert.Nil(t, u)
+				assert.Equal(t, tt.wantError, err)
 			}
 		})
 	}

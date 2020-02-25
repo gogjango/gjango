@@ -79,7 +79,7 @@ func (s *Service) Authenticate(c context.Context, username, password string) (*m
 
 // Refresh refreshes jwt token and puts new claims inside
 func (s *Service) Refresh(c context.Context, token string) (*model.RefreshToken, error) {
-	user, err := s.userRepo.FindByToken(c, token)
+	user, err := s.userRepo.FindByToken(token)
 	if err != nil {
 		return nil, err
 	}

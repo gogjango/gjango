@@ -38,7 +38,7 @@ type UserRepo interface {
 	FindByUsername(string) (*User, error)
 	FindByEmail(string) (*User, error)
 	FindByMobile(string, string) (*User, error)
-	FindByToken(context.Context, string) (*User, error)
+	FindByToken(string) (*User, error)
 	UpdateLogin(context.Context, *User) error
 	List(context.Context, *ListQuery, *Pagination) ([]User, error)
 	Update(*User) (*User, error)
