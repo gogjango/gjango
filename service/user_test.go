@@ -362,7 +362,7 @@ func TestUpdateUser(t *testing.T) {
 						Mobile:    "332223",
 					}, nil
 				},
-				UpdateFn: func(c context.Context, usr *model.User) (*model.User, error) {
+				UpdateFn: func(usr *model.User) (*model.User, error) {
 					usr.UpdatedAt = mock.TestTime(2010)
 					usr.Mobile = "991991"
 					return usr, nil

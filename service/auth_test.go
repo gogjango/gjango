@@ -453,7 +453,7 @@ func TestVerifyMobile(t *testing.T) {
 						Mobile:      "91919191",
 					}, nil
 				},
-				UpdateFn: func(context.Context, *model.User) (*model.User, error) {
+				UpdateFn: func(*model.User) (*model.User, error) {
 					return &model.User{
 						CountryCode: "+65",
 						Mobile:      "91919191",

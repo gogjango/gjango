@@ -16,7 +16,7 @@ type User struct {
 	UpdateLoginFn    func(context.Context, *model.User) error
 	ListFn           func(context.Context, *model.ListQuery, *model.Pagination) ([]model.User, error)
 	DeleteFn         func(context.Context, *model.User) error
-	UpdateFn         func(context.Context, *model.User) (*model.User, error)
+	UpdateFn         func(*model.User) (*model.User, error)
 }
 
 // View mock
@@ -60,6 +60,6 @@ func (u *User) Delete(c context.Context, usr *model.User) error {
 }
 
 // Update mock
-func (u *User) Update(c context.Context, usr *model.User) (*model.User, error) {
-	return u.UpdateFn(c, usr)
+func (u *User) Update(usr *model.User) (*model.User, error) {
+	return u.UpdateFn(usr)
 }

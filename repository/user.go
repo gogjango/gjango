@@ -117,7 +117,7 @@ func (u *UserRepo) List(c context.Context, qp *model.ListQuery, p *model.Paginat
 }
 
 // Update updates user's contact info
-func (u *UserRepo) Update(c context.Context, user *model.User) (*model.User, error) {
+func (u *UserRepo) Update(user *model.User) (*model.User, error) {
 	_, err := u.db.Model(user).Column("first_name",
 		"last_name", "mobile", "address", "active", "updated_at").WherePK().Update()
 	if err != nil {

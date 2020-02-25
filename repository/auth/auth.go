@@ -119,7 +119,7 @@ func (s *Service) VerifyMobile(c context.Context, countryCode, mobile, code stri
 	}
 	// if it code is approved, make user active
 	user.Active = true
-	_, err = s.userRepo.Update(c, user)
+	_, err = s.userRepo.Update(user)
 	if err != nil {
 		return err
 	}
