@@ -26,3 +26,8 @@ type Role struct {
 	AccessLevel AccessRole `json:"access_level"`
 	Name        string     `json:"name"`
 }
+
+// RoleRepo represents the database interface
+type RoleRepo interface {
+	CreateRoles() error
+}
