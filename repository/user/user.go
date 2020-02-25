@@ -62,7 +62,7 @@ func (s *Service) Update(c *gin.Context, update *Update) (*model.User, error) {
 		return nil, err
 	}
 	structs.Merge(u, update)
-	return s.userRepo.Update(c, u)
+	return s.userRepo.Update(u)
 }
 
 // Delete deletes a user

@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"fmt"
 	"net/http/httptest"
 	"path"
 	"path/filepath"
@@ -67,6 +68,23 @@ func (suite *RBACTestSuite) TestRBAC() {
 	// create a user in our test database, which is superadmin
 	log, _ := zap.NewDevelopment()
 	userRepo := repository.NewUserRepo(suite.db, log)
+	accountRepo := repository.NewAccountRepo(suite.db, log)
+	u := createUserAndMakeActive(accountRepo, userRepo)
+	fmt.Println("#######")
+	fmt.Println(u.Role)
+	fmt.Println("#######")
+
 	rbac := repository.NewRBACService(userRepo)
 	assert.NotNil(suite.T(), rbac)
+}
+
+func createUserAndMakeActive(accountRepo *repository.AccountRepo, userRepo *repository.UserRepo) *model.User {
+	u := &model.User{
+		CountryCode: "+65",
+		Mobile:      "91919191",
+	}
+	u, _ = accountRepo.Create(u)
+	u.Active = true
+	u, _ = userRepo.Update(u)
+	return u
 }
