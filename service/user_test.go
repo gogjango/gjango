@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -80,7 +79,7 @@ func TestListUsers(t *testing.T) {
 					}
 				}},
 			userRepo: &mockdb.User{
-				ListFn: func(c context.Context, q *model.ListQuery, p *model.Pagination) ([]model.User, error) {
+				ListFn: func(q *model.ListQuery, p *model.Pagination) ([]model.User, error) {
 
 					if p.Limit == 100 && p.Offset == 100 {
 

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"context"
 	"time"
 )
 
@@ -52,7 +51,7 @@ type UserRepo interface {
 	FindByMobile(string, string) (*User, error)
 	FindByToken(string) (*User, error)
 	UpdateLogin(*User) error
-	List(context.Context, *ListQuery, *Pagination) ([]User, error)
+	List(*ListQuery, *Pagination) ([]User, error)
 	Update(*User) (*User, error)
 	Delete(*User) error
 }
