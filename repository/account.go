@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
@@ -101,7 +100,7 @@ func (a *AccountRepo) ChangePassword(u *model.User) error {
 }
 
 // FindVerificationToken retrieves an existing verification token
-func (a *AccountRepo) FindVerificationToken(c context.Context, token string) (*model.Verification, error) {
+func (a *AccountRepo) FindVerificationToken(token string) (*model.Verification, error) {
 	var v = new(model.Verification)
 	sql := `SELECT * FROM verifications WHERE (token = ? and deleted_at IS NULL)`
 	_, err := a.db.QueryOne(v, sql, token)
@@ -113,7 +112,7 @@ func (a *AccountRepo) FindVerificationToken(c context.Context, token string) (*m
 }
 
 // DeleteVerificationToken sets deleted_at for an existing verification token
-func (a *AccountRepo) DeleteVerificationToken(c context.Context, v *model.Verification) error {
+func (a *AccountRepo) DeleteVerificationToken(v *model.Verification) error {
 	_, err := a.db.Model(v).Column("deleted_at").WherePK().Update()
 	if err != nil {
 		a.log.Warn("AccountRepo Error", zap.Error(err))

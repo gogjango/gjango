@@ -222,6 +222,21 @@ func (suite *AccountTestSuite) TestChangePass() {
 	updatedUser, err := userRepo.View(u.ID)
 	assert.Nil(suite.T(), err)
 	assert.Equal(suite.T(), newPassword, updatedUser.Password)
+
+	user2 := &model.User{
+		Email:    "user4@example.org",
+		Password: currentPassword,
+	}
+	v, err := accountRepo.CreateAndVerify(user2)
+	assert.Nil(suite.T(), err)
+	assert.NotNil(suite.T(), v)
+
+	vRetrieved, err := accountRepo.FindVerificationToken(v.Token)
+	assert.Nil(suite.T(), err)
+	assert.Equal(suite.T(), v.Token, vRetrieved.Token)
+
+	err = accountRepo.DeleteVerificationToken(v)
+	assert.Nil(suite.T(), err)
 }
 
 func TestAccountTestSuite(t *testing.T) {

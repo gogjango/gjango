@@ -95,11 +95,11 @@ func (s *Service) Refresh(c context.Context, token string) (*model.RefreshToken,
 
 // Verify verifies the (verification) token and deletes it
 func (s *Service) Verify(c context.Context, token string) error {
-	v, err := s.accountRepo.FindVerificationToken(c, token)
+	v, err := s.accountRepo.FindVerificationToken(token)
 	if err != nil {
 		return err
 	}
-	err = s.accountRepo.DeleteVerificationToken(c, v)
+	err = s.accountRepo.DeleteVerificationToken(v)
 	if err != nil {
 		return err
 	}

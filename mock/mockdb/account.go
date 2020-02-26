@@ -1,8 +1,6 @@
 package mockdb
 
 import (
-	"context"
-
 	"github.com/calvinchengx/gin-go-pg/model"
 )
 
@@ -12,8 +10,8 @@ type Account struct {
 	CreateAndVerifyFn         func(*model.User) (*model.Verification, error)
 	CreateWithMobileFn        func(*model.User) error
 	ChangePasswordFn          func(*model.User) error
-	FindVerificationTokenFn   func(context.Context, string) (*model.Verification, error)
-	DeleteVerificationTokenFn func(context.Context, *model.Verification) error
+	FindVerificationTokenFn   func(string) (*model.Verification, error)
+	DeleteVerificationTokenFn func(*model.Verification) error
 }
 
 // Create mock
@@ -37,11 +35,11 @@ func (a *Account) ChangePassword(usr *model.User) error {
 }
 
 // FindVerificationToken mock
-func (a *Account) FindVerificationToken(c context.Context, token string) (*model.Verification, error) {
-	return a.FindVerificationTokenFn(c, token)
+func (a *Account) FindVerificationToken(token string) (*model.Verification, error) {
+	return a.FindVerificationTokenFn(token)
 }
 
 // DeleteVerificationToken mock
-func (a *Account) DeleteVerificationToken(c context.Context, v *model.Verification) error {
-	return a.DeleteVerificationTokenFn(c, v)
+func (a *Account) DeleteVerificationToken(v *model.Verification) error {
+	return a.DeleteVerificationTokenFn(v)
 }
