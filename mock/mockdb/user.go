@@ -12,10 +12,10 @@ type User struct {
 	FindByUsernameFn func(string) (*model.User, error)
 	FindByEmailFn    func(string) (*model.User, error)
 	FindByMobileFn   func(string, string) (*model.User, error)
-	FindByTokenFn    func(context.Context, string) (*model.User, error)
-	UpdateLoginFn    func(context.Context, *model.User) error
+	FindByTokenFn    func(string) (*model.User, error)
+	UpdateLoginFn    func(*model.User) error
 	ListFn           func(context.Context, *model.ListQuery, *model.Pagination) ([]model.User, error)
-	DeleteFn         func(context.Context, *model.User) error
+	DeleteFn         func(*model.User) error
 	UpdateFn         func(*model.User) (*model.User, error)
 }
 
@@ -40,13 +40,13 @@ func (u *User) FindByMobile(countryCode, mobile string) (*model.User, error) {
 }
 
 // FindByToken mock
-func (u *User) FindByToken(c context.Context, token string) (*model.User, error) {
-	return u.FindByTokenFn(c, token)
+func (u *User) FindByToken(token string) (*model.User, error) {
+	return u.FindByTokenFn(token)
 }
 
 // UpdateLogin mock
-func (u *User) UpdateLogin(c context.Context, usr *model.User) error {
-	return u.UpdateLoginFn(c, usr)
+func (u *User) UpdateLogin(usr *model.User) error {
+	return u.UpdateLoginFn(usr)
 }
 
 // List mock
@@ -55,8 +55,8 @@ func (u *User) List(c context.Context, lq *model.ListQuery, p *model.Pagination)
 }
 
 // Delete mock
-func (u *User) Delete(c context.Context, usr *model.User) error {
-	return u.DeleteFn(c, usr)
+func (u *User) Delete(usr *model.User) error {
+	return u.DeleteFn(usr)
 }
 
 // Update mock

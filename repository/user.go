@@ -80,7 +80,7 @@ func (u *UserRepo) FindByMobile(countryCode, mobile string) (*model.User, error)
 }
 
 // FindByToken queries for single user by token
-func (u *UserRepo) FindByToken(c context.Context, token string) (*model.User, error) {
+func (u *UserRepo) FindByToken(token string) (*model.User, error) {
 	var user = new(model.User)
 	sql := `SELECT "user".*, "role"."id" AS "role__id", "role"."access_level" AS "role__access_level", "role"."name" AS "role__name" 
 	FROM "users" AS "user" LEFT JOIN "roles" AS "role" ON "role"."id" = "user"."role_id" 
@@ -94,7 +94,8 @@ func (u *UserRepo) FindByToken(c context.Context, token string) (*model.User, er
 }
 
 // UpdateLogin updates last login and refresh token for user
-func (u *UserRepo) UpdateLogin(c context.Context, user *model.User) error {
+func (u *UserRepo) UpdateLogin(user *model.User) error {
+	user.UpdateLastLogin() // update user object's last_login field
 	_, err := u.db.Model(user).Column("last_login", "token").WherePK().Update()
 	if err != nil {
 		u.log.Warn("UserRepo Error", zap.Error(err))
@@ -119,7 +120,7 @@ func (u *UserRepo) List(c context.Context, qp *model.ListQuery, p *model.Paginat
 // Update updates user's contact info
 func (u *UserRepo) Update(user *model.User) (*model.User, error) {
 	_, err := u.db.Model(user).Column("first_name",
-		"last_name", "mobile", "address", "active", "updated_at").WherePK().Update()
+		"last_name", "country_code", "mobile", "address", "active", "updated_at").WherePK().Update()
 	if err != nil {
 		u.log.Warn("UserDB Error", zap.Error(err))
 	}
@@ -127,7 +128,7 @@ func (u *UserRepo) Update(user *model.User) (*model.User, error) {
 }
 
 // Delete sets deleted_at for a user
-func (u *UserRepo) Delete(c context.Context, user *model.User) error {
+func (u *UserRepo) Delete(user *model.User) error {
 	_, err := u.db.Model(user).Column("deleted_at").WherePK().Update()
 	if err != nil {
 		u.log.Warn("UserRepo Error", zap.Error(err))

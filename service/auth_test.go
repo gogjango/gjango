@@ -58,7 +58,7 @@ func TestLogin(t *testing.T) {
 						Active:   true,
 					}, nil
 				},
-				UpdateLoginFn: func(context.Context, *model.User) error {
+				UpdateLoginFn: func(*model.User) error {
 					return nil
 				},
 			},
@@ -115,7 +115,7 @@ func TestRefresh(t *testing.T) {
 			req:        "refreshtoken",
 			wantStatus: http.StatusInternalServerError,
 			userRepo: &mockdb.User{
-				FindByTokenFn: func(context.Context, string) (*model.User, error) {
+				FindByTokenFn: func(string) (*model.User, error) {
 					return nil, apperr.DB
 				},
 			},
@@ -125,7 +125,7 @@ func TestRefresh(t *testing.T) {
 			req:        "refreshtoken",
 			wantStatus: http.StatusOK,
 			userRepo: &mockdb.User{
-				FindByTokenFn: func(context.Context, string) (*model.User, error) {
+				FindByTokenFn: func(string) (*model.User, error) {
 					return &model.User{
 						Username: "johndoe",
 						Active:   true,
