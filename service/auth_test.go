@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -289,13 +288,13 @@ func TestVerification(t *testing.T) {
 			req:        "some-random-verification-token",
 			wantStatus: http.StatusOK,
 			accountRepo: &mockdb.Account{
-				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+				FindVerificationTokenFn: func(string) (*model.Verification, error) {
 					return &model.Verification{
 						Token:  "some-random-token-for-verification",
 						UserID: 1,
 					}, nil
 				},
-				DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
+				DeleteVerificationTokenFn: func(*model.Verification) error {
 					return nil
 				},
 			},
@@ -305,7 +304,7 @@ func TestVerification(t *testing.T) {
 			req:        "some-random-verification-token",
 			wantStatus: http.StatusNotFound,
 			accountRepo: &mockdb.Account{
-				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+				FindVerificationTokenFn: func(string) (*model.Verification, error) {
 					return nil, apperr.NotFound
 				},
 			},
@@ -315,13 +314,13 @@ func TestVerification(t *testing.T) {
 			req:        "some-random-verification-token",
 			wantStatus: http.StatusInternalServerError,
 			accountRepo: &mockdb.Account{
-				FindVerificationTokenFn: func(context.Context, string) (*model.Verification, error) {
+				FindVerificationTokenFn: func(string) (*model.Verification, error) {
 					return &model.Verification{
 						Token:  "some-random-token-for-verification",
 						UserID: 1,
 					}, nil
 				},
-				DeleteVerificationTokenFn: func(context.Context, *model.Verification) error {
+				DeleteVerificationTokenFn: func(*model.Verification) error {
 					return apperr.DB
 				},
 			},

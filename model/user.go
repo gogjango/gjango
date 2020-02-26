@@ -63,8 +63,8 @@ type AccountRepo interface {
 	CreateAndVerify(*User) (*Verification, error)
 	CreateWithMobile(*User) error
 	ChangePassword(*User) error
-	FindVerificationToken(context.Context, string) (*Verification, error)
-	DeleteVerificationToken(context.Context, *Verification) error
+	FindVerificationToken(string) (*Verification, error)
+	DeleteVerificationToken(*Verification) error
 }
 
 // AuthUser represents data stored in JWT token for user
