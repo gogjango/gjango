@@ -48,5 +48,5 @@ func (s *Service) ChangePassword(c *gin.Context, oldPass, newPass string, id int
 		return apperr.New(http.StatusBadGateway, "old password is not correct")
 	}
 	u.Password = auth.HashPassword(newPass)
-	return s.accountRepo.ChangePassword(c, u)
+	return s.accountRepo.ChangePassword(u)
 }

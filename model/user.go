@@ -38,6 +38,12 @@ func (u *User) Delete() {
 	u.DeletedAt = &t
 }
 
+// Update updates the updated_at field
+func (u *User) Update() {
+	t := time.Now()
+	u.UpdatedAt = t
+}
+
 // UserRepo represents user database interface (the repository)
 type UserRepo interface {
 	View(int) (*User, error)
@@ -56,7 +62,7 @@ type AccountRepo interface {
 	Create(*User) (*User, error)
 	CreateAndVerify(*User) (*Verification, error)
 	CreateWithMobile(*User) error
-	ChangePassword(context.Context, *User) error
+	ChangePassword(*User) error
 	FindVerificationToken(context.Context, string) (*Verification, error)
 	DeleteVerificationToken(context.Context, *Verification) error
 }

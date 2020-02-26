@@ -11,7 +11,7 @@ type Account struct {
 	CreateFn                  func(*model.User) (*model.User, error)
 	CreateAndVerifyFn         func(*model.User) (*model.Verification, error)
 	CreateWithMobileFn        func(*model.User) error
-	ChangePasswordFn          func(context.Context, *model.User) error
+	ChangePasswordFn          func(*model.User) error
 	FindVerificationTokenFn   func(context.Context, string) (*model.Verification, error)
 	DeleteVerificationTokenFn func(context.Context, *model.Verification) error
 }
@@ -32,8 +32,8 @@ func (a *Account) CreateWithMobile(usr *model.User) error {
 }
 
 // ChangePassword mock
-func (a *Account) ChangePassword(c context.Context, usr *model.User) error {
-	return a.ChangePasswordFn(c, usr)
+func (a *Account) ChangePassword(usr *model.User) error {
+	return a.ChangePasswordFn(usr)
 }
 
 // FindVerificationToken mock
