@@ -32,6 +32,12 @@ func (u *User) UpdateLastLogin() {
 	u.LastLogin = &t
 }
 
+// Delete updates the deleted_at field
+func (u *User) Delete() {
+	t := time.Now()
+	u.DeletedAt = &t
+}
+
 // UserRepo represents user database interface (the repository)
 type UserRepo interface {
 	View(int) (*User, error)
