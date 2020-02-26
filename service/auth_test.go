@@ -58,7 +58,7 @@ func TestLogin(t *testing.T) {
 						Active:   true,
 					}, nil
 				},
-				UpdateLoginFn: func(context.Context, *model.User) error {
+				UpdateLoginFn: func(*model.User) error {
 					return nil
 				},
 			},

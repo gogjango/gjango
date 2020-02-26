@@ -67,7 +67,7 @@ func (s *Service) Authenticate(c context.Context, username, password string) (*m
 	}
 	u.UpdateLastLogin()
 	u.Token = xid.New().String()
-	if err := s.userRepo.UpdateLogin(c, u); err != nil {
+	if err := s.userRepo.UpdateLogin(u); err != nil {
 		return nil, err
 	}
 	return &model.AuthToken{

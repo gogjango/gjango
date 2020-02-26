@@ -75,5 +75,5 @@ func (s *Service) Delete(c *gin.Context, id int) error {
 		return apperr.Forbidden
 	}
 	u.Delete()
-	return s.userRepo.Delete(c, u)
+	return s.userRepo.Delete(u)
 }

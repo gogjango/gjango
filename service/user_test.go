@@ -457,7 +457,7 @@ func TestDeleteUser(t *testing.T) {
 						},
 					}, nil
 				},
-				DeleteFn: func(context.Context, *model.User) error {
+				DeleteFn: func(*model.User) error {
 					return nil
 				},
 			},

@@ -39,10 +39,10 @@ type UserRepo interface {
 	FindByEmail(string) (*User, error)
 	FindByMobile(string, string) (*User, error)
 	FindByToken(string) (*User, error)
-	UpdateLogin(context.Context, *User) error
+	UpdateLogin(*User) error
 	List(context.Context, *ListQuery, *Pagination) ([]User, error)
 	Update(*User) (*User, error)
-	Delete(context.Context, *User) error
+	Delete(*User) error
 }
 
 // AccountRepo represents account database interface (the repository)
