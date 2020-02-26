@@ -31,7 +31,7 @@ func (s *Service) List(c *gin.Context, p *model.Pagination) ([]model.User, error
 	if err != nil {
 		return nil, err
 	}
-	return s.userRepo.List(c, q, p)
+	return s.userRepo.List(q, p)
 }
 
 // View returns single user

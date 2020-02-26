@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"context"
-
 	"github.com/go-pg/pg/v9"
 	"go.uber.org/zap"
 
@@ -104,7 +102,7 @@ func (u *UserRepo) UpdateLogin(user *model.User) error {
 }
 
 // List returns list of all users retreivable for the current user, depending on role
-func (u *UserRepo) List(c context.Context, qp *model.ListQuery, p *model.Pagination) ([]model.User, error) {
+func (u *UserRepo) List(qp *model.ListQuery, p *model.Pagination) ([]model.User, error) {
 	var users []model.User
 	q := u.db.Model(&users).Column("user.*", "Role").Limit(p.Limit).Offset(p.Offset).Where(notDeleted).Order("user.id desc")
 	if qp != nil {

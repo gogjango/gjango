@@ -122,6 +122,10 @@ func (suite *UserTestSuite) TestUserView() {
 				u, err = userRepo.View(u.ID)
 				assert.Nil(t, u)
 				assert.Error(t, apperr.NotFound)
+				pag := &model.Pagination{Limit: 10, Offset: 0}
+				users, err := userRepo.List(nil, pag)
+				assert.Equal(suite.T(), 0, len(users))
+				assert.Nil(suite.T(), err)
 			} else {
 				u, err := userRepo.View(tt.user.ID)
 				assert.Nil(t, u)

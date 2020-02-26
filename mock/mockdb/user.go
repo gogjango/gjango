@@ -1,8 +1,6 @@
 package mockdb
 
 import (
-	"context"
-
 	"github.com/calvinchengx/gin-go-pg/model"
 )
 
@@ -14,7 +12,7 @@ type User struct {
 	FindByMobileFn   func(string, string) (*model.User, error)
 	FindByTokenFn    func(string) (*model.User, error)
 	UpdateLoginFn    func(*model.User) error
-	ListFn           func(context.Context, *model.ListQuery, *model.Pagination) ([]model.User, error)
+	ListFn           func(*model.ListQuery, *model.Pagination) ([]model.User, error)
 	DeleteFn         func(*model.User) error
 	UpdateFn         func(*model.User) (*model.User, error)
 }
@@ -50,8 +48,8 @@ func (u *User) UpdateLogin(usr *model.User) error {
 }
 
 // List mock
-func (u *User) List(c context.Context, lq *model.ListQuery, p *model.Pagination) ([]model.User, error) {
-	return u.ListFn(c, lq, p)
+func (u *User) List(lq *model.ListQuery, p *model.Pagination) ([]model.User, error) {
+	return u.ListFn(lq, p)
 }
 
 // Delete mock
