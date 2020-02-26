@@ -12,6 +12,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
+	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/go-pg/pg/v9"
 	"github.com/go-pg/pg/v9/orm"
@@ -196,6 +197,31 @@ func (suite *AccountTestSuite) TestAccountCreate() {
 			}
 		})
 	}
+}
+
+func (suite *AccountTestSuite) TestChangePass() {
+	log, _ := zap.NewDevelopment()
+	accountRepo := repository.NewAccountRepo(suite.db, log)
+	userRepo := repository.NewUserRepo(suite.db, log)
+	currentPassword := auth.HashPassword("currentpassword")
+	user := &model.User{
+		Email:    "user3@example.org",
+		Password: currentPassword,
+	}
+	u, err := accountRepo.Create(user)
+	assert.Equal(suite.T(), user.Password, u.Password)
+	assert.NotNil(suite.T(), u.Password)
+	assert.Nil(suite.T(), err)
+
+	newPassword := auth.HashPassword("newpassword")
+	u.Password = newPassword
+	assert.NotEqual(suite.T(), currentPassword, newPassword)
+	err = accountRepo.ChangePassword(u)
+	assert.Nil(suite.T(), err)
+
+	updatedUser, err := userRepo.View(u.ID)
+	assert.Nil(suite.T(), err)
+	assert.Equal(suite.T(), newPassword, updatedUser.Password)
 }
 
 func TestAccountTestSuite(t *testing.T) {

@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -147,7 +146,7 @@ func TestChangePassword(t *testing.T) {
 				},
 			},
 			accountRepo: &mockdb.Account{
-				ChangePasswordFn: func(c context.Context, usr *model.User) error {
+				ChangePasswordFn: func(usr *model.User) error {
 					return nil
 				},
 			},
