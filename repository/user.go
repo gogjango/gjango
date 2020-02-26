@@ -129,6 +129,7 @@ func (u *UserRepo) Update(user *model.User) (*model.User, error) {
 
 // Delete sets deleted_at for a user
 func (u *UserRepo) Delete(user *model.User) error {
+	user.Delete()
 	_, err := u.db.Model(user).Column("deleted_at").WherePK().Update()
 	if err != nil {
 		u.log.Warn("UserRepo Error", zap.Error(err))
