@@ -24,6 +24,7 @@ require (
 	github.com/sendgrid/rest v2.4.1+incompatible // indirect
 	github.com/sendgrid/sendgrid-go v3.5.0+incompatible
 	github.com/stretchr/testify v1.5.0
+	github.com/yusufsyaifudin/gopg-mock v0.0.0-20191216100327-58f68294db5b
 	go.uber.org/zap v1.13.0
 	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413
 	gopkg.in/go-playground/validator.v8 v8.18.2
