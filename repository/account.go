@@ -5,19 +5,19 @@ import (
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/go-pg/pg/v9"
+	"github.com/go-pg/pg/v9/orm"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
 // NewAccountRepo returns an AccountRepo instance
-func NewAccountRepo(db *pg.DB, log *zap.Logger) *AccountRepo {
+func NewAccountRepo(db orm.DB, log *zap.Logger) *AccountRepo {
 	return &AccountRepo{db, log}
 }
 
 // AccountRepo represents the client for the user table
 type AccountRepo struct {
-	db  *pg.DB
+	db  orm.DB
 	log *zap.Logger
 }
 
