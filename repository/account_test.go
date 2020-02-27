@@ -21,7 +21,7 @@ func TestCreateAndVerify(t *testing.T) {
 	}
 
 	log, _ := zap.NewDevelopment()
-	accountRepo := repository.NewAccountRepo2(db, log)
+	accountRepo := repository.NewAccountRepo(db, log)
 	fmt.Println(accountRepo)
 
 	u := &model.User{
@@ -45,7 +45,7 @@ func TestCreateAndVerify2(t *testing.T) {
 	}
 
 	log, _ := zap.NewDevelopment()
-	accountRepo := repository.NewAccountRepo2(db, log)
+	accountRepo := repository.NewAccountRepo(db, log)
 
 	u2 := &model.User{
 		Username:    "hello",
@@ -70,7 +70,7 @@ func TestCreateAndVerify3(t *testing.T) {
 	}
 
 	log, _ := zap.NewDevelopment()
-	accountRepo := repository.NewAccountRepo2(db, log)
+	accountRepo := repository.NewAccountRepo(db, log)
 
 	u2 := &model.User{
 		Username:    "hello",
