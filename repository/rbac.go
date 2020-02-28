@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/gin-gonic/gin"
 )
@@ -57,11 +55,8 @@ func (s *RBACService) isCompanyAdmin(c *gin.Context) bool {
 // Location admin cannot create accounts, needs to be fixed on EnforceLocation function
 func (s *RBACService) AccountCreate(c *gin.Context, roleID, companyID, locationID int) bool {
 	companyCheck := s.EnforceCompany(c, companyID)
-	fmt.Println(companyCheck)
 	locationCheck := s.EnforceLocation(c, locationID)
-	fmt.Println(locationCheck)
 	roleCheck := s.EnforceRole(c, model.AccessRole(roleID))
-	fmt.Println(roleCheck)
 	return companyCheck && locationCheck && roleCheck && s.IsLowerRole(c, model.AccessRole(roleID))
 }
 

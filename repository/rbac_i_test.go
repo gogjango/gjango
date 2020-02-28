@@ -86,4 +86,13 @@ func (suite *RBACTestSuite) TestRBAC() {
 
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), rbac)
+
+	// since the current user is a superadmin, we should be able to change user data
+	userID := 1
+	access := rbac.EnforceUser(c, userID)
+	assert.True(suite.T(), access)
+
+	// since the current user is a superadmin, we should be able to change location data
+	access = rbac.EnforceLocation(c, 1)
+	assert.True(suite.T(), access)
 }
