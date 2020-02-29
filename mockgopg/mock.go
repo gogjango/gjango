@@ -1,16 +1,36 @@
 package mockgopg
 
 import (
+	"reflect"
 	"strings"
 	"sync"
 )
 
 // SQLMock handles query mocks
 type SQLMock struct {
-	lock          *sync.RWMutex
+	lock *sync.RWMutex
+	// tracking queries
 	currentQuery  string
 	currentParams []interface{}
 	queries       map[string]buildQuery
+	// tracking inserts
+	currentInsert string
+	inserts       map[string]buildInsert
+}
+
+// ExpectInsert is a builder method that accepts a model as interface and returns an SQLMock pointer
+func (sqlMock *SQLMock) ExpectInsert(models ...interface{}) *SQLMock {
+	sqlMock.lock.Lock()
+	defer sqlMock.lock.Unlock()
+
+	var inserts []string
+	for _, v := range models {
+		inserts = append(inserts, strings.ToLower(getType(v)))
+	}
+	currentInsert := strings.Join(inserts, ",")
+
+	sqlMock.currentInsert = currentInsert
+	return sqlMock
 }
 
 // ExpectExec is a builder method that accepts a query in string and returns an SQLMock pointer
@@ -55,10 +75,17 @@ func (sqlMock *SQLMock) Returns(result *OrmResult, err error) {
 		result: result,
 		err:    err,
 	}
-
 	sqlMock.queries[sqlMock.currentQuery] = q
 	sqlMock.currentQuery = ""
 	sqlMock.currentParams = nil
+
+	i := buildInsert{
+		insert: sqlMock.currentInsert,
+		err:    err,
+	}
+	sqlMock.inserts[sqlMock.currentInsert] = i
+	sqlMock.currentInsert = ""
+
 }
 
 // FlushAll resets our sqlMock object
@@ -69,4 +96,16 @@ func (sqlMock *SQLMock) FlushAll() {
 	sqlMock.currentQuery = ""
 	sqlMock.currentParams = nil
 	sqlMock.queries = make(map[string]buildQuery)
+
+	sqlMock.currentInsert = ""
+	sqlMock.inserts = make(map[string]buildInsert)
+}
+
+func getType(myvar interface{}) string {
+	valueOf := reflect.ValueOf(myvar)
+	if valueOf.Type().Kind() == reflect.Ptr {
+		return reflect.Indirect(valueOf).Type().Name()
+	}
+	return valueOf.Type().Name()
+
 }

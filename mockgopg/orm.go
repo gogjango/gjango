@@ -23,6 +23,8 @@ func NewGoPGDBTest() (conn orm.DB, mock *SQLMock, err error) {
 		currentQuery:  "",
 		currentParams: nil,
 		queries:       make(map[string]buildQuery),
+		currentInsert: "",
+		inserts:       make(map[string]buildInsert),
 	}
 
 	goPG := &goPgDB{
@@ -46,7 +48,8 @@ func (p *goPgDB) Select(model interface{}) error {
 }
 
 func (p *goPgDB) Insert(model ...interface{}) error {
-	return nil
+	// return nil
+	return p.doInsert(context.Background(), model...)
 }
 
 func (p *goPgDB) Update(model interface{}) error {
@@ -112,6 +115,28 @@ func (p *goPgDB) Context() context.Context {
 func (p *goPgDB) Formatter() orm.QueryFormatter {
 	f := new(Formatter)
 	return f
+}
+
+func (p *goPgDB) doInsert(ctx context.Context, models ...interface{}) error {
+	// update p.insertMock
+	for k, v := range p.sqlMock.inserts {
+
+		// not handling value at the moment
+
+		onTheListInsertStr := k
+
+		var inserts []string
+		for _, v := range models {
+			inserts = append(inserts, strings.ToLower(getType(v)))
+		}
+		wantedInsertStr := strings.Join(inserts, ",")
+
+		if onTheListInsertStr == wantedInsertStr {
+			return v.err
+		}
+	}
+
+	return nil
 }
 
 func (p *goPgDB) doQuery(ctx context.Context, dst interface{}, query string, params ...interface{}) (orm.Result, error) {
