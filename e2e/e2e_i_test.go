@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"path"
 	"path/filepath"
-	"reflect"
 	"runtime"
 	"testing"
 
@@ -94,13 +93,4 @@ func (suite *E2ETestSuite) TestSuperUser() {
 
 func TestE2ETestSuite(t *testing.T) {
 	suite.Run(t, new(E2ETestSuite))
-}
-
-func getType(myvar interface{}) string {
-	valueOf := reflect.ValueOf(myvar)
-	if valueOf.Type().Kind() == reflect.Ptr {
-		return reflect.Indirect(valueOf).Type().Name()
-	}
-	return valueOf.Type().Name()
-
 }
