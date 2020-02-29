@@ -1,9 +1,10 @@
 package mockgopg
 
 import (
-	"reflect"
 	"strings"
 	"sync"
+
+	"github.com/calvinchengx/gin-go-pg/manager"
 )
 
 // SQLMock handles query mocks
@@ -25,7 +26,7 @@ func (sqlMock *SQLMock) ExpectInsert(models ...interface{}) *SQLMock {
 
 	var inserts []string
 	for _, v := range models {
-		inserts = append(inserts, strings.ToLower(getType(v)))
+		inserts = append(inserts, strings.ToLower(manager.GetType(v)))
 	}
 	currentInsert := strings.Join(inserts, ",")
 
@@ -99,13 +100,4 @@ func (sqlMock *SQLMock) FlushAll() {
 
 	sqlMock.currentInsert = ""
 	sqlMock.inserts = make(map[string]buildInsert)
-}
-
-func getType(myvar interface{}) string {
-	valueOf := reflect.ValueOf(myvar)
-	if valueOf.Type().Kind() == reflect.Ptr {
-		return reflect.Indirect(valueOf).Type().Name()
-	}
-	return valueOf.Type().Name()
-
 }

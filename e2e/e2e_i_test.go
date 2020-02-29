@@ -1,24 +1,31 @@
 package e2e_test
 
 import (
+	"fmt"
 	"path"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"testing"
 
 	"github.com/calvinchengx/gin-go-pg/e2e"
-	"github.com/calvinchengx/gin-go-pg/testhelper"
+	"github.com/calvinchengx/gin-go-pg/manager"
+	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/calvinchengx/gin-go-pg/repository"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/go-pg/pg/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
+	"go.uber.org/zap"
 )
+
+var superUser *model.User
 
 type E2ETestSuite struct {
 	suite.Suite
 	db       *pg.DB
 	postgres *embeddedpostgres.EmbeddedPostgres
-	helper   testhelper.TestHelper
+	m        *manager.Manager
 }
 
 func (suite *E2ETestSuite) SetupSuite() {
@@ -44,8 +51,17 @@ func (suite *E2ETestSuite) SetupSuite() {
 		Database: "db_test_database",
 	})
 
+	log, _ := zap.NewDevelopment()
+	accountRepo := repository.NewAccountRepo(suite.db, log)
+	roleRepo := repository.NewRoleRepo(suite.db, log)
+	suite.m = manager.NewManager(accountRepo, roleRepo, suite.db)
+
 	models := e2e.GetModels()
-	suite.helper.CreateSchema(suite.db, models...)
+	suite.m.CreateSchema(models...)
+	suite.m.CreateRoles()
+	superUser, err := suite.m.CreateSuperAdmin("superuser@example.org", "testpassword")
+	fmt.Println("superUser", superUser)
+	fmt.Println("Is there an error?", err)
 }
 
 func (suite *E2ETestSuite) TearDownSuite() {
@@ -54,16 +70,37 @@ func (suite *E2ETestSuite) TearDownSuite() {
 
 func (suite *E2ETestSuite) TestGetModels() {
 	models := e2e.GetModels()
-
-	sql := `select count(*) from information_schema.tables where table_schema = 'public';`
+	sql := `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';`
 	var count int
 	res, err := suite.db.Query(pg.Scan(&count), sql, nil)
 
 	assert.NotNil(suite.T(), res)
 	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), len(models), count)
+	assert.Equal(suite.T(), len(models), count) // for some reason, "dbs" table is also created
+
+	sql = `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';`
+	var names pg.Strings
+	res, err = suite.db.Query(&names, sql, nil)
+
+	assert.NotNil(suite.T(), res)
+	assert.Nil(suite.T(), err)
+	assert.Equal(suite.T(), len(models), len(names)) // for some reason, "dbs" table is also created
+}
+
+func (suite *E2ETestSuite) TestSuperUser() {
+	// assert.Equal(suite.T(), "superuser@example.org", superUser.Email)
+	fmt.Println("Our superUser is", superUser)
 }
 
 func TestE2ETestSuite(t *testing.T) {
 	suite.Run(t, new(E2ETestSuite))
+}
+
+func getType(myvar interface{}) string {
+	valueOf := reflect.ValueOf(myvar)
+	if valueOf.Type().Kind() == reflect.Ptr {
+		return reflect.Indirect(valueOf).Type().Name()
+	}
+	return valueOf.Type().Name()
+
 }

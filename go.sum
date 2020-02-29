@@ -42,6 +42,8 @@ github.com/fatih/structs v1.1.0/go.mod h1:9NiDSp5zOcgEDl+j00MP/WkGVPOlPRLejGD8Ga
 github.com/fergusstrange/embedded-postgres v1.0.0 h1:V7HTmjqLa12MZfuCPEvSBBMjtjYBfKJVHHJolZ1NkqQ=
 github.com/fergusstrange/embedded-postgres v1.0.0/go.mod h1:/puCGX7H8ORxgQGQd2BGfcGoS4LBtkGavfXid+5ZSs0=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
+github.com/gertd/go-pluralize v0.1.1 h1:fQhql/WRRwr4TVp+TCw12s2esCacvEVBdkTUUwNqF/Q=
+github.com/gertd/go-pluralize v0.1.1/go.mod h1:t5DfHcumb6m0RqyVJDrDLEzL2AGeaiqUXIcDNwLaeAs=
 github.com/gf-third/mysql v1.4.2/go.mod h1:+dd90V663ppI2fV5uQ6+rHk0u8KCyU6FkG8Um8Cx3ms=
 github.com/gf-third/yaml v1.0.1/go.mod h1:t443vj0txEw3+E0MOtkr83kt+PrZg2I8SRuYfn85NM0=
 github.com/gin-contrib/cors v1.3.0 h1:PolezCc89peu+NgkIWt9OB01Kbzt6IP0J/JvkG6xxlg=

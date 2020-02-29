@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/calvinchengx/gin-go-pg/manager"
 	"github.com/go-pg/pg/v9/orm"
 )
 
@@ -127,7 +128,7 @@ func (p *goPgDB) doInsert(ctx context.Context, models ...interface{}) error {
 
 		var inserts []string
 		for _, v := range models {
-			inserts = append(inserts, strings.ToLower(getType(v)))
+			inserts = append(inserts, strings.ToLower(manager.GetType(v)))
 		}
 		wantedInsertStr := strings.Join(inserts, ",")
 
