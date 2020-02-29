@@ -1,5 +1,9 @@
 package model
 
+func init() {
+	Register(&Verification{})
+}
+
 // Verification stores randomly generated tokens that can be redeemed
 type Verification struct {
 	Base
