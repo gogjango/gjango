@@ -1,5 +1,9 @@
 package model
 
+func init() {
+	Register(&Location{})
+}
+
 // Location represents company location model
 type Location struct {
 	Base

@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// Models hold registered models in-memory
+var Models []interface{}
+
 // Base contains common fields for all tables
 type Base struct {
 	CreatedAt time.Time  `json:"created_at"`
@@ -46,4 +49,9 @@ func (b *Base) BeforeUpdate(ctx context.Context) (context.Context, error) {
 func (b *Base) Delete() {
 	t := time.Now()
 	b.DeletedAt = &t
+}
+
+// Register is used for registering models
+func Register(m interface{}) {
+	Models = append(Models, m)
 }

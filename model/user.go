@@ -4,6 +4,10 @@ import (
 	"time"
 )
 
+func init() {
+	Register(&User{})
+}
+
 // User represents user domain model
 type User struct {
 	Base

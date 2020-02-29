@@ -1,5 +1,9 @@
 package model
 
+func init() {
+	Register(&Company{})
+}
+
 // Company represents company model
 type Company struct {
 	Base
