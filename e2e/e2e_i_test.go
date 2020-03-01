@@ -26,6 +26,7 @@ type E2ETestSuite struct {
 	m        *manager.Manager
 }
 
+// SetupSuite runs before all tests in this test suite
 func (suite *E2ETestSuite) SetupSuite() {
 	_, b, _, _ := runtime.Caller(0)
 	d := path.Join(path.Dir(b))
@@ -57,6 +58,7 @@ func (suite *E2ETestSuite) SetupSuite() {
 	superUser, _ = e2e.SetupDatabase(suite.m)
 }
 
+// TearDownSuite runs after all tests in this test suite
 func (suite *E2ETestSuite) TearDownSuite() {
 	suite.postgres.Stop()
 }
