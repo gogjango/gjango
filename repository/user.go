@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/go-pg/pg/v9"
+	"github.com/go-pg/pg/v9/orm"
 	"go.uber.org/zap"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
@@ -11,13 +11,13 @@ import (
 const notDeleted = "deleted_at is null"
 
 // NewUserRepo returns a new UserRepo instance
-func NewUserRepo(db *pg.DB, log *zap.Logger) *UserRepo {
+func NewUserRepo(db orm.DB, log *zap.Logger) *UserRepo {
 	return &UserRepo{db, log}
 }
 
 // UserRepo is the client for our user model
 type UserRepo struct {
-	db  *pg.DB
+	db  orm.DB
 	log *zap.Logger
 }
 
