@@ -9,13 +9,11 @@ import (
 
 // SQLMock handles query mocks
 type SQLMock struct {
-	lock *sync.RWMutex
-	// tracking queries
-	currentQuery  string
+	lock          *sync.RWMutex
+	currentQuery  string // tracking queries
 	currentParams []interface{}
 	queries       map[string]buildQuery
-	// tracking inserts
-	currentInsert string
+	currentInsert string // tracking inserts
 	inserts       map[string]buildInsert
 }
 
@@ -95,7 +93,6 @@ func (sqlMock *SQLMock) Returns(result *OrmResult, err error) {
 	}
 	sqlMock.inserts[sqlMock.currentInsert] = i
 	sqlMock.currentInsert = ""
-
 }
 
 // FlushAll resets our sqlMock object
