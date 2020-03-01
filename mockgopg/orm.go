@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/calvinchengx/gin-go-pg/manager"
 	"github.com/go-pg/pg/v9/orm"
 )
 
@@ -93,7 +94,8 @@ func (p *goPgDB) QueryContext(c context.Context, model, query interface{}, param
 }
 
 func (p *goPgDB) QueryOne(model, query interface{}, params ...interface{}) (orm.Result, error) {
-	return nil, nil
+	sqlQuery := fmt.Sprintf("%v", query)
+	return p.doQuery(context.Background(), model, sqlQuery, params...)
 }
 
 func (p *goPgDB) QueryOneContext(c context.Context, model, query interface{}, params ...interface{}) (orm.Result, error) {
@@ -127,7 +129,7 @@ func (p *goPgDB) doInsert(ctx context.Context, models ...interface{}) error {
 
 		var inserts []string
 		for _, v := range models {
-			inserts = append(inserts, strings.ToLower(getType(v)))
+			inserts = append(inserts, strings.ToLower(manager.GetType(v)))
 		}
 		wantedInsertStr := strings.Join(inserts, ",")
 
