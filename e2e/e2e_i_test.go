@@ -55,12 +55,7 @@ func (suite *E2ETestSuite) SetupSuite() {
 	roleRepo := repository.NewRoleRepo(suite.db, log)
 	suite.m = manager.NewManager(accountRepo, roleRepo, suite.db)
 
-	models := e2e.GetModels()
-	suite.m.CreateSchema(models...)
-	suite.m.CreateRoles()
-	superUser, err := suite.m.CreateSuperAdmin("superuser@example.org", "testpassword")
-	fmt.Println("superUser", superUser)
-	fmt.Println("Is there an error?", err)
+	e2e.SetupDatabase(suite.m)
 }
 
 func (suite *E2ETestSuite) TearDownSuite() {
@@ -68,7 +63,7 @@ func (suite *E2ETestSuite) TearDownSuite() {
 }
 
 func (suite *E2ETestSuite) TestGetModels() {
-	models := e2e.GetModels()
+	models := manager.GetModels()
 	sql := `SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';`
 	var count int
 	res, err := suite.db.Query(pg.Scan(&count), sql, nil)
