@@ -1,7 +1,6 @@
 package repository_test
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -194,8 +193,8 @@ func (suite *AccountUnitTestSuite) TestFindVerificationTokenSuccess() {
 		Returns(mockgopg.NewResult(1, 1, v), nil)
 
 	vReturned, err := accountRepo.FindVerificationToken("somerandomverificationtoken")
-	fmt.Println(vReturned.Token)
-	fmt.Println(vReturned.UserID)
+	assert.Equal(t, v.Token, vReturned.Token)
+	assert.Equal(t, v.UserID, vReturned.UserID)
 	assert.Nil(t, err)
 }
 
