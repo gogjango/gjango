@@ -94,7 +94,8 @@ func (p *goPgDB) QueryContext(c context.Context, model, query interface{}, param
 }
 
 func (p *goPgDB) QueryOne(model, query interface{}, params ...interface{}) (orm.Result, error) {
-	return nil, nil
+	sqlQuery := fmt.Sprintf("%v", query)
+	return p.doQuery(context.Background(), model, sqlQuery, params...)
 }
 
 func (p *goPgDB) QueryOneContext(c context.Context, model, query interface{}, params ...interface{}) (orm.Result, error) {

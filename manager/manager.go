@@ -60,10 +60,7 @@ func (m *Manager) CreateSuperAdmin(email, password string) (*model.User, error) 
 		Active:   true,
 		RoleID:   int(model.SuperAdminRole),
 	}
-	u, err := m.accountRepo.Create(u)
-	fmt.Println(u)
-	fmt.Println(err)
-	return u, err
+	return m.accountRepo.Create(u)
 }
 
 // GetType is a useful utility function to help us inspect the name of a model (struct) which is expressed as an interface{}

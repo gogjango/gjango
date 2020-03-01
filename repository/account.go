@@ -72,7 +72,7 @@ func (a *AccountRepo) CreateWithMobile(u *model.User) error {
 	user := new(model.User)
 	sql := `SELECT id FROM users WHERE username = ? OR email = ? OR (country_code = ? AND mobile = ?) AND deleted_at IS NULL`
 	res, err := a.db.Query(user, sql, u.Username, u.Email, u.CountryCode, u.Mobile)
-	if err != nil {
+	if err == apperr.DB {
 		a.log.Error("AccountRepo Error: ", zap.Error(err))
 		return apperr.DB
 	}

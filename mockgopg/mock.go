@@ -52,6 +52,15 @@ func (sqlMock *SQLMock) ExpectQuery(query string) *SQLMock {
 	return sqlMock
 }
 
+// ExpectQueryOne accepts a query in string and returns an SQLMock pointer
+func (sqlMock *SQLMock) ExpectQueryOne(query string) *SQLMock {
+	sqlMock.lock.Lock()
+	defer sqlMock.lock.Unlock()
+
+	sqlMock.currentQuery = strings.TrimSpace(query)
+	return sqlMock
+}
+
 // WithArgs is a builder method that accepts a query in string and returns an SQLMock pointer
 func (sqlMock *SQLMock) WithArgs(params ...interface{}) *SQLMock {
 	sqlMock.lock.Lock()
