@@ -1,17 +1,14 @@
 package e2e
 
 import (
-	"fmt"
-
 	"github.com/calvinchengx/gin-go-pg/manager"
+	"github.com/calvinchengx/gin-go-pg/model"
 )
 
-// SetupDatabase creates the schema and populates it with data
-func SetupDatabase(m *manager.Manager) {
+// SetupDatabase creates the schema, populates it with data and returns with superadmin user
+func SetupDatabase(m *manager.Manager) (*model.User, error) {
 	models := manager.GetModels()
 	m.CreateSchema(models...)
 	m.CreateRoles()
-	superUser, err := m.CreateSuperAdmin("superuser@example.org", "testpassword")
-	fmt.Println("superUser", superUser)
-	fmt.Println("Is there an error?", err)
+	return m.CreateSuperAdmin("superuser@example.org", "testpassword")
 }

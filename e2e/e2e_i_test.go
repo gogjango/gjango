@@ -1,7 +1,6 @@
 package e2e_test
 
 import (
-	"fmt"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -55,7 +54,7 @@ func (suite *E2ETestSuite) SetupSuite() {
 	roleRepo := repository.NewRoleRepo(suite.db, log)
 	suite.m = manager.NewManager(accountRepo, roleRepo, suite.db)
 
-	e2e.SetupDatabase(suite.m)
+	superUser, _ = e2e.SetupDatabase(suite.m)
 }
 
 func (suite *E2ETestSuite) TearDownSuite() {
@@ -70,7 +69,7 @@ func (suite *E2ETestSuite) TestGetModels() {
 
 	assert.NotNil(suite.T(), res)
 	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), len(models), count) // for some reason, "dbs" table is also created
+	assert.Equal(suite.T(), len(models), count)
 
 	sql = `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';`
 	var names pg.Strings
@@ -78,12 +77,11 @@ func (suite *E2ETestSuite) TestGetModels() {
 
 	assert.NotNil(suite.T(), res)
 	assert.Nil(suite.T(), err)
-	assert.Equal(suite.T(), len(models), len(names)) // for some reason, "dbs" table is also created
+	assert.Equal(suite.T(), len(models), len(names))
 }
 
 func (suite *E2ETestSuite) TestSuperUser() {
-	// assert.Equal(suite.T(), "superuser@example.org", superUser.Email)
-	fmt.Println("Our superUser is", superUser)
+	assert.NotNil(suite.T(), superUser)
 }
 
 func TestE2ETestSuite(t *testing.T) {
