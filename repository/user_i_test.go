@@ -21,6 +21,7 @@ type UserTestSuite struct {
 	db       *pg.DB
 	dbErr    *pg.DB
 	postgres *embeddedpostgres.EmbeddedPostgres
+	u        *model.User // test user
 }
 
 func (suite *UserTestSuite) SetupTest() {
@@ -52,6 +53,12 @@ func (suite *UserTestSuite) SetupTest() {
 		Password: "db_test_password",
 		Database: "db_test_database",
 	})
+	suite.u = &model.User{
+		Username:    "user",
+		Email:       "user@example.org",
+		CountryCode: "+65",
+		Mobile:      "91919191",
+	}
 	createSchema(suite.db, &model.Company{}, &model.Location{}, &model.Role{}, &model.User{}, &model.Verification{})
 }
 
@@ -69,26 +76,16 @@ func (suite *UserTestSuite) TestUserView() {
 		wantResult *model.Verification
 	}{
 		{
-			name:   "Fail: user not found",
-			create: false,
-			user: &model.User{
-				Username:    "user",
-				Email:       "user@example.org",
-				CountryCode: "+65",
-				Mobile:      "91919191",
-			},
+			name:      "Fail: user not found",
+			create:    false,
+			user:      suite.u,
 			db:        suite.db,
 			wantError: apperr.NotFound,
 		},
 		{
-			name:   "Success: view user, find user",
-			create: true,
-			user: &model.User{
-				Username:    "user",
-				Email:       "user@example.org",
-				CountryCode: "+65",
-				Mobile:      "91919191",
-			},
+			name:      "Success: view user, find user",
+			create:    true,
+			user:      suite.u,
 			db:        suite.db,
 			wantError: nil,
 		},
@@ -145,6 +142,41 @@ func (suite *UserTestSuite) TestUserView() {
 			}
 		})
 	}
+}
+
+func (suite *UserTestSuite) TestUpdateLoginFailure() {
+	u := suite.u
+	log, _ := zap.NewDevelopment()
+	userRepo := repository.NewUserRepo(suite.dbErr, log)
+	err := userRepo.UpdateLogin(u)
+	assert.NotNil(suite.T(), err)
+}
+
+func (suite *UserTestSuite) TestUpdateFailure() {
+	u := suite.u
+	log, _ := zap.NewDevelopment()
+	userRepo := repository.NewUserRepo(suite.dbErr, log)
+	u.Address = "some address"
+	user, err := userRepo.Update(u)
+	assert.NotNil(suite.T(), user)
+	assert.NotNil(suite.T(), err)
+}
+
+func (suite *UserTestSuite) TestDeleteFailure() {
+	u := suite.u
+	log, _ := zap.NewDevelopment()
+	userRepo := repository.NewUserRepo(suite.dbErr, log)
+	err := userRepo.Delete(u)
+	assert.NotNil(suite.T(), err)
+}
+
+func (suite *UserTestSuite) TestListFailure() {
+	log, _ := zap.NewDevelopment()
+	userRepo := repository.NewUserRepo(suite.dbErr, log)
+	qp := &model.ListQuery{}
+	pag := &model.Pagination{Limit: 10, Offset: 0}
+	_, err := userRepo.List(qp, pag)
+	assert.NotNil(suite.T(), err)
 }
 
 func TestUserTestSuite(t *testing.T) {

@@ -16,6 +16,7 @@ import (
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/go-pg/pg/v9"
 	"github.com/go-pg/pg/v9/orm"
+	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
@@ -199,7 +200,7 @@ func (suite *AccountTestSuite) TestAccountCreate() {
 	}
 }
 
-func (suite *AccountTestSuite) TestChangePass() {
+func (suite *AccountTestSuite) TestChangePasswordSuccess() {
 	log, _ := zap.NewDevelopment()
 	accountRepo := repository.NewAccountRepo(suite.db, log)
 	userRepo := repository.NewUserRepo(suite.db, log)
@@ -237,6 +238,30 @@ func (suite *AccountTestSuite) TestChangePass() {
 
 	err = accountRepo.DeleteVerificationToken(v)
 	assert.Nil(suite.T(), err)
+}
+
+func (suite *AccountTestSuite) TestChangePasswordFailure() {
+	log, _ := zap.NewDevelopment()
+	defer log.Sync()
+	accountRepo := repository.NewAccountRepo(suite.dbErr, log)
+	user := &model.User{
+		Email:    "user5@example.org",
+		Password: auth.HashPassword("somepass"),
+	}
+	err := accountRepo.ChangePassword(user)
+	assert.NotNil(suite.T(), err)
+}
+
+func (suite *AccountTestSuite) TestDeleteVerificationTokenFailue() {
+	log, _ := zap.NewDevelopment()
+	defer log.Sync()
+	accountRepo := repository.NewAccountRepo(suite.dbErr, log)
+	v := &model.Verification{
+		UserID: 1,
+		Token:  uuid.NewV4().String(),
+	}
+	err := accountRepo.DeleteVerificationToken(v)
+	assert.NotNil(suite.T(), err)
 }
 
 func TestAccountTestSuite(t *testing.T) {
