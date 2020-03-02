@@ -30,7 +30,7 @@ func (a *Auth) login(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	r, err := a.svc.Authenticate(c, cred.Username, cred.Password)
+	r, err := a.svc.Authenticate(c, cred.Email, cred.Password)
 	if err != nil {
 		apperr.Response(c, err)
 		return

@@ -6,11 +6,18 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/calvinchengx/gin-go-pg/config"
 	"github.com/calvinchengx/gin-go-pg/e2e"
+	"github.com/calvinchengx/gin-go-pg/mail"
 	"github.com/calvinchengx/gin-go-pg/manager"
+	mw "github.com/calvinchengx/gin-go-pg/middleware"
+	"github.com/calvinchengx/gin-go-pg/mobile"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
+	"github.com/calvinchengx/gin-go-pg/route"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -24,6 +31,7 @@ type E2ETestSuite struct {
 	db       *pg.DB
 	postgres *embeddedpostgres.EmbeddedPostgres
 	m        *manager.Manager
+	r        *gin.Engine
 }
 
 // SetupSuite runs before all tests in this test suite
@@ -51,11 +59,37 @@ func (suite *E2ETestSuite) SetupSuite() {
 	})
 
 	log, _ := zap.NewDevelopment()
+	defer log.Sync()
 	accountRepo := repository.NewAccountRepo(suite.db, log)
 	roleRepo := repository.NewRoleRepo(suite.db, log)
 	suite.m = manager.NewManager(accountRepo, roleRepo, suite.db)
 
 	superUser, _ = e2e.SetupDatabase(suite.m)
+
+	gin.SetMode(gin.TestMode)
+	r := gin.Default()
+
+	// middleware
+	mw.Add(r, cors.Default())
+
+	// load configuration
+	c, _ := config.Load("dev")
+	jwt := mw.NewJWT(c.JWT)
+	m := mail.NewMail(config.GetMailConfig(), config.GetSiteConfig())
+	mobile := mobile.NewMobile(config.GetTwilioConfig())
+
+	// setup routes
+	rs := &route.Services{
+		DB:     suite.db,
+		Log:    log,
+		JWT:    jwt,
+		Mail:   m,
+		Mobile: mobile,
+		R:      r}
+	rs.SetupV1Routes()
+
+	// we can now test our routes in an end-to-end fashion by making http calls
+	suite.r = r
 }
 
 // TearDownSuite runs after all tests in this test suite

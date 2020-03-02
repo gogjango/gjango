@@ -33,25 +33,25 @@ func TestLogin(t *testing.T) {
 	}{
 		{
 			name:       "Invalid request",
-			req:        `{"username":"juzernejm"}`,
+			req:        `{"email":"juzernejm"}`,
 			wantStatus: http.StatusInternalServerError,
 		},
 		{
 			name:       "Fail on FindByUsername",
-			req:        `{"username":"juzernejm","password":"hunter123"}`,
+			req:        `{"email":"juzernejm","password":"hunter123"}`,
 			wantStatus: http.StatusInternalServerError,
 			userRepo: &mockdb.User{
-				FindByUsernameFn: func(string) (*model.User, error) {
+				FindByEmailFn: func(string) (*model.User, error) {
 					return nil, apperr.DB
 				},
 			},
 		},
 		{
 			name:       "Success",
-			req:        `{"username":"juzernejm","password":"hunter123"}`,
+			req:        `{"email":"juzernejm","password":"hunter123"}`,
 			wantStatus: http.StatusOK,
 			userRepo: &mockdb.User{
-				FindByUsernameFn: func(string) (*model.User, error) {
+				FindByEmailFn: func(string) (*model.User, error) {
 					return &model.User{
 						Password: auth.HashPassword("hunter123"),
 						Active:   true,

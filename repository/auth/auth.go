@@ -50,8 +50,8 @@ type Mobile interface {
 }
 
 // Authenticate tries to authenticate the user provided by username and password
-func (s *Service) Authenticate(c context.Context, username, password string) (*model.AuthToken, error) {
-	u, err := s.userRepo.FindByUsername(username)
+func (s *Service) Authenticate(c context.Context, email, password string) (*model.AuthToken, error) {
+	u, err := s.userRepo.FindByEmail(email)
 	if err != nil {
 		return nil, err
 	}
