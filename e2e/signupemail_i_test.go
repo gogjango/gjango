@@ -38,6 +38,8 @@ func (suite *E2ETestSuite) TestSignupEmail() {
 	}
 	defer resp.Body.Close()
 
+	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
