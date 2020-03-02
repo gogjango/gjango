@@ -46,5 +46,5 @@ func (suite *E2ETestSuite) TestSignupEmail() {
 	}
 	fmt.Println(string(body))
 
-	assert.Nil(t, nil)
+	assert.Nil(t, err)
 }
