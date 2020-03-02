@@ -9,6 +9,8 @@ github.com/GoAdminGroup/go-admin v1.2.2 h1:GRoMX6VXW5iw7vIZxUXfYVlLvwZTjU9oaFYws
 github.com/GoAdminGroup/go-admin v1.2.2/go.mod h1:I+W+JDH8UtIFuNtDfNzweM8F5UjLjfg0sTKHnAjTM18=
 github.com/GoAdminGroup/go-admin v1.2.3 h1:Vtyyn/pC3XoA0gWrIc6f7JAY9XgOG7/Xis6s3weVLL4=
 github.com/GoAdminGroup/go-admin v1.2.3/go.mod h1:9Kk8rbrMUUiKQCRaAtdV1aHOTHaqzeyjChq9ykQ76Rg=
+github.com/GoAdminGroup/go-admin v1.2.4 h1:ac3TAveZIFYfFchSu1KzVpeHhYkbglh4krbIbtUcWXg=
+github.com/GoAdminGroup/go-admin v1.2.4/go.mod h1:9Kk8rbrMUUiKQCRaAtdV1aHOTHaqzeyjChq9ykQ76Rg=
 github.com/GoAdminGroup/html v0.0.1/go.mod h1:A1laTJaOx8sQ64p2dE8IqtstDeCNBHEazrEp7hR5VvM=
 github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e h1:n+DcnTNkQnHlwpsrHoQtkrJIO7CBx029fw6oR4vIob4=
 github.com/NebulousLabs/fastrand v0.0.0-20181203155948-6fb6489aac4e/go.mod h1:Bdzq+51GR4/0DIhaICZEOm+OHvXGwwB2trKZ8B4Y6eQ=
