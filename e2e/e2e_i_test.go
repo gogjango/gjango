@@ -31,6 +31,7 @@ type E2ETestSuite struct {
 	postgres *embeddedpostgres.EmbeddedPostgres
 	m        *manager.Manager
 	r        *gin.Engine
+	v        *model.Verification
 }
 
 // SetupSuite runs before all tests in this test suite
@@ -74,11 +75,10 @@ func (suite *E2ETestSuite) SetupSuite() {
 	// load configuration
 	c, _ := config.Load("dev")
 	jwt := mw.NewJWT(c.JWT)
+
 	// mock mail
 	m := &mock.Mail{
-		SendVerificationEmailFn: func(string, *model.Verification) error {
-			return nil
-		},
+		SendVerificationEmailFn: suite.sendVerification,
 	}
 	// mock mobile
 	mobile := &mock.Mobile{
@@ -128,4 +128,10 @@ func (suite *E2ETestSuite) TestSuperUser() {
 
 func TestE2ETestSuite(t *testing.T) {
 	suite.Run(t, new(E2ETestSuite))
+}
+
+// our mock verification token is saved into suite.token for subsequent use
+func (suite *E2ETestSuite) sendVerification(email string, v *model.Verification) error {
+	suite.v = v
+	return nil
 }

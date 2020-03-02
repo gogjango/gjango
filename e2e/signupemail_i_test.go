@@ -48,3 +48,12 @@ func (suite *E2ETestSuite) TestSignupEmail() {
 
 	assert.Nil(t, err)
 }
+
+func (suite *E2ETestSuite) TestVerification() {
+	t := suite.T()
+	v := suite.v
+	fmt.Println("Are we able to retrieve our verification token?")
+	fmt.Println(v.Token)
+	fmt.Println(v.UserID)
+	assert.NotNil(t, v)
+}
