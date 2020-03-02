@@ -1,8 +1,14 @@
 package e2e
 
-import "github.com/calvinchengx/gin-go-pg/model"
+import (
+	"github.com/calvinchengx/gin-go-pg/manager"
+	"github.com/calvinchengx/gin-go-pg/model"
+)
 
-// GetModels retrieve models
-func GetModels() []interface{} {
-	return model.Models
+// SetupDatabase creates the schema, populates it with data and returns with superadmin user
+func SetupDatabase(m *manager.Manager) (*model.User, error) {
+	models := manager.GetModels()
+	m.CreateSchema(models...)
+	m.CreateRoles()
+	return m.CreateSuperAdmin("superuser@example.org", "testpassword")
 }

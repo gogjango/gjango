@@ -71,3 +71,8 @@ func GetType(myvar interface{}) string {
 	}
 	return valueOf.Type().Name()
 }
+
+// GetModels retrieve models
+func GetModels() []interface{} {
+	return model.Models
+}

@@ -11,11 +11,13 @@ require (
 	github.com/gin-contrib/cors v1.3.0
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-pg/migrations/v7 v7.1.9 // indirect
+	github.com/go-pg/pg v8.0.6+incompatible
 	github.com/go-pg/pg/v9 v9.1.3
 	github.com/gogf/gf v1.11.4 // indirect
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/pierrec/lz4 v2.4.1+incompatible // indirect
+	github.com/ribice/gorsk-gin v0.0.0-20190118073939-555e775d6528
 	github.com/robinjoseph08/go-pg-migrations/v2 v2.0.1
 	github.com/rs/xid v1.2.1
 	github.com/satori/go.uuid v1.2.0
