@@ -77,8 +77,8 @@ func (suite *E2ETestSuite) TestVerification() {
 	fmt.Println(string(body))
 	assert.Nil(t, err)
 
+	// The second time we call our verification url, it should return not found
 	resp, err = http.Get(url)
-	// The second type we call our verification url, it should return not found
-	fmt.Println(resp.StatusCode)
-	fmt.Println(err)
+	assert.Equal(t, http.StatusNotFound, resp.StatusCode)
+	assert.Nil(t, err)
 }
