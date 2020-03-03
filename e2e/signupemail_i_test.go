@@ -56,4 +56,29 @@ func (suite *E2ETestSuite) TestVerification() {
 	fmt.Println(v.Token)
 	fmt.Println(v.UserID)
 	assert.NotNil(t, v)
+
+	ts := httptest.NewServer(suite.r)
+	defer ts.Close()
+
+	url := ts.URL + "/verification/" + v.Token
+	fmt.Println("This is our verification url", url)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(body))
+	assert.Nil(t, err)
+
+	resp, err = http.Get(url)
+	// The second type we call our verification url, it should return not found
+	fmt.Println(resp.StatusCode)
+	fmt.Println(err)
 }

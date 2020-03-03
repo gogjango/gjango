@@ -4,6 +4,7 @@ import "github.com/calvinchengx/gin-go-pg/model"
 
 // Mail mock
 type Mail struct {
+	ExternalURL             string
 	SendFn                  func(string, string, string, string) error
 	SendWithDefaultsFn      func(string, string, string) error
 	SendVerificationEmailFn func(string, *model.Verification) error
