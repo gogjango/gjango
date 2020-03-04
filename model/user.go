@@ -21,6 +21,7 @@ type User struct {
 	CountryCode string     `json:"country_code,omitempty"`
 	Address     string     `json:"address,omitempty"`
 	LastLogin   *time.Time `json:"last_login,omitempty"`
+	Verified    bool       `json:"verified"`
 	Active      bool       `json:"active"`
 	Token       string     `json:"-"`
 	Role        *Role      `json:"role,omitempty"`

@@ -55,6 +55,7 @@ func TestLogin(t *testing.T) {
 					return &model.User{
 						Password: auth.HashPassword("hunter123"),
 						Active:   true,
+						Verified: true,
 					}, nil
 				},
 				UpdateLoginFn: func(*model.User) error {

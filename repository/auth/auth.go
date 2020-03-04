@@ -44,7 +44,8 @@ func (s *Service) Authenticate(c context.Context, email, password string) (*mode
 	if !HashMatchesPassword(u.Password, password) {
 		return nil, apperr.New(http.StatusNotFound, "Username or password does not exist")
 	}
-	if !u.Active {
+	// user must be active and verified. Active is enabled/disabled by superadmin user. Verified depends on user verifying via /verification/:token or /mobile/verify
+	if !u.Active || !u.Verified {
 		return nil, apperr.Unauthorized
 	}
 	token, expire, err := s.jwt.GenerateToken(u)
@@ -103,7 +104,8 @@ func (s *Service) MobileVerify(c context.Context, countryCode, mobile, code stri
 	if err != nil {
 		return nil, err
 	}
-	if signup { // signup case, make user verified
+	if signup { // signup case, make user verified and active
+		u.Verified = true
 		u.Active = true
 	} else { // login case, update user's last_login attribute
 		u.UpdateLastLogin()

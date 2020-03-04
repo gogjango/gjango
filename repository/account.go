@@ -77,7 +77,7 @@ func (a *AccountRepo) CreateWithMobile(u *model.User) error {
 		a.log.Error("AccountRepo Error: ", zap.Error(err))
 		return apperr.DB
 	}
-	if res.RowsReturned() != 0 && user.Active == true {
+	if res.RowsReturned() != 0 && user.Verified == true {
 		return apperr.NewStatus(http.StatusConflict) // user already exists and is already verified
 	}
 	if res.RowsReturned() != 0 {

@@ -133,14 +133,15 @@ func (suite *AccountUnitTestSuite) TestCreateWithMobileDBErr() {
 	assert.Equal(t, apperr.DB, err)
 }
 
-// Mock user exists and is already verified when queried
+// Mock user exists and is already verified and active when queried
 func (suite *AccountUnitTestSuite) TestCreateWithMobileUserExistsAndVerified() {
 	u := suite.u
 	accountRepo := suite.accountRepo
 	t := suite.T()
 	mock := suite.mock
 
-	u.Active = true // set user as active (verified)
+	u.Verified = true // set expecged user as verified
+	u.Active = true   // set expected user object as active
 	mock.ExpectQuery(`SELECT id FROM users WHERE username = ? OR email = ? OR (country_code = ? AND mobile = ?) AND deleted_at IS NULL`).
 		WithArgs(u.Username, u.Email, u.CountryCode, u.Mobile).
 		Returns(mockgopg.NewResult(1, 1, u), nil)
