@@ -17,7 +17,7 @@ func (suite *E2ETestSuite) TestSignupMobile() {
 	ts := httptest.NewServer(suite.r)
 	defer ts.Close()
 
-	urlSignupMobile := ts.URL + "/signup/m"
+	urlSignupMobile := ts.URL + "/mobile"
 
 	req := &request.MobileSignup{
 		CountryCode: "+65",
@@ -37,13 +37,14 @@ func (suite *E2ETestSuite) TestSignupMobile() {
 	assert.Nil(t, err)
 
 	// the sms code will be separately sms-ed to user's mobile phone, trigger above
-	// we now test against the /verifycode
+	// we now test against the /mobile/verify
 
-	url := ts.URL + "/verifycode"
+	url := ts.URL + "/mobile/verify"
 	req2 := &request.MobileVerify{
 		CountryCode: "+65",
 		Mobile:      "91919191",
 		Code:        "123456",
+		Signup:      true,
 	}
 	b, err = json.Marshal(req2)
 	if err != nil {

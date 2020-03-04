@@ -50,6 +50,7 @@ type MobileVerify struct {
 	CountryCode string `json:"country_code" binding:"required,min=2"`
 	Mobile      string `json:"mobile" binding:"required"`
 	Code        string `json:"code" binding:"required"`
+	Signup      bool   `json:"signup" binding:"required"`
 }
 
 // AccountVerifyMobile validates user mobile verification

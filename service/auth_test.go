@@ -414,7 +414,7 @@ func TestSignupMobile(t *testing.T) {
 			ts := httptest.NewServer(r)
 			defer ts.Close()
 			// signup
-			path := ts.URL + "/signup/m"
+			path := ts.URL + "/mobile"
 			res, err := http.Post(path, "application/json", bytes.NewBufferString(tt.req))
 			if err != nil {
 				t.Fatal(err)
@@ -438,7 +438,7 @@ func TestVerifyMobile(t *testing.T) {
 	}{
 		{
 			name:       "Success",
-			req:        `{"country_code":"+65","mobile":"91919191","code":"324567"}`,
+			req:        `{"country_code":"+65","mobile":"91919191","code":"324567","signup":true}`,
 			wantStatus: http.StatusOK,
 			mobile: &mock.Mobile{
 				CheckCodeFn: func(string, string, string) error {
@@ -473,7 +473,7 @@ func TestVerifyMobile(t *testing.T) {
 		},
 		{
 			name:       "Failure: code not verified",
-			req:        `{"country_code":"+65","mobile":"91919191","code":"324567"}`,
+			req:        `{"country_code":"+65","mobile":"91919191","code":"324567","signup":true}`,
 			wantStatus: http.StatusNotFound,
 			mobile: &mock.Mobile{
 				CheckCodeFn: func(string, string, string) error {
@@ -493,7 +493,7 @@ func TestVerifyMobile(t *testing.T) {
 			ts := httptest.NewServer(r)
 			defer ts.Close()
 			// signup
-			path := ts.URL + "/verifycode"
+			path := ts.URL + "/mobile/verify"
 			res, err := http.Post(path, "application/json", bytes.NewBufferString(tt.req))
 			if err != nil {
 				t.Fatal(err)
