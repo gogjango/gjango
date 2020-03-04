@@ -1,4 +1,5 @@
 ![CircleCI](https://img.shields.io/circleci/build/github/calvinchengx/gin-go-pg/master) [![Maintainability](https://api.codeclimate.com/v1/badges/62185b640652168fe9f9/maintainability)](https://codeclimate.com/github/calvinchengx/gin-go-pg/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/62185b640652168fe9f9/test_coverage)](https://codeclimate.com/github/calvinchengx/gin-go-pg/test_coverage) [![Go Report Card](https://goreportcard.com/badge/github.com/calvinchengx/gin-go-pg)](https://goreportcard.com/report/github.com/calvinchengx/gin-go-pg) ![GitHub](https://img.shields.io/github/license/calvinchengx/gin-go-pg)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcalvinchengx%2Fgin-go-pg.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcalvinchengx%2Fgin-go-pg?ref=badge_shield)
 
 
 # golang gin with go-pg orm
@@ -40,3 +41,6 @@ go build -o bin/migration migration/main.go
 # we can create migrations by creating files named 1_name.go etc
 # reference https://github.com/go-pg/migrations/tree/master/example
 ```
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcalvinchengx%2Fgin-go-pg.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcalvinchengx%2Fgin-go-pg?ref=badge_large)
