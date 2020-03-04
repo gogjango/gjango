@@ -5,6 +5,7 @@ import (
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	"github.com/go-pg/pg/v9/orm"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
@@ -81,6 +82,11 @@ func (a *AccountRepo) CreateWithMobile(u *model.User) error {
 	}
 	if res.RowsReturned() != 0 {
 		return apperr.BadRequest // user already exists but is not yet verified
+	}
+	// generate a cryptographically secure random password for this user
+	u.Password, err = auth.HashRandomPassword()
+	if err != nil {
+		return apperr.DB
 	}
 	if err := a.db.Insert(u); err != nil {
 		a.log.Warn("AccountRepo error: ", zap.Error(err))

@@ -348,7 +348,7 @@ func TestVerification(t *testing.T) {
 	}
 }
 
-func TestSignupMobile(t *testing.T) {
+func TestMobile(t *testing.T) {
 	cases := []struct {
 		name        string
 		req         string
@@ -390,9 +390,9 @@ func TestSignupMobile(t *testing.T) {
 			wantStatus: http.StatusInternalServerError,
 		},
 		{
-			name:       "Failure: user with mobile number already exists",
+			name:       "Success: user with mobile number already exists",
 			req:        `{"country_code":"+65","mobile":"91919191"}`,
-			wantStatus: http.StatusConflict,
+			wantStatus: http.StatusOK,
 			userRepo: &mockdb.User{
 				FindByMobileFn: func(string, string) (*model.User, error) {
 					return &model.User{ // user already exists
@@ -425,7 +425,7 @@ func TestSignupMobile(t *testing.T) {
 	}
 }
 
-func TestVerifyMobile(t *testing.T) {
+func TestMobileVerify(t *testing.T) {
 	cases := []struct {
 		name        string
 		req         string
@@ -440,6 +440,11 @@ func TestVerifyMobile(t *testing.T) {
 			name:       "Success",
 			req:        `{"country_code":"+65","mobile":"91919191","code":"324567","signup":true}`,
 			wantStatus: http.StatusOK,
+			jwt: &mock.JWT{
+				GenerateTokenFn: func(*model.User) (string, string, error) {
+					return "jwttokenstring", mock.TestTime(2018).Format(time.RFC3339), nil
+				},
+			},
 			mobile: &mock.Mobile{
 				CheckCodeFn: func(string, string, string) error {
 					return nil
@@ -452,6 +457,9 @@ func TestVerifyMobile(t *testing.T) {
 						Mobile:      "91919191",
 					}, nil
 				},
+				UpdateLoginFn: func(*model.User) error {
+					return nil
+				},
 				UpdateFn: func(*model.User) (*model.User, error) {
 					return &model.User{
 						CountryCode: "+65",
@@ -462,19 +470,34 @@ func TestVerifyMobile(t *testing.T) {
 			},
 		},
 		{
-			name:       "Failure: no country code",
-			req:        `{"mobile":"91919191}`,
+			name: "Failure: no country code",
+			req:  `{"mobile":"91919191}`,
+			jwt: &mock.JWT{
+				GenerateTokenFn: func(*model.User) (string, string, error) {
+					return "jwttokenstring", mock.TestTime(2018).Format(time.RFC3339), nil
+				},
+			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		{
-			name:       "Failure: no mobile",
-			req:        `{"country_code":"+1}`,
+			name: "Failure: no mobile",
+			req:  `{"country_code":"+1}`,
+			jwt: &mock.JWT{
+				GenerateTokenFn: func(*model.User) (string, string, error) {
+					return "jwttokenstring", mock.TestTime(2018).Format(time.RFC3339), nil
+				},
+			},
 			wantStatus: http.StatusInternalServerError,
 		},
 		{
 			name:       "Failure: code not verified",
 			req:        `{"country_code":"+65","mobile":"91919191","code":"324567","signup":true}`,
-			wantStatus: http.StatusNotFound,
+			wantStatus: http.StatusUnauthorized,
+			jwt: &mock.JWT{
+				GenerateTokenFn: func(*model.User) (string, string, error) {
+					return "jwttokenstring", mock.TestTime(2018).Format(time.RFC3339), nil
+				},
+			},
 			mobile: &mock.Mobile{
 				CheckCodeFn: func(string, string, string) error {
 					return apperr.NewStatus(http.StatusNotFound)

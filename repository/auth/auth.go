@@ -8,6 +8,7 @@ import (
 	"github.com/rs/xid"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
+	"github.com/calvinchengx/gin-go-pg/cryptohelper"
 	"github.com/calvinchengx/gin-go-pg/mail"
 	"github.com/calvinchengx/gin-go-pg/mobile"
 	"github.com/calvinchengx/gin-go-pg/model"
@@ -91,24 +92,40 @@ func (s *Service) Verify(c context.Context, token string) error {
 	return nil
 }
 
-// VerifyMobile verifies the mobile verification code, i.e. (6-digit) code
-func (s *Service) VerifyMobile(c context.Context, countryCode, mobile, code string) error {
+// MobileVerify verifies the mobile verification code, i.e. (6-digit) code
+func (s *Service) MobileVerify(c context.Context, countryCode, mobile, code string, signup bool) (*model.AuthToken, error) {
 	// send code to twilio
 	err := s.mob.CheckCode(countryCode, mobile, code)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	user, err := s.userRepo.FindByMobile(countryCode, mobile)
+	u, err := s.userRepo.FindByMobile(countryCode, mobile)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	// if it code is approved, make user active
-	user.Active = true
-	_, err = s.userRepo.Update(user)
+	// for the signup true case, make user active
+	if signup {
+		u.Active = true
+		u, err = s.userRepo.Update(u)
+		if err != nil {
+			return nil, err
+		}
+	}
+	// generate jwt and return
+	token, expire, err := s.jwt.GenerateToken(u)
 	if err != nil {
-		return err
+		return nil, apperr.Unauthorized
 	}
-	return nil
+	u.UpdateLastLogin()
+	u.Token = xid.New().String()
+	if err := s.userRepo.UpdateLogin(u); err != nil {
+		return nil, err
+	}
+	return &model.AuthToken{
+		Token:        token,
+		Expires:      expire,
+		RefreshToken: u.Token,
+	}, nil
 }
 
 // User returns user data stored in jwt token
@@ -147,12 +164,12 @@ func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 	return nil
 }
 
-// SignupMobile returns any error from creating a new user in our database with a mobile number
-func (s *Service) SignupMobile(c *gin.Context, m *request.MobileSignup) error {
+// Mobile returns any error from creating a new user in our database with a mobile number
+func (s *Service) Mobile(c *gin.Context, m *request.MobileSignup) error {
 	// find by countryCode and mobile
 	_, err := s.userRepo.FindByMobile(m.CountryCode, m.Mobile)
 	if err == nil { // user already exists
-		return apperr.NewStatus(http.StatusConflict)
+		return apperr.New(http.StatusConflict, "User already exists.")
 	}
 	// create and verify
 	user := &model.User{
@@ -181,4 +198,14 @@ func HashPassword(password string) string {
 // HashMatchesPassword matches hash with password. Returns true if hash and password match.
 func HashMatchesPassword(hash, password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
+}
+
+// HashRandomPassword creates a random password for passwordless mobile signup
+func HashRandomPassword() (string, error) {
+	randomPassword, err := cryptohelper.GenerateRandomString(16)
+	if err != nil {
+		return "", err
+	}
+	r := HashPassword(randomPassword)
+	return r, nil
 }

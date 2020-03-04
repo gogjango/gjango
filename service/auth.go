@@ -77,13 +77,17 @@ func (a *Auth) verify(c *gin.Context) {
 // the client should call /mobile/verify next, if it receives 201 (newly created user object) or 200 (success, and user was previously created)
 // we can use this status code in the client to prepare our request object with Signup attribute as true (201) or false (200)
 func (a *Auth) mobile(c *gin.Context) {
-	m, err := request.AccountSignupMobile(c)
+	m, err := request.Mobile(c)
 	if err != nil {
 		apperr.Response(c, err)
 		return
 	}
-	err = a.svc.SignupMobile(c, m)
+	err = a.svc.Mobile(c, m)
 	if err != nil {
+		if err.Error() == "User already exists." {
+			c.Status(http.StatusOK)
+			return
+		}
 		apperr.Response(c, err)
 		return
 	}
@@ -95,18 +99,13 @@ func (a *Auth) mobile(c *gin.Context) {
 func (a *Auth) mobileVerify(c *gin.Context) {
 	m, err := request.AccountVerifyMobile(c)
 	if err != nil {
-		apperr.Response(c, err)
+		c.JSON(http.StatusInternalServerError, nil)
 		return
 	}
-	err = a.svc.VerifyMobile(c, m.CountryCode, m.Mobile, m.Code)
+	r, err := a.svc.MobileVerify(c, m.CountryCode, m.Mobile, m.Code, m.Signup)
 	if err != nil {
-		apperr.Response(c, err)
+		c.JSON(http.StatusUnauthorized, nil)
 		return
 	}
-	if m.Signup {
-		// mark our user as verified and generate jwt
-	} else {
-		// update our user's last_login attribute and generate jwt
-	}
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, r)
 }
