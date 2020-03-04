@@ -103,14 +103,16 @@ func (s *Service) MobileVerify(c context.Context, countryCode, mobile, code stri
 	if err != nil {
 		return nil, err
 	}
-	// for the signup true case, make user active
-	if signup {
+	if signup { // signup case, make user verified
 		u.Active = true
-		u, err = s.userRepo.Update(u)
-		if err != nil {
-			return nil, err
-		}
+	} else { // login case, update user's last_login attribute
+		u.UpdateLastLogin()
 	}
+	u, err = s.userRepo.Update(u)
+	if err != nil {
+		return nil, err
+	}
+
 	// generate jwt and return
 	token, expire, err := s.jwt.GenerateToken(u)
 	if err != nil {
