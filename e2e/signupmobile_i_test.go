@@ -3,6 +3,7 @@ package e2e_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -33,5 +34,28 @@ func (suite *E2ETestSuite) TestSignupMobile() {
 	defer resp.Body.Close()
 
 	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+	assert.Nil(t, err)
+
+	// the sms code will be separately sms-ed to user's mobile phone, trigger above
+	// we now test against the /verifycode
+
+	url := ts.URL + "/verifycode"
+	req2 := &request.MobileVerify{
+		CountryCode: "+65",
+		Mobile:      "91919191",
+		Code:        "123456",
+	}
+	b, err = json.Marshal(req2)
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp, err = http.Post(url, "application/json", bytes.NewBuffer(b))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("Verify Code")
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Nil(t, err)
 }
