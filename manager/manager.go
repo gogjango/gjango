@@ -58,6 +58,7 @@ func (m *Manager) CreateSuperAdmin(email, password string) (*model.User, error) 
 		Email:    email,
 		Password: auth.HashPassword(password),
 		Active:   true,
+		Verified: true,
 		RoleID:   int(model.SuperAdminRole),
 	}
 	return m.accountRepo.Create(u)
