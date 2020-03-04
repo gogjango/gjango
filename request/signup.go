@@ -35,8 +35,8 @@ type MobileSignup struct {
 	Mobile      string `json:"mobile" binding:"required"`
 }
 
-// AccountSignupMobile validates user signup request via mobile
-func AccountSignupMobile(c *gin.Context) (*MobileSignup, error) {
+// Mobile validates user signup request via mobile
+func Mobile(c *gin.Context) (*MobileSignup, error) {
 	var r MobileSignup
 	if err := c.ShouldBindJSON(&r); err != nil {
 		apperr.Response(c, err)
@@ -50,6 +50,7 @@ type MobileVerify struct {
 	CountryCode string `json:"country_code" binding:"required,min=2"`
 	Mobile      string `json:"mobile" binding:"required"`
 	Code        string `json:"code" binding:"required"`
+	Signup      bool   `json:"signup" binding:"required"`
 }
 
 // AccountVerifyMobile validates user mobile verification
