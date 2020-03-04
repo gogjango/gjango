@@ -8,20 +8,16 @@ import (
 	"github.com/rs/xid"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
+	"github.com/calvinchengx/gin-go-pg/mail"
+	"github.com/calvinchengx/gin-go-pg/mobile"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/request"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // NewAuthService creates new auth service
-func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT, mail Mail, mobile Mobile) *Service {
-	return &Service{
-		userRepo:    userRepo,
-		accountRepo: accountRepo,
-		jwt:         jwt,
-		mail:        mail,
-		mobile:      mobile,
-	}
+func NewAuthService(userRepo model.UserRepo, accountRepo model.AccountRepo, jwt JWT, m mail.Service, mob mobile.Service) *Service {
+	return &Service{userRepo, accountRepo, jwt, m, mob}
 }
 
 // Service represents the auth application service
@@ -29,24 +25,13 @@ type Service struct {
 	userRepo    model.UserRepo
 	accountRepo model.AccountRepo
 	jwt         JWT
-	mail        Mail
-	mobile      Mobile
+	m           mail.Service
+	mob         mobile.Service
 }
 
 // JWT represents jwt interface
 type JWT interface {
 	GenerateToken(*model.User) (string, string, error)
-}
-
-// Mail represents mail interface
-type Mail interface {
-	SendVerificationEmail(string, *model.Verification) error
-}
-
-// Mobile represents mobile interface
-type Mobile interface {
-	GenerateSMSToken(string, string) error
-	CheckCode(string, string, string) error
 }
 
 // Authenticate tries to authenticate the user provided by username and password
@@ -109,7 +94,7 @@ func (s *Service) Verify(c context.Context, token string) error {
 // VerifyMobile verifies the mobile verification code, i.e. (6-digit) code
 func (s *Service) VerifyMobile(c context.Context, countryCode, mobile, code string) error {
 	// send code to twilio
-	err := s.mobile.CheckCode(countryCode, mobile, code)
+	err := s.mob.CheckCode(countryCode, mobile, code)
 	if err != nil {
 		return err
 	}
@@ -154,7 +139,7 @@ func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 	if err != nil {
 		return err
 	}
-	err = s.mail.SendVerificationEmail(e.Email, v)
+	err = s.m.SendVerificationEmail(e.Email, v)
 	if err != nil {
 		apperr.Response(c, err)
 		return err
@@ -165,17 +150,21 @@ func (s *Service) Signup(c *gin.Context, e *request.EmailSignup) error {
 // SignupMobile returns any error from creating a new user in our database with a mobile number
 func (s *Service) SignupMobile(c *gin.Context, m *request.MobileSignup) error {
 	// find by countryCode and mobile
-	u, err := s.userRepo.FindByMobile(m.CountryCode, m.Mobile)
+	_, err := s.userRepo.FindByMobile(m.CountryCode, m.Mobile)
 	if err == nil { // user already exists
 		return apperr.NewStatus(http.StatusConflict)
 	}
 	// create and verify
-	err = s.accountRepo.CreateWithMobile(u)
+	user := &model.User{
+		CountryCode: m.CountryCode,
+		Mobile:      m.Mobile,
+	}
+	err = s.accountRepo.CreateWithMobile(user)
 	if err != nil {
 		return err
 	}
 	// generate sms token
-	err = s.mobile.GenerateSMSToken(m.CountryCode, m.Mobile)
+	err = s.mob.GenerateSMSToken(m.CountryCode, m.Mobile)
 	if err != nil {
 		apperr.Response(c, err)
 		return err

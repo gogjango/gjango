@@ -14,13 +14,18 @@ import (
 	"go.uber.org/zap"
 )
 
+// NewServices creates a new router services
+func NewServices(DB *pg.DB, Log *zap.Logger, JWT *mw.JWT, Mail mail.Service, Mobile mobile.Service, R *gin.Engine) *Services {
+	return &Services{DB, Log, JWT, Mail, Mobile, R}
+}
+
 // Services lets us bind specific services when setting up routes
 type Services struct {
 	DB     *pg.DB
 	Log    *zap.Logger
 	JWT    *mw.JWT
-	Mail   *mail.Mail
-	Mobile *mobile.Mobile
+	Mail   mail.Service
+	Mobile mobile.Service
 	R      *gin.Engine
 }
 

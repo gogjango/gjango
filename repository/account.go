@@ -113,6 +113,7 @@ func (a *AccountRepo) FindVerificationToken(token string) (*model.Verification, 
 
 // DeleteVerificationToken sets deleted_at for an existing verification token
 func (a *AccountRepo) DeleteVerificationToken(v *model.Verification) error {
+	v.Delete()
 	_, err := a.db.Model(v).Column("deleted_at").WherePK().Update()
 	if err != nil {
 		a.log.Warn("AccountRepo Error", zap.Error(err))

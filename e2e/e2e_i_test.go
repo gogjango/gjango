@@ -8,10 +8,9 @@ import (
 
 	"github.com/calvinchengx/gin-go-pg/config"
 	"github.com/calvinchengx/gin-go-pg/e2e"
-	"github.com/calvinchengx/gin-go-pg/mail"
 	"github.com/calvinchengx/gin-go-pg/manager"
 	mw "github.com/calvinchengx/gin-go-pg/middleware"
-	"github.com/calvinchengx/gin-go-pg/mobile"
+	"github.com/calvinchengx/gin-go-pg/mock"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
 	"github.com/calvinchengx/gin-go-pg/route"
@@ -32,6 +31,7 @@ type E2ETestSuite struct {
 	postgres *embeddedpostgres.EmbeddedPostgres
 	m        *manager.Manager
 	r        *gin.Engine
+	v        *model.Verification
 }
 
 // SetupSuite runs before all tests in this test suite
@@ -75,17 +75,23 @@ func (suite *E2ETestSuite) SetupSuite() {
 	// load configuration
 	c, _ := config.Load("dev")
 	jwt := mw.NewJWT(c.JWT)
-	m := mail.NewMail(config.GetMailConfig(), config.GetSiteConfig())
-	mobile := mobile.NewMobile(config.GetTwilioConfig())
+
+	// mock mail
+	m := &mock.Mail{
+		SendVerificationEmailFn: suite.sendVerification,
+	}
+	// mock mobile
+	mobile := &mock.Mobile{
+		GenerateSMSTokenFn: func(string, string) error {
+			return nil
+		},
+		CheckCodeFn: func(string, string, string) error {
+			return nil
+		},
+	}
 
 	// setup routes
-	rs := &route.Services{
-		DB:     suite.db,
-		Log:    log,
-		JWT:    jwt,
-		Mail:   m,
-		Mobile: mobile,
-		R:      r}
+	rs := route.NewServices(suite.db, log, jwt, m, mobile, r)
 	rs.SetupV1Routes()
 
 	// we can now test our routes in an end-to-end fashion by making http calls
@@ -122,4 +128,10 @@ func (suite *E2ETestSuite) TestSuperUser() {
 
 func TestE2ETestSuite(t *testing.T) {
 	suite.Run(t, new(E2ETestSuite))
+}
+
+// our mock verification token is saved into suite.token for subsequent use
+func (suite *E2ETestSuite) sendVerification(email string, v *model.Verification) error {
+	suite.v = v
+	return nil
 }
