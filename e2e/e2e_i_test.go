@@ -27,11 +27,12 @@ var superUser *model.User
 
 type E2ETestSuite struct {
 	suite.Suite
-	db       *pg.DB
-	postgres *embeddedpostgres.EmbeddedPostgres
-	m        *manager.Manager
-	r        *gin.Engine
-	v        *model.Verification
+	db        *pg.DB
+	postgres  *embeddedpostgres.EmbeddedPostgres
+	m         *manager.Manager
+	r         *gin.Engine
+	v         *model.Verification
+	authToken model.AuthToken
 }
 
 // SetupSuite runs before all tests in this test suite

@@ -39,7 +39,8 @@ func (a *Auth) login(c *gin.Context) {
 }
 
 func (a *Auth) refresh(c *gin.Context) {
-	r, err := a.svc.Refresh(c, c.Param("token"))
+	refreshToken := c.Param("token")
+	r, err := a.svc.Refresh(c, refreshToken)
 	if err != nil {
 		apperr.Response(c, err)
 		return

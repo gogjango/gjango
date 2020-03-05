@@ -65,11 +65,12 @@ func (s *Service) Authenticate(c context.Context, email, password string) (*mode
 }
 
 // Refresh refreshes jwt token and puts new claims inside
-func (s *Service) Refresh(c context.Context, token string) (*model.RefreshToken, error) {
-	user, err := s.userRepo.FindByToken(token)
+func (s *Service) Refresh(c context.Context, refreshToken string) (*model.RefreshToken, error) {
+	user, err := s.userRepo.FindByToken(refreshToken)
 	if err != nil {
 		return nil, err
 	}
+	// this is our re-generated JWT
 	token, expire, err := s.jwt.GenerateToken(user)
 	if err != nil {
 		return nil, apperr.Generic
