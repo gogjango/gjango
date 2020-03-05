@@ -9,6 +9,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/go-pg/pg/v9"
 	"github.com/stretchr/testify/assert"
@@ -96,7 +97,7 @@ func (suite *UserTestSuite) TestUserView() {
 			userRepo := repository.NewUserRepo(tt.db, log)
 
 			if tt.create {
-				accountRepo := repository.NewAccountRepo(tt.db, log)
+				accountRepo := repository.NewAccountRepo(tt.db, log, secret.New())
 				_, err := accountRepo.Create(tt.user)
 				assert.Nil(t, err)
 				u, err := userRepo.View(tt.user.ID)

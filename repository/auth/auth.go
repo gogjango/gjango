@@ -8,11 +8,11 @@ import (
 	"github.com/rs/xid"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/cryptohelper"
 	"github.com/calvinchengx/gin-go-pg/mail"
 	"github.com/calvinchengx/gin-go-pg/mobile"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/request"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -207,7 +207,7 @@ func HashMatchesPassword(hash, password string) bool {
 
 // HashRandomPassword creates a random password for passwordless mobile signup
 func HashRandomPassword() (string, error) {
-	randomPassword, err := cryptohelper.GenerateRandomString(16)
+	randomPassword, err := secret.GenerateRandomString(16)
 	if err != nil {
 		return "", err
 	}

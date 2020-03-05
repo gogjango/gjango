@@ -13,6 +13,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
 	"github.com/calvinchengx/gin-go-pg/repository/auth"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/go-pg/pg/v9"
 	"github.com/go-pg/pg/v9/orm"
@@ -86,7 +87,7 @@ func (suite *AccountTestSuite) TestAccountCreateWithMobile() {
 	for _, tt := range cases {
 		suite.T().Run(tt.name, func(t *testing.T) {
 			log, _ := zap.NewDevelopment()
-			accountRepo := repository.NewAccountRepo(tt.db, log)
+			accountRepo := repository.NewAccountRepo(tt.db, log, secret.New())
 			err := accountRepo.CreateWithMobile(tt.user)
 			assert.Equal(t, tt.wantError, err)
 		})
@@ -125,7 +126,7 @@ func (suite *AccountTestSuite) TestAccountCreateAndVerify() {
 	for _, tt := range cases {
 		suite.T().Run(tt.name, func(t *testing.T) {
 			log, _ := zap.NewDevelopment()
-			accountRepo := repository.NewAccountRepo(tt.db, log)
+			accountRepo := repository.NewAccountRepo(tt.db, log, secret.New())
 			v, err := accountRepo.CreateAndVerify(tt.user)
 			assert.Equal(t, tt.wantError, err)
 			if v != nil {
@@ -188,7 +189,7 @@ func (suite *AccountTestSuite) TestAccountCreate() {
 	for _, tt := range cases {
 		suite.T().Run(tt.name, func(t *testing.T) {
 			log, _ := zap.NewDevelopment()
-			accountRepo := repository.NewAccountRepo(tt.db, log)
+			accountRepo := repository.NewAccountRepo(tt.db, log, secret.New())
 			u, err := accountRepo.Create(tt.user)
 			assert.Equal(t, tt.wantError, err)
 			if u != nil {
@@ -202,7 +203,7 @@ func (suite *AccountTestSuite) TestAccountCreate() {
 
 func (suite *AccountTestSuite) TestChangePasswordSuccess() {
 	log, _ := zap.NewDevelopment()
-	accountRepo := repository.NewAccountRepo(suite.db, log)
+	accountRepo := repository.NewAccountRepo(suite.db, log, secret.New())
 	userRepo := repository.NewUserRepo(suite.db, log)
 	currentPassword := auth.HashPassword("currentpassword")
 	user := &model.User{
@@ -243,7 +244,7 @@ func (suite *AccountTestSuite) TestChangePasswordSuccess() {
 func (suite *AccountTestSuite) TestChangePasswordFailure() {
 	log, _ := zap.NewDevelopment()
 	defer log.Sync()
-	accountRepo := repository.NewAccountRepo(suite.dbErr, log)
+	accountRepo := repository.NewAccountRepo(suite.dbErr, log, secret.New())
 	user := &model.User{
 		Email:    "user5@example.org",
 		Password: auth.HashPassword("somepass"),
@@ -255,7 +256,7 @@ func (suite *AccountTestSuite) TestChangePasswordFailure() {
 func (suite *AccountTestSuite) TestDeleteVerificationTokenFailue() {
 	log, _ := zap.NewDevelopment()
 	defer log.Sync()
-	accountRepo := repository.NewAccountRepo(suite.dbErr, log)
+	accountRepo := repository.NewAccountRepo(suite.dbErr, log, secret.New())
 	v := &model.Verification{
 		UserID: 1,
 		Token:  uuid.NewV4().String(),

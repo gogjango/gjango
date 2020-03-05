@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
+	"github.com/calvinchengx/gin-go-pg/mock"
+	mck "github.com/calvinchengx/gin-go-pg/mock"
 	"github.com/calvinchengx/gin-go-pg/mockgopg"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
@@ -36,7 +38,7 @@ func (suite *AccountUnitTestSuite) SetupTest() {
 	}
 
 	log, _ := zap.NewDevelopment()
-	suite.accountRepo = repository.NewAccountRepo(db, log)
+	suite.accountRepo = repository.NewAccountRepo(db, log, &mock.Password{})
 }
 
 func (suite *AccountUnitTestSuite) TearDownTest() {
@@ -97,7 +99,7 @@ func (suite *AccountUnitTestSuite) TestCreateAndVerifyDBErrOnInsertUser() {
 }
 
 // Mock DB error when inserting verification object
-func (suite *AccountUnitTestSuite) TestCreateAndVerifyDBErrOnInsertVerififcation() {
+func (suite *AccountUnitTestSuite) TestCreateAndVerifyDBErrOnInsertVerification() {
 	u := suite.u
 	accountRepo := suite.accountRepo
 	t := suite.T()
@@ -163,6 +165,28 @@ func (suite *AccountUnitTestSuite) TestCreateWithMobileUserExistsButNotVerified(
 	assert.Equal(t, apperr.BadRequest, err)
 }
 
+// Mock HashRandomPassword error
+func (suite *AccountUnitTestSuite) TestCreateWithMobileHashRandomPasswordErr() {
+	u := suite.u
+	accountRepo := suite.accountRepo
+	t := suite.T()
+	mock := suite.mock
+
+	mock.ExpectQuery(`SELECT id FROM users WHERE username = ? OR email = ? OR (country_code = ? AND mobile = ?) AND deleted_at IS NULL`).
+		WithArgs(u.Username, u.Email, u.CountryCode, u.Mobile).
+		Returns(mockgopg.NewResult(0, 0, nil), apperr.NotFound)
+
+	// mock a HashRandomPassword error
+	accountRepo.Secret = &mck.Password{
+		HashRandomPasswordFn: func() (string, error) {
+			return "", apperr.DB
+		},
+	}
+
+	err := accountRepo.CreateWithMobile(u)
+	assert.Equal(t, apperr.DB, err)
+}
+
 // Mock db error when insert
 func (suite *AccountUnitTestSuite) TestCreateWithMobileDBErrOnInsert() {
 	u := suite.u
@@ -173,6 +197,13 @@ func (suite *AccountUnitTestSuite) TestCreateWithMobileDBErrOnInsert() {
 	mock.ExpectQuery(`SELECT id FROM users WHERE username = ? OR email = ? OR (country_code = ? AND mobile = ?) AND deleted_at IS NULL`).
 		WithArgs(u.Username, u.Email, u.CountryCode, u.Mobile).
 		Returns(mockgopg.NewResult(0, 0, nil), apperr.NotFound)
+
+	// mock a successful HashRandomPassword
+	accountRepo.Secret = &mck.Password{
+		HashRandomPasswordFn: func() (string, error) {
+			return "somerandomhash", nil
+		},
+	}
 
 	mock.ExpectInsert(u).
 		Returns(nil, apperr.DB)

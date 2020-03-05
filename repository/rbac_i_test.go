@@ -10,6 +10,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
 	"github.com/calvinchengx/gin-go-pg/repository/account"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v9"
@@ -68,7 +69,7 @@ func (suite *RBACTestSuite) TestRBAC() {
 	// create a user in our test database, which is superadmin
 	log, _ := zap.NewDevelopment()
 	userRepo := repository.NewUserRepo(suite.db, log)
-	accountRepo := repository.NewAccountRepo(suite.db, log)
+	accountRepo := repository.NewAccountRepo(suite.db, log, secret.New())
 	rbac := repository.NewRBACService(userRepo)
 
 	// ensure that our roles table is populated with default roles
