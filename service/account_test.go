@@ -11,7 +11,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/mock/mockdb"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository/account"
-	"github.com/calvinchengx/gin-go-pg/repository/auth"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/calvinchengx/gin-go-pg/service"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -80,7 +80,7 @@ func TestCreate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
 			rg := r.Group("/v1")
-			accountService := account.NewAccountService(nil, tt.accountRepo, tt.rbac)
+			accountService := account.NewAccountService(nil, tt.accountRepo, tt.rbac, secret.New())
 			service.AccountRouter(accountService, rg)
 			ts := httptest.NewServer(r)
 			defer ts.Close()
@@ -141,7 +141,7 @@ func TestChangePassword(t *testing.T) {
 			userRepo: &mockdb.User{
 				ViewFn: func(id int) (*model.User, error) {
 					return &model.User{
-						Password: auth.HashPassword("oldpassw"),
+						Password: secret.New().HashPassword("oldpassw"),
 					}, nil
 				},
 			},
@@ -160,7 +160,7 @@ func TestChangePassword(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.New()
 			rg := r.Group("/v1")
-			accountService := account.NewAccountService(tt.userRepo, tt.accountRepo, tt.rbac)
+			accountService := account.NewAccountService(tt.userRepo, tt.accountRepo, tt.rbac, secret.New())
 			service.AccountRouter(accountService, rg)
 			ts := httptest.NewServer(r)
 			defer ts.Close()

@@ -1,4 +1,4 @@
-package cryptohelper
+package secret
 
 import (
 	"crypto/rand"

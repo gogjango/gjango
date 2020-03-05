@@ -8,6 +8,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/repository/account"
 	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	"github.com/calvinchengx/gin-go-pg/repository/user"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/calvinchengx/gin-go-pg/service"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v9"
@@ -33,12 +34,12 @@ type Services struct {
 func (s *Services) SetupV1Routes() {
 	// database logic
 	userRepo := repository.NewUserRepo(s.DB, s.Log)
-	accountRepo := repository.NewAccountRepo(s.DB, s.Log)
+	accountRepo := repository.NewAccountRepo(s.DB, s.Log, secret.New())
 	rbac := repository.NewRBACService(userRepo)
 
 	// service logic
 	authService := auth.NewAuthService(userRepo, accountRepo, s.JWT, s.Mail, s.Mobile)
-	accountService := account.NewAccountService(userRepo, accountRepo, rbac)
+	accountService := account.NewAccountService(userRepo, accountRepo, rbac, secret.New())
 	userService := user.NewUserService(userRepo, authService, rbac)
 
 	// no prefix, no jwt

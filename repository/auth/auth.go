@@ -8,12 +8,11 @@ import (
 	"github.com/rs/xid"
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/cryptohelper"
 	"github.com/calvinchengx/gin-go-pg/mail"
 	"github.com/calvinchengx/gin-go-pg/mobile"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/request"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/calvinchengx/gin-go-pg/secret"
 )
 
 // NewAuthService creates new auth service
@@ -41,7 +40,7 @@ func (s *Service) Authenticate(c context.Context, email, password string) (*mode
 	if err != nil {
 		return nil, err
 	}
-	if !HashMatchesPassword(u.Password, password) {
+	if !secret.New().HashMatchesPassword(u.Password, password) {
 		return nil, apperr.New(http.StatusNotFound, "Username or password does not exist")
 	}
 	// user must be active and verified. Active is enabled/disabled by superadmin user. Verified depends on user verifying via /verification/:token or /mobile/verify
@@ -192,25 +191,4 @@ func (s *Service) Mobile(c *gin.Context, m *request.MobileSignup) error {
 		return err
 	}
 	return nil
-}
-
-// HashPassword hashes the password using bcrypt
-func HashPassword(password string) string {
-	hashedPW, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(hashedPW)
-}
-
-// HashMatchesPassword matches hash with password. Returns true if hash and password match.
-func HashMatchesPassword(hash, password string) bool {
-	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
-}
-
-// HashRandomPassword creates a random password for passwordless mobile signup
-func HashRandomPassword() (string, error) {
-	randomPassword, err := cryptohelper.GenerateRandomString(16)
-	if err != nil {
-		return "", err
-	}
-	r := HashPassword(randomPassword)
-	return r, nil
 }

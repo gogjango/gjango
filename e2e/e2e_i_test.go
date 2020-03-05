@@ -14,6 +14,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
 	"github.com/calvinchengx/gin-go-pg/route"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -61,7 +62,7 @@ func (suite *E2ETestSuite) SetupSuite() {
 
 	log, _ := zap.NewDevelopment()
 	defer log.Sync()
-	accountRepo := repository.NewAccountRepo(suite.db, log)
+	accountRepo := repository.NewAccountRepo(suite.db, log, secret.New())
 	roleRepo := repository.NewRoleRepo(suite.db, log)
 	suite.m = manager.NewManager(accountRepo, roleRepo, suite.db)
 
