@@ -1,4 +1,4 @@
-package main
+package migration
 
 import (
 	"flag"
@@ -26,7 +26,8 @@ Usage:
   go run *.go <command> [args]
 `
 
-func main() {
+// Run executes migration subcommands
+func Run() error {
 	fmt.Println("Running migration")
 	flag.Usage = usage
 	flag.Parse()
@@ -60,6 +61,7 @@ func main() {
 	} else {
 		fmt.Printf("version is %d\n", oldVersion)
 	}
+	return nil
 }
 
 func usage() {
