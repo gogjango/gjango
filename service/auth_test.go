@@ -382,6 +382,26 @@ func TestMobile(t *testing.T) {
 			},
 		},
 		{
+			name:       "Failure: GenerateSMSToken function fails",
+			req:        `{"country_code":"+65","mobile":"91919191"}`,
+			wantStatus: http.StatusInternalServerError,
+			userRepo: &mockdb.User{
+				FindByMobileFn: func(string, string) (*model.User, error) {
+					return nil, apperr.DB // no such user, so create
+				},
+			},
+			accountRepo: &mockdb.Account{
+				CreateWithMobileFn: func(*model.User) error {
+					return nil
+				},
+			},
+			mobile: &mock.Mobile{
+				GenerateSMSTokenFn: func(string, string) error {
+					return apperr.DB
+				},
+			},
+		},
+		{
 			name:       "Failure: no country code",
 			req:        `{"mobile":"91919191}`,
 			wantStatus: http.StatusInternalServerError,
