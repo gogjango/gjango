@@ -27,11 +27,8 @@ Usage:
 `
 
 // Run executes migration subcommands
-func Run() error {
+func Run(args ...string) error {
 	fmt.Println("Running migration")
-	flag.Usage = usage
-	flag.Parse()
-	args := flag.Args()
 
 	p := config.GetPostgresConfig()
 

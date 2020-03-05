@@ -13,11 +13,11 @@ require (
 	github.com/go-pg/pg v8.0.6+incompatible
 	github.com/go-pg/pg/v9 v9.1.3
 	github.com/gogf/gf v1.11.4 // indirect
+	github.com/mitchellh/go-homedir v1.1.0
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
 	github.com/pierrec/lz4 v2.4.1+incompatible // indirect
-	github.com/ribice/gorsk-gin v0.0.0-20190118073939-555e775d6528
 	github.com/robinjoseph08/go-pg-migrations/v2 v2.0.1
 	github.com/rs/xid v1.2.1
 	github.com/satori/go.uuid v1.2.0
@@ -28,7 +28,7 @@ require (
 	github.com/spf13/cobra v0.0.6
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.6.2 // indirect
+	github.com/spf13/viper v1.6.2
 	github.com/stretchr/testify v1.5.1
 	go.uber.org/zap v1.14.0
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
