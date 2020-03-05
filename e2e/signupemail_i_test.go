@@ -52,9 +52,7 @@ func (suite *E2ETestSuite) TestSignupEmail() {
 func (suite *E2ETestSuite) TestVerification() {
 	t := suite.T()
 	v := suite.v
-	fmt.Println("Are we able to retrieve our verification token?")
-	fmt.Println(v.Token)
-	fmt.Println(v.UserID)
+	// verify that we can retrieve our test verification token
 	assert.NotNil(t, v)
 
 	ts := httptest.NewServer(suite.r)
