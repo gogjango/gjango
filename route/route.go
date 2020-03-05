@@ -39,7 +39,7 @@ func (s *Services) SetupV1Routes() {
 
 	// service logic
 	authService := auth.NewAuthService(userRepo, accountRepo, s.JWT, s.Mail, s.Mobile)
-	accountService := account.NewAccountService(userRepo, accountRepo, rbac)
+	accountService := account.NewAccountService(userRepo, accountRepo, rbac, secret.New())
 	userService := user.NewUserService(userRepo, authService, rbac)
 
 	// no prefix, no jwt

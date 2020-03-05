@@ -77,7 +77,7 @@ func (suite *RBACTestSuite) TestRBAC() {
 	err := roleRepo.CreateRoles()
 	assert.Nil(suite.T(), err)
 
-	accountService := account.NewAccountService(userRepo, accountRepo, rbac)
+	accountService := account.NewAccountService(userRepo, accountRepo, rbac, secret.New())
 	err = accountService.Create(c, &model.User{
 		CountryCode: "+65",
 		Mobile:      "91919191",

@@ -13,6 +13,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/mock/mockdb"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository/auth"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/calvinchengx/gin-go-pg/service"
 	"github.com/gin-gonic/gin"
 
@@ -53,7 +54,7 @@ func TestLogin(t *testing.T) {
 			userRepo: &mockdb.User{
 				FindByEmailFn: func(string) (*model.User, error) {
 					return &model.User{
-						Password: auth.HashPassword("hunter123"),
+						Password: secret.New().HashPassword("hunter123"),
 						Active:   true,
 						Verified: true,
 					}, nil

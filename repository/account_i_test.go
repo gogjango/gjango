@@ -12,7 +12,6 @@ import (
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
-	"github.com/calvinchengx/gin-go-pg/repository/auth"
 	"github.com/calvinchengx/gin-go-pg/secret"
 	embeddedpostgres "github.com/fergusstrange/embedded-postgres"
 	"github.com/go-pg/pg/v9"
@@ -205,7 +204,7 @@ func (suite *AccountTestSuite) TestChangePasswordSuccess() {
 	log, _ := zap.NewDevelopment()
 	accountRepo := repository.NewAccountRepo(suite.db, log, secret.New())
 	userRepo := repository.NewUserRepo(suite.db, log)
-	currentPassword := auth.HashPassword("currentpassword")
+	currentPassword := secret.New().HashPassword("currentpassword")
 	user := &model.User{
 		Email:    "user3@example.org",
 		Password: currentPassword,
@@ -215,7 +214,7 @@ func (suite *AccountTestSuite) TestChangePasswordSuccess() {
 	assert.NotNil(suite.T(), u.Password)
 	assert.Nil(suite.T(), err)
 
-	newPassword := auth.HashPassword("newpassword")
+	newPassword := secret.New().HashPassword("newpassword")
 	u.Password = newPassword
 	assert.NotEqual(suite.T(), currentPassword, newPassword)
 	err = accountRepo.ChangePassword(u)
@@ -247,7 +246,7 @@ func (suite *AccountTestSuite) TestChangePasswordFailure() {
 	accountRepo := repository.NewAccountRepo(suite.dbErr, log, secret.New())
 	user := &model.User{
 		Email:    "user5@example.org",
-		Password: auth.HashPassword("somepass"),
+		Password: secret.New().HashPassword("somepass"),
 	}
 	err := accountRepo.ChangePassword(user)
 	assert.NotNil(suite.T(), err)
