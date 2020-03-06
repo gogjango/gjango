@@ -50,8 +50,8 @@ func GetPostgresConfig() *PostgresConfig {
 	return &c
 }
 
-// GetSuperUserConnection gets the corresponding db connection for our superuser
-func GetSuperUserConnection() *pg.DB {
+// GetPostgresSuperUserConnection gets the corresponding db connection for our superuser
+func GetPostgresSuperUserConnection() *pg.DB {
 	c := getPostgresSuperUser()
 	db := pg.Connect(&pg.Options{
 		Addr:     c.Host + ":" + c.Port,

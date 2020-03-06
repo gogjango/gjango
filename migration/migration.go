@@ -1,4 +1,4 @@
-package main
+package migration
 
 import (
 	"flag"
@@ -26,16 +26,14 @@ Usage:
   go run *.go <command> [args]
 `
 
-func main() {
+// Run executes migration subcommands
+func Run(args ...string) error {
 	fmt.Println("Running migration")
-	flag.Usage = usage
-	flag.Parse()
-	args := flag.Args()
 
 	p := config.GetPostgresConfig()
 
-	// connection to db as superuser
-	dbSuper := config.GetSuperUserConnection()
+	// connection to db as postgres superuser
+	dbSuper := config.GetPostgresSuperUserConnection()
 	defer dbSuper.Close()
 
 	// connection to db as POSTGRES_USER
@@ -60,6 +58,7 @@ func main() {
 	} else {
 		fmt.Printf("version is %d\n", oldVersion)
 	}
+	return nil
 }
 
 func usage() {
