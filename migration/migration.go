@@ -32,8 +32,8 @@ func Run(args ...string) error {
 
 	p := config.GetPostgresConfig()
 
-	// connection to db as superuser
-	dbSuper := config.GetSuperUserConnection()
+	// connection to db as postgres superuser
+	dbSuper := config.GetPostgresSuperUserConnection()
 	defer dbSuper.Close()
 
 	// connection to db as POSTGRES_USER

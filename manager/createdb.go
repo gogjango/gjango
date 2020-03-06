@@ -21,6 +21,6 @@ func CreateDatabaseIfNotExist(db *pg.DB, p *config.PostgresConfig) {
 			fmt.Printf(`Created database %s`, p.Database)
 		}
 	} else {
-		fmt.Printf("database %s already exists", p.Database)
+		fmt.Printf("Database named %s already exists\n", p.Database)
 	}
 }
