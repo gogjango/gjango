@@ -9,10 +9,10 @@ import (
 )
 
 // createschemaCmd represents the createschema command
-var createschemaCmd = &cobra.Command{
-	Use:   "createschema",
-	Short: "createschema creates the initial database schema for the existing database",
-	Long:  `createschema creates the initial database schema for the existing database`,
+var createSchemaCmd = &cobra.Command{
+	Use:   "create_schema",
+	Short: "create_schema creates the initial database schema for the existing database",
+	Long:  `create_schema creates the initial database schema for the existing database`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("createschema called")
 		db := config.GetConnection()
@@ -22,5 +22,5 @@ var createschemaCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createschemaCmd)
+	rootCmd.AddCommand(createSchemaCmd)
 }

@@ -10,11 +10,11 @@ import (
 
 // createCmd represents the migrate command
 var createdbCmd = &cobra.Command{
-	Use:   "createdb",
-	Short: "createdb creates a database user and database from database parameters declared in config",
-	Long:  `createdb creates a database user and database from database parameters declared in config`,
+	Use:   "create_db",
+	Short: "create_db creates a database user and database from database parameters declared in config",
+	Long:  `create_db creates a database user and database from database parameters declared in config`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("createdb called")
+		fmt.Println("create_db called")
 		p := config.GetPostgresConfig()
 
 		// connection to db as postgres superuser

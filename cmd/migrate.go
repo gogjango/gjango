@@ -8,7 +8,8 @@ import (
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
 	Short: "migrate runs schema migration",
-	Long: `migrate executes the following subcommands. Supported subcommands are:
+	Long: `migrate executes the following subcommands. 
+	Supported subcommands are:
   - init - creates version info table in the database
   - up - runs all available migrations.
   - up [target] - runs available migrations up to the target one.
@@ -16,12 +17,8 @@ var migrateCmd = &cobra.Command{
   - reset - reverts all migrations.
   - version - prints current db version.
   - set_version [version] - sets db version without running migrations.
-  - create_schema [version] - creates initial set of tables from models (structs).
 Usage:
-  go run *.go <command> [args]`,
-	// Run: func(cmd *cobra.Command, args []string) {
-	// 	fmt.Println("migrate called")
-	// },
+  go run . <command> <subcommand>`,
 }
 
 func init() {
