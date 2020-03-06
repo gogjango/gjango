@@ -24,19 +24,23 @@ go run .
 ```bash
 go test -coverprofile c.out ./...
 go tool cover -html=c.out
+
+# or simply
+./test.sh
 ```
 
-## Schema migration
+## Schema migration and cli management commands
 
 ```bash
-# either
-go run migration/*.go [command]
+# create a new database based on config values in .env
+go run . create_db
 
-# or
-go build -o bin/migration migration/main.go
-./bin/migration [command]
+# create our database schema
+go run . create_schema
 
-# see all commands via `go run migration/*.go -h`
-# we can create migrations by creating files named 1_name.go etc
-# reference https://github.com/go-pg/migrations/tree/master/example
+# create our superadmin user, which is used to administer our API server
+go run . create_superadmin
+
+# schema migration and subcommands are available in the migrate subcommand
+# go run . migrate [command]
 ```
