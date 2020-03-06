@@ -5,21 +5,22 @@ import (
 
 	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/repository/auth"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/go-pg/pg/v9/orm"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
 // NewAccountRepo returns an AccountRepo instance
-func NewAccountRepo(db orm.DB, log *zap.Logger) *AccountRepo {
-	return &AccountRepo{db, log}
+func NewAccountRepo(db orm.DB, log *zap.Logger, secret secret.Service) *AccountRepo {
+	return &AccountRepo{db, log, secret}
 }
 
 // AccountRepo represents the client for the user table
 type AccountRepo struct {
-	db  orm.DB
-	log *zap.Logger
+	db     orm.DB
+	log    *zap.Logger
+	Secret secret.Service
 }
 
 // Create creates a new user in our database
@@ -83,8 +84,8 @@ func (a *AccountRepo) CreateWithMobile(u *model.User) error {
 	if res.RowsReturned() != 0 {
 		return apperr.BadRequest // user already exists but is not yet verified
 	}
-	// generate a cryptographically secure random password for this user
-	u.Password, err = auth.HashRandomPassword()
+	// generate a cryptographically secure random password hash for this user
+	u.Password, err = a.Secret.HashRandomPassword()
 	if err != nil {
 		return apperr.DB
 	}

@@ -13,6 +13,7 @@ import (
 	"github.com/calvinchengx/gin-go-pg/mock/mockdb"
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository/auth"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/calvinchengx/gin-go-pg/service"
 	"github.com/gin-gonic/gin"
 
@@ -53,7 +54,7 @@ func TestLogin(t *testing.T) {
 			userRepo: &mockdb.User{
 				FindByEmailFn: func(string) (*model.User, error) {
 					return &model.User{
-						Password: auth.HashPassword("hunter123"),
+						Password: secret.New().HashPassword("hunter123"),
 						Active:   true,
 						Verified: true,
 					}, nil
@@ -377,6 +378,26 @@ func TestMobile(t *testing.T) {
 			mobile: &mock.Mobile{
 				GenerateSMSTokenFn: func(string, string) error {
 					return nil
+				},
+			},
+		},
+		{
+			name:       "Failure: GenerateSMSToken function fails",
+			req:        `{"country_code":"+65","mobile":"91919191"}`,
+			wantStatus: http.StatusInternalServerError,
+			userRepo: &mockdb.User{
+				FindByMobileFn: func(string, string) (*model.User, error) {
+					return nil, apperr.DB // no such user, so create
+				},
+			},
+			accountRepo: &mockdb.Account{
+				CreateWithMobileFn: func(*model.User) error {
+					return nil
+				},
+			},
+			mobile: &mock.Mobile{
+				GenerateSMSTokenFn: func(string, string) error {
+					return apperr.DB
 				},
 			},
 		},

@@ -8,7 +8,7 @@ import (
 
 	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/calvinchengx/gin-go-pg/repository"
-	"github.com/calvinchengx/gin-go-pg/repository/auth"
+	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/gertd/go-pluralize"
 	"github.com/go-pg/pg/v9"
 	"github.com/go-pg/pg/v9/orm"
@@ -56,7 +56,7 @@ func (m *Manager) CreateRoles() {
 func (m *Manager) CreateSuperAdmin(email, password string) (*model.User, error) {
 	u := &model.User{
 		Email:    email,
-		Password: auth.HashPassword(password),
+		Password: secret.New().HashPassword(password),
 		Active:   true,
 		Verified: true,
 		RoleID:   int(model.SuperAdminRole),
