@@ -15,15 +15,17 @@ import (
 )
 
 // Run runs our API server
-func Run() error {
+func Run(env string) error {
+
+	// load configuration
+	c := config.Load(env)
+	j := config.LoadJWT(env)
+
 	r := gin.Default()
 
 	// middleware
 	mw.Add(r, cors.Default())
-
-	// load configuration
-	c, _ := config.Load("dev")
-	jwt := mw.NewJWT(c.JWT)
+	jwt := mw.NewJWT(j)
 	m := mail.NewMail(config.GetMailConfig(), config.GetSiteConfig())
 	mobile := mobile.NewMobile(config.GetTwilioConfig())
 	db := config.GetConnection()

@@ -25,8 +25,13 @@ var rootCmd = &cobra.Command{
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run server")
-		err := server.Run()
+		var env string
+		var ok bool
+		if env, ok = os.LookupEnv("GJANGO_ENV"); !ok {
+			env = "dev"
+			fmt.Printf("Run server in %s mode\n", env)
+		}
+		err := server.Run(env)
 		if err != nil {
 			log.Fatal(err)
 		}
