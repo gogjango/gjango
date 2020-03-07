@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"os"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -30,6 +31,7 @@ func (suite *UserTestSuite) SetupTest() {
 	d := path.Join(path.Dir(b))
 	projectRoot := filepath.Dir(d)
 	tmpDir := path.Join(projectRoot, "tmp")
+	os.RemoveAll(tmpDir)
 	testConfig := embeddedpostgres.DefaultConfig().
 		Username("db_test_user").
 		Password("db_test_password").
