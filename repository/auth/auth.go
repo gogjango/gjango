@@ -38,10 +38,10 @@ type JWT interface {
 func (s *Service) Authenticate(c context.Context, email, password string) (*model.AuthToken, error) {
 	u, err := s.userRepo.FindByEmail(email)
 	if err != nil {
-		return nil, err
+		return nil, apperr.Unauthorized
 	}
 	if !secret.New().HashMatchesPassword(u.Password, password) {
-		return nil, apperr.New(http.StatusNotFound, "Username or password does not exist")
+		return nil, apperr.Unauthorized
 	}
 	// user must be active and verified. Active is enabled/disabled by superadmin user. Verified depends on user verifying via /verification/:token or /mobile/verify
 	if !u.Active || !u.Verified {
