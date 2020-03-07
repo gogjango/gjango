@@ -1,6 +1,7 @@
 package e2e_test
 
 import (
+	"os"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -42,6 +43,8 @@ func (suite *E2ETestSuite) SetupSuite() {
 	d := path.Join(path.Dir(b))
 	projectRoot := filepath.Dir(d)
 	tmpDir := path.Join(projectRoot, "tmp2")
+	os.RemoveAll(tmpDir) // ensure that we start afresh
+
 	testConfig := embeddedpostgres.DefaultConfig().
 		Username("db_test_user").
 		Password("db_test_password").

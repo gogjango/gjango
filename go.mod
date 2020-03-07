@@ -7,7 +7,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fergusstrange/embedded-postgres v1.0.0
 	github.com/gertd/go-pluralize v0.1.1
-	github.com/gin-contrib/cors v1.3.0
+	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-pg/migrations/v7 v7.1.9
 	github.com/go-pg/pg v8.0.6+incompatible
