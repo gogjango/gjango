@@ -13,6 +13,8 @@ require (
 	github.com/go-pg/pg v8.0.6+incompatible
 	github.com/go-pg/pg/v9 v9.1.3
 	github.com/gogf/gf v1.11.4 // indirect
+	github.com/joho/godotenv v1.3.0
+	github.com/mcuadros/go-defaults v1.1.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/onsi/ginkgo v1.12.0 // indirect
@@ -37,4 +39,5 @@ require (
 	gopkg.in/go-playground/validator.v8 v8.18.2
 	gopkg.in/ini.v1 v1.52.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8
+	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )

@@ -78,8 +78,9 @@ func (suite *E2ETestSuite) SetupSuite() {
 	mw.Add(r, cors.Default())
 
 	// load configuration
-	c := config.Load("dev")
-	jwt := mw.NewJWT(c.JWT)
+	_ = config.Load("test")
+	j := config.LoadJWT("test")
+	jwt := mw.NewJWT(j)
 
 	// mock mail
 	m := &mock.Mail{

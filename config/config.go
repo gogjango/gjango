@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
@@ -25,6 +26,7 @@ func Load(env string) *Configuration {
 
 	var config Configuration
 	viper.Unmarshal(&config)
+	setGinMode(config.Server.Mode)
 
 	return &config
 }
@@ -32,20 +34,23 @@ func Load(env string) *Configuration {
 // Configuration holds data necessery for configuring application
 type Configuration struct {
 	Server *Server `yaml:"server"`
-	JWT    *JWT    `yaml:"jwt"`
 }
 
 // Server holds data necessary for server configuration
 type Server struct {
-	Port int `yaml:"port"`
+	Port int    `yaml:"port"`
+	Mode string `yaml:"mode"`
 }
 
-// JWT holds data necessary for JWT configuration
-type JWT struct {
-	Realm            string
-	Secret           string
-	Duration         int
-	RefreshDuration  int
-	MaxRefresh       int
-	SigningAlgorithm string
+func setGinMode(mode string) {
+	switch mode {
+	case "release":
+		gin.SetMode(gin.ReleaseMode)
+		break
+	case "test":
+		gin.SetMode(gin.TestMode)
+		break
+	default:
+		gin.SetMode(gin.DebugMode)
+	}
 }

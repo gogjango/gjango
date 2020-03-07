@@ -29,7 +29,7 @@ var rootCmd = &cobra.Command{
 		var ok bool
 		if env, ok = os.LookupEnv("GJANGO_ENV"); !ok {
 			env = "dev"
-			fmt.Printf("Run server in %s mode", env)
+			fmt.Printf("Run server in %s mode\n", env)
 		}
 		err := server.Run(env)
 		if err != nil {
