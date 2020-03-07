@@ -40,7 +40,7 @@ func TestLogin(t *testing.T) {
 		{
 			name:       "Fail on FindByUsername",
 			req:        `{"email":"juzernejm","password":"hunter123"}`,
-			wantStatus: http.StatusInternalServerError,
+			wantStatus: http.StatusUnauthorized,
 			userRepo: &mockdb.User{
 				FindByEmailFn: func(string) (*model.User, error) {
 					return nil, apperr.DB
