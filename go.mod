@@ -14,6 +14,7 @@ require (
 	github.com/go-pg/pg/v9 v9.1.3
 	github.com/gogf/gf v1.11.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mitchellh/mapstructure v1.1.2
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.9.0 // indirect
 	github.com/pelletier/go-toml v1.6.0 // indirect
