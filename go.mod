@@ -14,7 +14,7 @@ require (
 	github.com/go-pg/pg/v9 v9.1.5
 	github.com/gogf/gf v1.11.4 // indirect
 	github.com/joho/godotenv v1.3.0
-	github.com/mcuadros/go-defaults v1.1.0
+	github.com/mcuadros/go-defaults v1.2.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.2.2
 	github.com/onsi/ginkgo v1.12.0 // indirect
