@@ -39,6 +39,8 @@ github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
 github.com/gertd/go-pluralize v0.1.1 h1:fQhql/WRRwr4TVp+TCw12s2esCacvEVBdkTUUwNqF/Q=
 github.com/gertd/go-pluralize v0.1.1/go.mod h1:t5DfHcumb6m0RqyVJDrDLEzL2AGeaiqUXIcDNwLaeAs=
+github.com/gertd/go-pluralize v0.1.4 h1:whO9tabQ5OSpTFr8oZRrlM3owcuyc6NFJho54kBCQUE=
+github.com/gertd/go-pluralize v0.1.4/go.mod h1:3DkM/CcGP3dn/Gt02QBhRit6Jh9Pt9nSV8HHSu88NuE=
 github.com/gf-third/mysql v1.4.2/go.mod h1:+dd90V663ppI2fV5uQ6+rHk0u8KCyU6FkG8Um8Cx3ms=
 github.com/gf-third/yaml v1.0.1/go.mod h1:t443vj0txEw3+E0MOtkr83kt+PrZg2I8SRuYfn85NM0=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
