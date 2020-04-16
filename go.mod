@@ -12,7 +12,7 @@ require (
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-pg/migrations/v7 v7.1.9
 	github.com/go-pg/pg v8.0.6+incompatible // indirect
-	github.com/go-pg/pg/v9 v9.1.5
+	github.com/go-pg/pg/v9 v9.1.6
 	github.com/gogf/gf v1.11.4 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/mcuadros/go-defaults v1.2.0
