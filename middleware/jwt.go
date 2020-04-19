@@ -5,11 +5,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/config"
-	"github.com/calvinchengx/gin-go-pg/model"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/config"
+	"github.com/gogjango/gjango/model"
 )
 
 // NewJWT generates new JWT variable necessery for auth middleware

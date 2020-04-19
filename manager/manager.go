@@ -6,12 +6,12 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/repository"
-	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/gertd/go-pluralize"
 	"github.com/go-pg/pg/v9"
 	"github.com/go-pg/pg/v9/orm"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/repository"
+	"github.com/gogjango/gjango/secret"
 )
 
 // NewManager returns a new manager

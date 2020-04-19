@@ -9,8 +9,8 @@ import (
 	"net/http/httptest"
 	"time"
 
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/request"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/request"
 	"github.com/stretchr/testify/assert"
 )
 

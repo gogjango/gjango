@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/calvinchengx/gin-go-pg/request"
+	"github.com/gogjango/gjango/request"
 	"github.com/stretchr/testify/assert"
 )
 

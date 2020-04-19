@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/calvinchengx/gin-go-pg/config"
-	"github.com/calvinchengx/gin-go-pg/manager"
+	"github.com/gogjango/gjango/config"
+	"github.com/gogjango/gjango/manager"
 	"github.com/spf13/cobra"
 )
 

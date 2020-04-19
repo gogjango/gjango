@@ -3,8 +3,8 @@ package manager
 import (
 	"fmt"
 
-	"github.com/calvinchengx/gin-go-pg/config"
 	"github.com/go-pg/pg/v9"
+	"github.com/gogjango/gjango/config"
 )
 
 // CreateDatabaseUserIfNotExist creates a database user

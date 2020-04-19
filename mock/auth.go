@@ -2,7 +2,7 @@ package mock
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/gogjango/gjango/model"
 )
 
 // Auth mock

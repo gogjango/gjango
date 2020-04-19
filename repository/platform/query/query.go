@@ -1,8 +1,8 @@
 package query
 
 import (
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/model"
 )
 
 // List prepares data for list queries

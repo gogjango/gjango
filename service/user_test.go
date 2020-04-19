@@ -7,13 +7,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/mock"
-	"github.com/calvinchengx/gin-go-pg/mock/mockdb"
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/repository/user"
-	"github.com/calvinchengx/gin-go-pg/service"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/mock"
+	"github.com/gogjango/gjango/mock/mockdb"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/repository/user"
+	"github.com/gogjango/gjango/service"
 	"github.com/stretchr/testify/assert"
 )
 

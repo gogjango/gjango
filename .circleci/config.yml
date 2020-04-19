@@ -24,4 +24,4 @@ jobs:
             chmod +x ./cc-test-reporter
             ./cc-test-reporter before-build
             go test -coverprofile c.out ./...
-            ./cc-test-reporter after-build -t gocov -p github.com/calvinchengx/gin-go-pg -r ${TEST_REPORTER_ID}
+            ./cc-test-reporter after-build -t gocov -p github.com/gogjango/gjango -r ${TEST_REPORTER_ID}

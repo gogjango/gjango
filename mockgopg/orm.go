@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/calvinchengx/gin-go-pg/manager"
 	"github.com/go-pg/pg/v9/orm"
+	"github.com/gogjango/gjango/manager"
 )
 
 type goPgDB struct {

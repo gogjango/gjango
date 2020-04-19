@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/calvinchengx/gin-go-pg/config"
+	"github.com/gogjango/gjango/config"
 )
 
 // NewMobile creates a new mobile service implementation

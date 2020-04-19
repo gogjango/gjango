@@ -3,8 +3,8 @@ package request
 import (
 	"net/http"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/apperr"
 )
 
 // EmailSignup contains the user signup request

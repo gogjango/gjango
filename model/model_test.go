@@ -3,8 +3,8 @@ package model_test
 import (
 	"testing"
 
-	"github.com/calvinchengx/gin-go-pg/mock"
-	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/gogjango/gjango/mock"
+	"github.com/gogjango/gjango/model"
 )
 
 func TestBeforeInsert(t *testing.T) {

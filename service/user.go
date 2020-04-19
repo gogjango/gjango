@@ -3,11 +3,11 @@ package service
 import (
 	"net/http"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/repository/user"
-	"github.com/calvinchengx/gin-go-pg/request"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/repository/user"
+	"github.com/gogjango/gjango/request"
 )
 
 // User represents the user http service

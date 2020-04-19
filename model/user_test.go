@@ -3,7 +3,7 @@ package model_test
 import (
 	"testing"
 
-	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/gogjango/gjango/model"
 )
 
 func TestUpdateLastLogin(t *testing.T) {

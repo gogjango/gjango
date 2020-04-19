@@ -3,8 +3,8 @@ package mail
 import (
 	"os"
 
-	"github.com/calvinchengx/gin-go-pg/config"
-	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/gogjango/gjango/config"
+	"github.com/gogjango/gjango/model"
 	"github.com/sendgrid/sendgrid-go"
 	s "github.com/sendgrid/sendgrid-go/helpers/mail"
 )

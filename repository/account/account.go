@@ -3,10 +3,10 @@ package account
 import (
 	"net/http"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/secret"
 )
 
 // Service represents the account application service

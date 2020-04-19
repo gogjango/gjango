@@ -1,6 +1,6 @@
 package mock
 
-import "github.com/calvinchengx/gin-go-pg/model"
+import "github.com/gogjango/gjango/model"
 
 // Mail mock
 type Mail struct {

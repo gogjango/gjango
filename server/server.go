@@ -3,13 +3,13 @@ package server
 import (
 	"strconv"
 
-	"github.com/calvinchengx/gin-go-pg/config"
-	"github.com/calvinchengx/gin-go-pg/mail"
-	mw "github.com/calvinchengx/gin-go-pg/middleware"
-	"github.com/calvinchengx/gin-go-pg/mobile"
-	"github.com/calvinchengx/gin-go-pg/route"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/config"
+	"github.com/gogjango/gjango/mail"
+	mw "github.com/gogjango/gjango/middleware"
+	"github.com/gogjango/gjango/mobile"
+	"github.com/gogjango/gjango/route"
 
 	"go.uber.org/zap"
 )

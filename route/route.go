@@ -1,17 +1,17 @@
 package route
 
 import (
-	"github.com/calvinchengx/gin-go-pg/mail"
-	mw "github.com/calvinchengx/gin-go-pg/middleware"
-	"github.com/calvinchengx/gin-go-pg/mobile"
-	"github.com/calvinchengx/gin-go-pg/repository"
-	"github.com/calvinchengx/gin-go-pg/repository/account"
-	"github.com/calvinchengx/gin-go-pg/repository/auth"
-	"github.com/calvinchengx/gin-go-pg/repository/user"
-	"github.com/calvinchengx/gin-go-pg/secret"
-	"github.com/calvinchengx/gin-go-pg/service"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pg/pg/v9"
+	"github.com/gogjango/gjango/mail"
+	mw "github.com/gogjango/gjango/middleware"
+	"github.com/gogjango/gjango/mobile"
+	"github.com/gogjango/gjango/repository"
+	"github.com/gogjango/gjango/repository/account"
+	"github.com/gogjango/gjango/repository/auth"
+	"github.com/gogjango/gjango/repository/user"
+	"github.com/gogjango/gjango/secret"
+	"github.com/gogjango/gjango/service"
 	"go.uber.org/zap"
 )
 

@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/go-pg/pg/v9"
+	"github.com/gogjango/gjango/model"
 	"go.uber.org/zap"
 )
 

@@ -3,10 +3,10 @@ package repository
 import (
 	"net/http"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/secret"
 	"github.com/go-pg/pg/v9/orm"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/secret"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
