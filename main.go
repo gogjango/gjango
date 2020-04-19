@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/calvinchengx/gin-go-pg/cmd"
+	"github.com/gogjango/gjango/cmd"
 )
 
 func main() {

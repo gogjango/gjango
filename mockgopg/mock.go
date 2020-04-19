@@ -4,7 +4,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/calvinchengx/gin-go-pg/manager"
+	"github.com/gogjango/gjango/manager"
 )
 
 // SQLMock handles query mocks

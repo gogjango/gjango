@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/calvinchengx/gin-go-pg/server"
+	"github.com/gogjango/gjango/server"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"

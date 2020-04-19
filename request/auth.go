@@ -1,8 +1,8 @@
 package request
 
 import (
-	"github.com/calvinchengx/gin-go-pg/apperr"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/apperr"
 )
 
 // Credentials stores the username and password provided in the request

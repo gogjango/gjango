@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/calvinchengx/gin-go-pg/secret"
+	"github.com/gogjango/gjango/secret"
 	"github.com/joho/godotenv"
 	"github.com/mcuadros/go-defaults"
 	"github.com/spf13/viper"

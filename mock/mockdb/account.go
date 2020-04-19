@@ -1,7 +1,7 @@
 package mockdb
 
 import (
-	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/gogjango/gjango/model"
 )
 
 // Account database mock

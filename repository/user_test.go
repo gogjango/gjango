@@ -3,10 +3,10 @@ package repository_test
 import (
 	"testing"
 
-	"github.com/calvinchengx/gin-go-pg/mockgopg"
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/repository"
 	"github.com/go-pg/pg/v9/orm"
+	"github.com/gogjango/gjango/mockgopg"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/repository"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"

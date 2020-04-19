@@ -4,8 +4,8 @@ import (
 	"github.com/go-pg/pg/v9/orm"
 	"go.uber.org/zap"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/model"
 )
 
 const notDeleted = "deleted_at is null"

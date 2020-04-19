@@ -7,12 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/mail"
-	"github.com/calvinchengx/gin-go-pg/mobile"
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/request"
-	"github.com/calvinchengx/gin-go-pg/secret"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/mail"
+	"github.com/gogjango/gjango/mobile"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/request"
+	"github.com/gogjango/gjango/secret"
 )
 
 // NewAuthService creates new auth service

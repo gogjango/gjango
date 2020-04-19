@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/model"
 )
 
 // NewRBACService creates new RBAC service

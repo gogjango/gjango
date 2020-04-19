@@ -1,6 +1,6 @@
 package mock
 
-import "github.com/calvinchengx/gin-go-pg/model"
+import "github.com/gogjango/gjango/model"
 
 // JWT mock
 type JWT struct {

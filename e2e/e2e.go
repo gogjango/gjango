@@ -1,8 +1,8 @@
 package e2e
 
 import (
-	"github.com/calvinchengx/gin-go-pg/manager"
-	"github.com/calvinchengx/gin-go-pg/model"
+	"github.com/gogjango/gjango/manager"
+	"github.com/gogjango/gjango/model"
 )
 
 // SetupDatabase creates the schema, populates it with data and returns with superadmin user

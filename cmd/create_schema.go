@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/calvinchengx/gin-go-pg/config"
-	"github.com/calvinchengx/gin-go-pg/manager"
-	"github.com/calvinchengx/gin-go-pg/repository"
-	"github.com/calvinchengx/gin-go-pg/secret"
+	"github.com/gogjango/gjango/config"
+	"github.com/gogjango/gjango/manager"
+	"github.com/gogjango/gjango/repository"
+	"github.com/gogjango/gjango/secret"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

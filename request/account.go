@@ -3,9 +3,9 @@ package request
 import (
 	"net/http"
 
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/model"
 )
 
 // RegisterAdmin contains admin registration request

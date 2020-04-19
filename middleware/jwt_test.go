@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/calvinchengx/gin-go-pg/config"
-	mw "github.com/calvinchengx/gin-go-pg/middleware"
-	"github.com/calvinchengx/gin-go-pg/mock"
-	"github.com/calvinchengx/gin-go-pg/model"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/config"
+	mw "github.com/gogjango/gjango/middleware"
+	"github.com/gogjango/gjango/mock"
+	"github.com/gogjango/gjango/model"
 	"github.com/stretchr/testify/assert"
 )
 

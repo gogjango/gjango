@@ -1,6 +1,6 @@
 package mail
 
-import "github.com/calvinchengx/gin-go-pg/model"
+import "github.com/gogjango/gjango/model"
 
 // Service is the interface to access our Mail
 type Service interface {

@@ -1,11 +1,11 @@
 package user
 
 import (
-	"github.com/calvinchengx/gin-go-pg/apperr"
-	"github.com/calvinchengx/gin-go-pg/model"
-	"github.com/calvinchengx/gin-go-pg/repository/platform/query"
-	"github.com/calvinchengx/gin-go-pg/repository/platform/structs"
 	"github.com/gin-gonic/gin"
+	"github.com/gogjango/gjango/apperr"
+	"github.com/gogjango/gjango/model"
+	"github.com/gogjango/gjango/repository/platform/query"
+	"github.com/gogjango/gjango/repository/platform/structs"
 )
 
 // NewUserService create a new user application service

@@ -6,11 +6,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/calvinchengx/gin-go-pg/config"
-	"github.com/calvinchengx/gin-go-pg/model"
 	migrations "github.com/go-pg/migrations/v7"
 	"github.com/go-pg/pg/v9"
 	"github.com/go-pg/pg/v9/orm"
+	"github.com/gogjango/gjango/config"
+	"github.com/gogjango/gjango/model"
 )
 
 const usageText = `This program runs command on the db. Supported commands are:

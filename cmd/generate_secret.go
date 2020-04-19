@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/calvinchengx/gin-go-pg/secret"
+	"github.com/gogjango/gjango/secret"
 	"github.com/spf13/cobra"
 )
 

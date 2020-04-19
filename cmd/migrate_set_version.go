@@ -4,7 +4,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/calvinchengx/gin-go-pg/migration"
+	"github.com/gogjango/gjango/migration"
 	"github.com/spf13/cobra"
 )
 
