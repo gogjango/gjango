@@ -1,6 +1,7 @@
 package e2e_test
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -20,6 +21,7 @@ import (
 	"github.com/gogjango/gjango/repository"
 	"github.com/gogjango/gjango/route"
 	"github.com/gogjango/gjango/secret"
+	"github.com/gogjango/gjango/testhelper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
@@ -45,19 +47,20 @@ func (suite *E2ETestSuite) SetupSuite() {
 	tmpDir := path.Join(projectRoot, "tmp2")
 	os.RemoveAll(tmpDir) // ensure that we start afresh
 
+	port := testhelper.AllocatePort("127.0.0.1", 9877)
 	testConfig := embeddedpostgres.DefaultConfig().
 		Username("db_test_user").
 		Password("db_test_password").
 		Database("db_test_database").
 		Version(embeddedpostgres.V12).
 		RuntimePath(tmpDir).
-		Port(9877)
+		Port(port)
 
 	suite.postgres = embeddedpostgres.NewDatabase(testConfig)
 	_ = suite.postgres.Start()
 
 	suite.db = pg.Connect(&pg.Options{
-		Addr:     "localhost:9877",
+		Addr:     "localhost:" + fmt.Sprint(port),
 		User:     "db_test_user",
 		Password: "db_test_password",
 		Database: "db_test_database",
