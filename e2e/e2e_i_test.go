@@ -57,10 +57,13 @@ func (suite *E2ETestSuite) SetupSuite() {
 		Port(port)
 
 	suite.postgres = embeddedpostgres.NewDatabase(testConfig)
-	_ = suite.postgres.Start()
+	err := suite.postgres.Start()
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	suite.db = pg.Connect(&pg.Options{
-		Addr:     "localhost:" + fmt.Sprint(port),
+		Addr:     "127.0.0.1:" + fmt.Sprint(port),
 		User:     "db_test_user",
 		Password: "db_test_password",
 		Database: "db_test_database",
