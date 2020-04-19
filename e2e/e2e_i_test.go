@@ -29,6 +29,16 @@ import (
 
 var superUser *model.User
 
+// end-to-end test constants
+const (
+	username   string = "db_test_user"
+	password   string = "db_test_password"
+	database   string = "db_test_database"
+	host       string = "127.0.0.1"
+	port       uint32 = 9877
+	tmpDirname string = "tmp2"
+)
+
 type E2ETestSuite struct {
 	suite.Suite
 	db        *pg.DB
@@ -44,14 +54,14 @@ func (suite *E2ETestSuite) SetupSuite() {
 	_, b, _, _ := runtime.Caller(0)
 	d := path.Join(path.Dir(b))
 	projectRoot := filepath.Dir(d)
-	tmpDir := path.Join(projectRoot, "tmp2")
+	tmpDir := path.Join(projectRoot, tmpDirname)
 	os.RemoveAll(tmpDir) // ensure that we start afresh
 
-	port := testhelper.AllocatePort("127.0.0.1", 9877)
+	port := testhelper.AllocatePort(host, port)
 	testConfig := embeddedpostgres.DefaultConfig().
-		Username("db_test_user").
-		Password("db_test_password").
-		Database("db_test_database").
+		Username(username).
+		Password(password).
+		Database(database).
 		Version(embeddedpostgres.V12).
 		RuntimePath(tmpDir).
 		Port(port)
@@ -63,10 +73,10 @@ func (suite *E2ETestSuite) SetupSuite() {
 	}
 
 	suite.db = pg.Connect(&pg.Options{
-		Addr:     "127.0.0.1:" + fmt.Sprint(port),
-		User:     "db_test_user",
-		Password: "db_test_password",
-		Database: "db_test_database",
+		Addr:     host + ":" + fmt.Sprint(port),
+		User:     username,
+		Password: password,
+		Database: database,
 	})
 
 	log, _ := zap.NewDevelopment()
