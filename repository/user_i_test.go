@@ -185,6 +185,10 @@ func (suite *UserTestSuite) TestListFailure() {
 	assert.NotNil(suite.T(), err)
 }
 
-func TestUserTestSuite(t *testing.T) {
+func TestUserTestSuiteIntegration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test")
+		return
+	}
 	suite.Run(t, new(UserTestSuite))
 }

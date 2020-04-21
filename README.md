@@ -21,12 +21,33 @@ go run .
 
 ## Tests and coverage
 
+### Run all tests
+
 ```bash
 go test -coverprofile c.out ./...
 go tool cover -html=c.out
 
 # or simply
 ./test.sh
+```
+
+### Run only integration tests
+
+```bash
+go test -v -run Integration ./...
+
+./test.sh -i
+```
+
+### Run only unit tests
+
+```bash
+go test -v -short ./...
+
+# without coverage
+./test.sh -s
+# with coverage
+./test.sh -s -c
 ```
 
 ## Schema migration and cli management commands

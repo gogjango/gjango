@@ -148,7 +148,11 @@ func (suite *E2ETestSuite) TestSuperUser() {
 	assert.NotNil(suite.T(), superUser)
 }
 
-func TestE2ETestSuite(t *testing.T) {
+func TestE2ETestSuiteIntegration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test")
+		return
+	}
 	suite.Run(t, new(E2ETestSuite))
 }
 

@@ -266,7 +266,11 @@ func (suite *AccountTestSuite) TestDeleteVerificationTokenFailue() {
 	assert.NotNil(suite.T(), err)
 }
 
-func TestAccountTestSuite(t *testing.T) {
+func TestAccountTestSuiteIntegration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test")
+		return
+	}
 	suite.Run(t, new(AccountTestSuite))
 }
 

@@ -57,7 +57,11 @@ func (suite *RBACTestSuite) TearDownTest() {
 	suite.postgres.Stop()
 }
 
-func TestRBACTestSuite(t *testing.T) {
+func TestRBACTestSuiteIntegration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test")
+		return
+	}
 	suite.Run(t, new(RBACTestSuite))
 }
 
