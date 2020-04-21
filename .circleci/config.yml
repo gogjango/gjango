@@ -11,9 +11,16 @@ jobs:
       - checkout
       - attach_workspace:
         at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+      - restore_cache:
+          keys:
+            - v1-pkg-cache
       - run: 
           name: Dependencies
           command: go get -v -t -d ./...
+      - save_cache:
+          key: v1-pkg-cache
+          paths:
+            - /go/pkg
       - persist_to_workspace:
           root: /
           paths: /
