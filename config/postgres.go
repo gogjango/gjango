@@ -16,7 +16,7 @@ type PostgresConfig struct {
 	Database string `env:"POSTGRES_DB"`
 }
 
-// PostgresSuperUser persists teh config for our PostgreSQL superuser
+// PostgresSuperUser persists the config for our PostgreSQL superuser
 type PostgresSuperUser struct {
 	Host     string `env:"POSTGRES_HOST" envDefault:"localhost"`
 	Port     string `env:"POSTGRES_PORT" envDefault:"5432"`
