@@ -23,7 +23,7 @@ jobs:
             - /go/pkg
       - persist_to_workspace:
           root: /
-          paths: /
+          paths: .
   
   unit-test:
     <<: *defaults
