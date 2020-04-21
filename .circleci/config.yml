@@ -31,6 +31,16 @@ jobs:
       - attach_workspace:
           at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
       - run:
+          name: Unit Tests
+          command: |
+            ./test.sh -s
+  
+  full-test:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+      - run:
           name: Tests with Coverage
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -45,5 +55,18 @@ workflows:
       jobs:
           - checkout
           - unit-test:
+              filters:
+                branches:
+                  ignore:
+                    - master
+                    - develop
+              requires:
+                - checkout
+          - full-test:
+              filters:
+                branches:
+                  only:
+                    - master
+                    - develop
               requires:
                 - checkout
