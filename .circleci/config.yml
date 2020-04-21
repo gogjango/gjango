@@ -1,22 +1,28 @@
+defaults: &defaults
+  docker:
+    - image: circleci/golang:1.13
+  working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/golang:1.13
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+  checkout:
+    <<: *defaults
     steps:
       - checkout
-
+      - attach_workspace:
+        at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
       - run: 
           name: Dependencies
           command: go get -v -t -d ./...
-
+      - persist_to_workspace:
+          root: /
+          paths: /
+  
+  unit-test:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+        at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
       - run:
           name: Tests with Coverage
           command: |
@@ -25,3 +31,12 @@ jobs:
             ./cc-test-reporter before-build
             go test -coverprofile c.out ./...
             ./cc-test-reporter after-build -t gocov -p github.com/gogjango/gjango -r ${TEST_REPORTER_ID}
+
+workflows:
+  version: 2
+  test-deploy-purge:
+      jobs:
+          - checkout
+          - unit-test:
+              requires:
+                - checkout
