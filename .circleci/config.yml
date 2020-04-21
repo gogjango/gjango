@@ -1,7 +1,7 @@
 defaults: &defaults
   docker:
     - image: circleci/golang:1.13
-  working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+  working_directory: /go/src/github.com/gogjango/gjango
 
 version: 2
 jobs:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+          at: /go/src/github.com/gogjango/gjango
       - restore_cache:
           keys:
             - v1-pkg-cache
@@ -29,7 +29,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+          at: /go/src/github.com/gogjango/gjango
       - run:
           name: Unit Tests
           command: |
@@ -41,7 +41,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+          at: /go/src/github.com/gogjango/gjango
       - run:
           name: Tests with Coverage
           command: |
