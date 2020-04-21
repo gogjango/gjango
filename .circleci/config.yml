@@ -62,6 +62,8 @@ workflows:
                   ignore:
                     - master
                     - develop
+              requires:
+                - checkout
           - full-test:
               filters:
                 branches:
