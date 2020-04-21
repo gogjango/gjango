@@ -32,7 +32,10 @@ jobs:
           at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
       - run:
           name: Unit Tests
-          command: ./test.sh -s
+          command: |
+            ls -la
+            pwd
+            ./test.sh -s
   
   full-test:
     <<: *defaults
