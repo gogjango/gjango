@@ -16,7 +16,7 @@ type Gjango struct {
 }
 
 // WithRoutes is the builder method for us to add in custom route services
-func (g *Gjango) WithRoutes(RouteServices []route.ServicesI) *Gjango {
+func (g *Gjango) WithRoutes(RouteServices ...route.ServicesI) *Gjango {
 	return &Gjango{RouteServices}
 }
 

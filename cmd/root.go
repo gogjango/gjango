@@ -35,7 +35,6 @@ var rootCmd = &cobra.Command{
 			env = "dev"
 			fmt.Printf("Run server in %s mode\n", env)
 		}
-		fmt.Println(s)
 		err := s.Run(env)
 		if err != nil {
 			log.Fatal(err)
