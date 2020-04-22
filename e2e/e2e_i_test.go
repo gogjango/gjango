@@ -27,7 +27,10 @@ import (
 	"go.uber.org/zap"
 )
 
-var superUser *model.User
+var (
+	superUser *model.User
+	isCI      bool
+)
 
 // end-to-end test constants
 const (
@@ -57,19 +60,21 @@ func (suite *E2ETestSuite) SetupSuite() {
 	tmpDir := path.Join(projectRoot, tmpDirname)
 	os.RemoveAll(tmpDir) // ensure that we start afresh
 
-	port := testhelper.AllocatePort(host, port)
-	testConfig := embeddedpostgres.DefaultConfig().
-		Username(username).
-		Password(password).
-		Database(database).
-		Version(embeddedpostgres.V12).
-		RuntimePath(tmpDir).
-		Port(port)
-
-	suite.postgres = embeddedpostgres.NewDatabase(testConfig)
-	err := suite.postgres.Start()
-	if err != nil {
-		fmt.Println(err)
+	_, isCI = os.LookupEnv("CIRCLECI")
+	if !isCI { // not in CI environment, so setup our embedded postgresql for integration test
+		port := testhelper.AllocatePort(host, port)
+		testConfig := embeddedpostgres.DefaultConfig().
+			Username(username).
+			Password(password).
+			Database(database).
+			Version(embeddedpostgres.V12).
+			RuntimePath(tmpDir).
+			Port(port)
+		suite.postgres = embeddedpostgres.NewDatabase(testConfig)
+		err := suite.postgres.Start()
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	suite.db = pg.Connect(&pg.Options{
@@ -122,7 +127,9 @@ func (suite *E2ETestSuite) SetupSuite() {
 
 // TearDownSuite runs after all tests in this test suite
 func (suite *E2ETestSuite) TearDownSuite() {
-	suite.postgres.Stop()
+	if !isCI { // not in CI environment, so stop our embedded postgresql db
+		suite.postgres.Stop()
+	}
 }
 
 func (suite *E2ETestSuite) TestGetModels() {

@@ -1,11 +1,15 @@
 defaults: &defaults
   docker:
     - image: circleci/golang:1.13
+      environment:
+        CIRCLECI: 1
     - image: circleci/postgres:12.2
       environment:
-        POSTGRES_USER: test-user
-        POSTGRES_DB: test-db
-        POSTGRES_PASSWORD: test-password
+        POSTGRES_USER: db_test_user
+        POSTGRES_PASSWORD: db_test_password
+        POSTGRES_DB: db_test_database
+        POSTGRES_HOST: "127.0.0.1"
+        POSTGRES_PORT: 9877
   working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
 
 version: 2
