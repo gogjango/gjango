@@ -38,7 +38,7 @@ const (
 	password   string = "db_test_password"
 	database   string = "db_test_database"
 	host       string = "localhost"
-	port       uint32 = 9877
+	port       uint32 = 5432
 	tmpDirname string = "tmp2"
 )
 
