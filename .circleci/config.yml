@@ -13,14 +13,14 @@ jobs:
           at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
       - restore_cache:
           keys:
-            - v1-pkg-cache
+            - go-mod-v4-{{ checksum "go.sum" }}
       - run: 
           name: Dependencies
           command: go get -v -t -d ./...
       - save_cache:
-          key: v1-pkg-cache
+          key: go-mod-v4-{{ checksum "go.sum" }}
           paths:
-            - /go/pkg
+            - "/go/pkg/mod"
       - persist_to_workspace:
           root: .
           paths: .
@@ -37,7 +37,7 @@ jobs:
   
   full-test:
     <<: *defaults
-    steps:
+    steps:  
       - attach_workspace:
           at: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
       - run:
