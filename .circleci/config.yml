@@ -8,7 +8,7 @@ defaults: &defaults
         POSTGRES_USER: db_test_user
         POSTGRES_PASSWORD: db_test_password
         POSTGRES_DB: db_test_database
-        POSTGRES_HOST: "127.0.0.1"
+        POSTGRES_HOST: localhost
         POSTGRES_PORT: 9877
   working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
 
