@@ -30,6 +30,7 @@ import (
 var (
 	superUser *model.User
 	isCI      bool
+	port      uint32 = 5432 // uses 5432 in CI, and 9877 when running integration tests locally, against embedded postgresql
 )
 
 // end-to-end test constants
@@ -38,7 +39,6 @@ const (
 	password   string = "db_test_password"
 	database   string = "db_test_database"
 	host       string = "localhost"
-	port       uint32 = 5432
 	tmpDirname string = "tmp2"
 )
 
@@ -62,7 +62,7 @@ func (suite *E2ETestSuite) SetupSuite() {
 
 	_, isCI = os.LookupEnv("CIRCLECI")
 	if !isCI { // not in CI environment, so setup our embedded postgresql for integration test
-		port := testhelper.AllocatePort(host, port)
+		port = testhelper.AllocatePort(host, 9877)
 		testConfig := embeddedpostgres.DefaultConfig().
 			Username(username).
 			Password(password).

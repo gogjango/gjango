@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/caarlos0/env/v6"
 	"github.com/go-pg/pg/v9"
@@ -9,6 +10,7 @@ import (
 
 // PostgresConfig persists the config for our PostgreSQL database connection
 type PostgresConfig struct {
+	URL      string `env:"DATABASE_URL"` // DATABASE_URL will be used in preference if it exists
 	Host     string `env:"POSTGRES_HOST" envDefault:"localhost"`
 	Port     string `env:"POSTGRES_PORT" envDefault:"5432"`
 	User     string `env:"POSTGRES_USER"`
@@ -31,6 +33,11 @@ type PostgresSuperUser struct {
 // defer db.Close()
 func GetConnection() *pg.DB {
 	c := GetPostgresConfig()
+	// if DATABASE_URL is valid, we will use its constituent values in preference
+	validConfig, err := validPostgresURL(c.URL)
+	if err == nil {
+		c = validConfig
+	}
 	db := pg.Connect(&pg.Options{
 		Addr:     c.Host + ":" + c.Port,
 		User:     c.User,
@@ -69,4 +76,19 @@ func getPostgresSuperUser() *PostgresSuperUser {
 		fmt.Printf("%+v\n", err)
 	}
 	return &c
+}
+
+func validPostgresURL(URL string) (*PostgresConfig, error) {
+	validURL, err := url.Parse(URL)
+	if err != nil {
+		return nil, err
+	}
+	c := &PostgresConfig{}
+	c.URL = URL
+	c.Host = validURL.Host
+	c.Database = validURL.Path
+	c.Port = validURL.Port()
+	c.User = validURL.User.Username()
+	c.Password, _ = validURL.User.Password()
+	return c, nil
 }
