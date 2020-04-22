@@ -1,12 +1,21 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gogjango/gjango"
-	"github.com/gogjango/gjango/route"
 )
 
 func main() {
 	gjango.New().
-		WithRoutes(route.ServicesI{}).
+		WithRoutes(&MyServices{}).
 		Run()
+}
+
+// MyServices implements github.com/gogjango/gjango/route.ServicesI
+type MyServices struct{}
+
+// SetupRoutes is our implementation of custom routes
+func (s *MyServices) SetupRoutes() {
+	fmt.Println("set up our custom routes!")
 }
