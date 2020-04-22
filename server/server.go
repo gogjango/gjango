@@ -14,8 +14,13 @@ import (
 	"go.uber.org/zap"
 )
 
+// Server holds all the routes and their services
+type Server struct {
+	RouteServices []route.ServicesI
+}
+
 // Run runs our API server
-func Run(env string) error {
+func (server *Server) Run(env string) error {
 
 	// load configuration
 	c := config.Load(env)
@@ -32,15 +37,20 @@ func Run(env string) error {
 	log, _ := zap.NewDevelopment()
 	defer log.Sync()
 
-	// setup routes
-	rs := &route.Services{
+	// setup default routes
+	rsDefault := &route.Services{
 		DB:     db,
 		Log:    log,
 		JWT:    jwt,
 		Mail:   m,
 		Mobile: mobile,
 		R:      r}
-	rs.SetupV1Routes()
+	rsDefault.SetupV1Routes()
+
+	// setup all custom/user-defined route services
+	for _, rs := range server.RouteServices {
+		rs.SetupRoutes()
+	}
 
 	// run with port from config
 	port := ":" + strconv.Itoa(c.Server.Port)

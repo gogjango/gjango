@@ -5,12 +5,16 @@ import (
 	"log"
 	"os"
 
+	"github.com/gogjango/gjango/route"
 	"github.com/gogjango/gjango/server"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
+
+// routes will be attached to s
+var s server.Server
 
 var cfgFile string
 
@@ -31,7 +35,8 @@ var rootCmd = &cobra.Command{
 			env = "dev"
 			fmt.Printf("Run server in %s mode\n", env)
 		}
-		err := server.Run(env)
+		fmt.Println(s)
+		err := s.Run(env)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -40,7 +45,8 @@ var rootCmd = &cobra.Command{
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func Execute(customRouteServices []route.ServicesI) {
+	s.RouteServices = customRouteServices
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
