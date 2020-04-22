@@ -57,5 +57,5 @@ func (server *Server) Run(env string) error {
 	}
 
 	// run with port from config
-	return r.Run(port)
+	return r.Run(":" + port)
 }
