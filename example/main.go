@@ -7,6 +7,6 @@ import (
 
 func main() {
 	gjango.New().
-		WithRoutes([]route.ServicesI{}).
+		WithRoutes(route.ServicesI{}).
 		Run()
 }
