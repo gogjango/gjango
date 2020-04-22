@@ -1,7 +1,7 @@
 package server
 
 import (
-	"strconv"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -23,7 +23,6 @@ type Server struct {
 func (server *Server) Run(env string) error {
 
 	// load configuration
-	c := config.Load(env)
 	j := config.LoadJWT(env)
 
 	r := gin.Default()
@@ -52,7 +51,11 @@ func (server *Server) Run(env string) error {
 		rs.SetupRoutes()
 	}
 
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		port = "8080"
+	}
+
 	// run with port from config
-	port := ":" + strconv.Itoa(c.Server.Port)
 	return r.Run(port)
 }

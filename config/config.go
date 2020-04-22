@@ -38,7 +38,6 @@ type Configuration struct {
 
 // Server holds data necessary for server configuration
 type Server struct {
-	Port int    `yaml:"port"`
 	Mode string `yaml:"mode"`
 }
 
