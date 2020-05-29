@@ -20,8 +20,8 @@ require (
 	github.com/sendgrid/sendgrid-go v3.5.0+incompatible
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.7.0
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.0
 	go.uber.org/zap v1.15.0
-	golang.org/x/crypto v0.0.0-20200420201142-3c4aac89819a
+	golang.org/x/crypto v0.0.0-20200427165652-729f1e841bcc
 	gopkg.in/go-playground/validator.v8 v8.18.2
 )
