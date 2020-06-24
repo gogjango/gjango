@@ -6,7 +6,7 @@ require (
 	github.com/caarlos0/env/v6 v6.3.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fergusstrange/embedded-postgres v1.1.0
-	github.com/gertd/go-pluralize v0.1.2
+	github.com/gertd/go-pluralize v0.1.7
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-pg/migrations/v7 v7.1.10
