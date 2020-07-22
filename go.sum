@@ -103,6 +103,8 @@ github.com/go-pg/migrations/v7 v7.1.9 h1:j9gPouA7rg7vympGx6vIMyZtt+L+ZGjm1guuq/9
 github.com/go-pg/migrations/v7 v7.1.9/go.mod h1:ycN6RqhOqa3km5KVLvRyESYP+lvqhrGYZxAIQ5HPPMM=
 github.com/go-pg/migrations/v7 v7.1.10 h1:taYaAAkSXUZBe65Tw3gXf6wW69wJIAGL240LRVnYueY=
 github.com/go-pg/migrations/v7 v7.1.10/go.mod h1:v/v7SfckdB2IGmUyopKyASTzjmN30HnDucLLZcCvBWU=
+github.com/go-pg/migrations/v7 v7.1.11 h1:59sWcsENzTrY2OUvG/yfkTgz92F3AyT5/wwmgnw6MoA=
+github.com/go-pg/migrations/v7 v7.1.11/go.mod h1:v/v7SfckdB2IGmUyopKyASTzjmN30HnDucLLZcCvBWU=
 github.com/go-pg/pg v8.0.6+incompatible h1:Hi7yUJ2zwmHFq1Mar5XqhCe3NJ7j9r+BaiNmd+vqf+A=
 github.com/go-pg/pg v8.0.6+incompatible/go.mod h1:a2oXow+aFOrvwcKs3eIA0lNFmMilrxK2sOkB5NWe0vA=
 github.com/go-pg/pg/v9 v9.0.0-beta.14/go.mod h1:T2Sr6bpTCOr2lUqOUMiXLMJqZHSUBKk1LdgSqjwhZfA=
