@@ -113,6 +113,8 @@ github.com/go-pg/pg/v9 v9.0.3/go.mod h1:Tm/Q3Vt6gdQOH6TTN1H/xLlIXc+Qrka7TZ6uREtu
 github.com/go-pg/pg/v9 v9.1.2/go.mod h1:AOJqkP8C4YfJgLOA5zSoV0DGHGo+M3G2nXXLeXkiyNs=
 github.com/go-pg/pg/v9 v9.1.6 h1:IqBayenvp9EWjHncRE7//SRmQuktq60oeO1/MkEx3dY=
 github.com/go-pg/pg/v9 v9.1.6/go.mod h1:QM13HBLkdml4zcKOfUfGLymM6hb72aKTJLrmaH8rsFg=
+github.com/go-pg/pg/v9 v9.1.7 h1:JSAszC/xbOHmvS86fPnvxCQ288lR0ecX7yqxiPnBoNo=
+github.com/go-pg/pg/v9 v9.1.7/go.mod h1:QM13HBLkdml4zcKOfUfGLymM6hb72aKTJLrmaH8rsFg=
 github.com/go-pg/urlstruct v0.1.0/go.mod h1:2Nag+BIny6G/KYCkdt++ZnqU/VinzimGapKfs4kwlN0=
 github.com/go-pg/urlstruct v0.1.4/go.mod h1:2Nag+BIny6G/KYCkdt++ZnqU/VinzimGapKfs4kwlN0=
 github.com/go-pg/urlstruct v0.2.5/go.mod h1:dxENwVISWSOX+k87hDt0ueEJadD+gZWv3tHzwfmZPu8=
