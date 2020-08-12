@@ -10,7 +10,7 @@ require (
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-pg/migrations/v7 v7.1.11
-	github.com/go-pg/pg/v9 v9.1.6
+	github.com/go-pg/pg/v9 v9.1.7
 	github.com/joho/godotenv v1.3.0
 	github.com/mcuadros/go-defaults v1.2.0
 	github.com/mitchellh/go-homedir v1.1.0
