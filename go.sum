@@ -34,6 +34,7 @@ github.com/caarlos0/env/v6 v6.2.2 h1:R0NIFXaB/LhwuGrjnsldzpnVNjFU/U+hTVHt+cq0yDY
 github.com/caarlos0/env/v6 v6.2.2/go.mod h1:3LpmfcAYCG6gCiSgDLaFR5Km1FRpPwFvBbRcjHar6Sw=
 github.com/caarlos0/env/v6 v6.3.0 h1:PaqGnS5iHScZ5SnZNBPvQbA2VE/eMAwlp51mKGuEZLg=
 github.com/caarlos0/env/v6 v6.3.0/go.mod h1:nXKfztzgWXH0C5Adnp+gb+vXHmMjKdBnMrSVSczSkiw=
+github.com/caarlos0/env/v6 v6.4.0/go.mod h1:MX/8qQ2zCofGGkb7FxjmDLOOjUylO2b7dbsIpN30bnY=
 github.com/calvinchengx/gin-go-pg v0.0.0-20200202222249-d986ae23229f/go.mod h1:XLaaQYx9GSDKeekBV9/twFI/Pl4ZdMlv+x4BARrGwfM=
 github.com/calvinchengx/gin-go-pg v0.0.0-20200418164053-b033284b3072 h1:HiinZOLiB9notzIL16ae2tfteU851smjwVMxsW4SyV8=
 github.com/calvinchengx/gin-go-pg v0.0.0-20200418164053-b033284b3072/go.mod h1:YoipxzANFONVpIQYbfteV+yCb7ZXKTZxPthC/2B3VAg=
