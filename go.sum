@@ -71,6 +71,7 @@ github.com/fergusstrange/embedded-postgres v1.0.0 h1:V7HTmjqLa12MZfuCPEvSBBMjtjY
 github.com/fergusstrange/embedded-postgres v1.0.0/go.mod h1:/puCGX7H8ORxgQGQd2BGfcGoS4LBtkGavfXid+5ZSs0=
 github.com/fergusstrange/embedded-postgres v1.1.0 h1:O5wtfvmjoK4nSM05pDux23qduRuCRW65LBCr1CBE750=
 github.com/fergusstrange/embedded-postgres v1.1.0/go.mod h1:/puCGX7H8ORxgQGQd2BGfcGoS4LBtkGavfXid+5ZSs0=
+github.com/fergusstrange/embedded-postgres v1.2.0/go.mod h1:/puCGX7H8ORxgQGQd2BGfcGoS4LBtkGavfXid+5ZSs0=
 github.com/frankban/quicktest v1.9.0 h1:jfEA+Psfr/pHsRJYPpHiNu7PGJnGctNxvTaM3K1EyXk=
 github.com/frankban/quicktest v1.9.0/go.mod h1:ui7WezCLWMWxVWr1GETZY3smRy0G4KWq9vcPtJmFl7Y=
 github.com/fsnotify/fsnotify v1.4.7 h1:IXs+QLmnXW2CcXuY+8Mzv/fWEsPGWxqefPtCP5CnV9I=
