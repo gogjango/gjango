@@ -3,9 +3,9 @@ module github.com/gogjango/gjango
 go 1.13
 
 require (
-	github.com/caarlos0/env/v6 v6.3.0
+	github.com/caarlos0/env/v6 v6.4.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/fergusstrange/embedded-postgres v1.1.0
+	github.com/fergusstrange/embedded-postgres v1.2.0
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
@@ -17,7 +17,7 @@ require (
 	github.com/rs/xid v1.2.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/sendgrid/rest v2.4.1+incompatible // indirect
-	github.com/sendgrid/sendgrid-go v3.6.4+incompatible
+	github.com/sendgrid/sendgrid-go v3.7.2+incompatible
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1
