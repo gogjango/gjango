@@ -1,8 +1,10 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/caarlos0/env/v6"
 	"github.com/go-pg/pg/v9"
@@ -79,6 +81,10 @@ func getPostgresSuperUser() *PostgresSuperUser {
 }
 
 func validPostgresURL(URL string) (*PostgresConfig, error) {
+	if URL == "" || strings.TrimSpace(URL) == "" {
+		return nil, errors.New("database url is blank")
+	}
+
 	validURL, err := url.Parse(URL)
 	if err != nil {
 		return nil, err
