@@ -15,7 +15,7 @@ type User struct {
 	svc *user.Service
 }
 
-// UserRouter declares the orutes for users router group
+// UserRouter declares the routes for users router group
 func UserRouter(svc *user.Service, r *gin.RouterGroup) {
 	u := User{
 		svc: svc,
