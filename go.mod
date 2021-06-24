@@ -3,7 +3,7 @@ module github.com/gogjango/gjango
 go 1.13
 
 require (
-	github.com/caarlos0/env/v6 v6.6.0
+	github.com/caarlos0/env/v6 v6.6.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fergusstrange/embedded-postgres v1.7.0
 	github.com/gertd/go-pluralize v0.1.7
