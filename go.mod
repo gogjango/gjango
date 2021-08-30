@@ -17,7 +17,7 @@ require (
 	github.com/rs/xid v1.3.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sendgrid/rest v2.4.1+incompatible // indirect
-	github.com/sendgrid/sendgrid-go v3.9.0+incompatible
+	github.com/sendgrid/sendgrid-go v3.10.0+incompatible
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.8.0
 	github.com/stretchr/testify v1.7.0
