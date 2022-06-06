@@ -8,7 +8,7 @@ require (
 	github.com/fergusstrange/embedded-postgres v1.9.0
 	github.com/gertd/go-pluralize v0.1.7
 	github.com/gin-contrib/cors v1.3.1
-	github.com/gin-gonic/gin v1.7.4
+	github.com/gin-gonic/gin v1.8.1
 	github.com/go-pg/migrations/v7 v7.1.11
 	github.com/go-pg/pg/v9 v9.2.1
 	github.com/joho/godotenv v1.4.0
@@ -20,7 +20,7 @@ require (
 	github.com/sendgrid/sendgrid-go v3.10.2+incompatible
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/viper v1.9.0
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.7.1
 	go.uber.org/zap v1.19.0
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
 	gopkg.in/go-playground/validator.v8 v8.18.2
